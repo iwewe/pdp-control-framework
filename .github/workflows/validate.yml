@@ -54,3 +54,14 @@ jobs:
               json.load(open(path))
               print(path, 'OK')
           PY
+
+      - name: Validate release metadata consistency
+        run: python tools/validation/validate_release_consistency.py
+
+      - name: Check coverage report is reproducible
+        run: |
+          python tools/reporting/generate_coverage_report.py
+          git diff --exit-code reports/ || {
+            echo "::error::reports/COVERAGE_REPORT.md and/or COVERAGE_REPORT.json are stale. Run tools/reporting/generate_coverage_report.py and commit the result." >&2
+            exit 1
+          }

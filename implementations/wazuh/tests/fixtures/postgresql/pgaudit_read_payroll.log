@@ -1,1 +1,1 @@
-AUDIT: SESSION,5,1,READ,SELECT,TABLE,public.payroll,<statement suppressed>,<not logged>,250
+2026-09-22 10:00:04.505 UTC [20105] postgres@pdp_lab 10.0.0.10 LOG:  AUDIT: SESSION,5,1,READ,SELECT,TABLE,public.payroll,<statement suppressed>,<not logged>,250

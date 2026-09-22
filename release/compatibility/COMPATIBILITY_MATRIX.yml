@@ -1,5 +1,5 @@
 metadata:
-  framework_version: 0.10.0-rc1
+  framework_version: 0.10.0-rc2
   status: TARGET_MATRIX_NOT_FULLY_LAB_VALIDATED
   last_reviewed: '2026-09-22'
 targets:

@@ -1,1 +1,1 @@
-AUDIT: SESSION,3,1,WRITE,UPDATE,TABLE,public.employee,<statement suppressed>,<not logged>,27
+2026-09-22 10:00:02.303 UTC [20103] postgres@pdp_lab 10.0.0.10 LOG:  AUDIT: SESSION,3,1,WRITE,UPDATE,TABLE,public.employee,<statement suppressed>,<not logged>,27

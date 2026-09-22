@@ -1,6 +1,6 @@
 # PDP Compliance Operating Model
 
-**Status:** Draft v0.3
+**Status:** Current architecture document (introduced in draft v0.3, part of 0.10.0-rc2)
 
 ## 1. End-to-End Model
 

@@ -1,6 +1,6 @@
 # Finding, Exception, and Remediation Model
 
-**Status:** Draft v0.3
+**Status:** Current normative model (introduced in draft v0.3, part of 0.10.0-rc2)
 
 ## 1. Finding
 

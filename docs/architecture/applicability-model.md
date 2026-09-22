@@ -1,6 +1,6 @@
 # Applicability Model
 
-**Status:** Draft v0.2
+**Status:** Current architecture document (introduced in draft v0.2, part of 0.10.0-rc2 `normative_core`)
 
 ## 1. Why Applicability Exists
 

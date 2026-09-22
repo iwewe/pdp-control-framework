@@ -1,6 +1,6 @@
 # Coverage Report
 
-**Framework version:** 0.10.0-rc1
+**Framework version:** 0.10.0-rc2
 
 > This report measures engineering traceability/technical test coverage. It is not a legal compliance score.
 

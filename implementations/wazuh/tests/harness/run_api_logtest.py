@@ -29,7 +29,7 @@ def find_repo_root(start):
 ROOT = find_repo_root(Path(__file__).parent)
 FIX = ROOT / "implementations" / "wazuh" / "tests" / "fixtures"
 CFG = ROOT / "implementations" / "wazuh" / "tests" / "harness" / "HARNESS.yml"
-MAP = ROOT / "assessment" / "WAZUH_EVIDENCE_MAPPING.yml"
+MAP = ROOT / "tools" / "assessment" / "WAZUH_EVIDENCE_MAPPING.yml"
 OUT = ROOT / "implementations" / "wazuh" / "tests" / "results"
 
 API = os.getenv("WAZUH_API_URL","https://127.0.0.1:55000").rstrip("/")

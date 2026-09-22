@@ -1,4 +1,4 @@
-framework_version: 0.10.0-rc1
+framework_version: 0.10.0-rc2
 release_target: 1.0.0
 gates:
   traceability:

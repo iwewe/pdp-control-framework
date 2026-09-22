@@ -21,7 +21,7 @@ FIX = ROOT / "implementations" / "wazuh" / "tests" / "fixtures"
 EXPECTED = ROOT / "implementations" / "wazuh" / "tests" / "expected" / "EXPECTED_RESULTS.yml"
 
 PGAUDIT = re.compile(
-    r"^AUDIT:\s+(SESSION|OBJECT),([0-9]+),([0-9]+),([A-Z_]+),"
+    r"AUDIT:\s+(SESSION|OBJECT),([0-9]+),([0-9]+),([A-Z_]+),"
     r"([A-Z ]+),([^,]*),([^,]*),(.*)$"
 )
 
@@ -40,7 +40,7 @@ for case in data["fixtures"]:
 
     if case["file"].startswith("postgresql/"):
         for n, line in enumerate(lines, 1):
-            m = PGAUDIT.match(line)
+            m = PGAUDIT.search(line)
             if not m:
                 errors.append(f"pgAudit fixture parse failure: {case['file']} line {n}")
                 continue

@@ -1,6 +1,7 @@
 # PDP Control Framework
 
-**Status:** Draft v0.1  
+**Status:** Pre-1.0 Release Candidate
+**Version:** 0.10.0-rc2  
 **Primary legal source:** Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)  
 **Jurisdiction:** Indonesia  
 **Project model:** Technology-neutral control framework with pluggable implementation/evidence engines  
@@ -330,7 +331,7 @@ Legal-source changes SHOULD trigger a documented framework review.
 
 ## 15. Current Limitations
 
-- This draft has not undergone formal legal review.
+- The legal mapping has been reviewed against the authoritative statutory text (see `framework/legal/review/LEGAL_SOURCE_REVIEW_0.10.0-rc2.md`), but has not undergone independent external legal counsel review.
 - The framework does not certify legal compliance.
 - Technical evidence does not replace organizational or legal evidence.
 - Applicability depends on the organization's processing context.
@@ -346,4 +347,4 @@ Legal-source changes SHOULD trigger a documented framework review.
 
 ---
 
-**Draft status:** This document is intended to become the normative architecture document for the repository.
+**Status:** This is the normative architecture document for the repository, per `FRAMEWORK_MANIFEST.yml`'s `normative_core` list. It remains a pre-1.0 release candidate pending independent legal counsel review and real Wazuh/Indexer/Dashboard runtime validation (see `release/PRE_1_0_CHECKLIST.md`).

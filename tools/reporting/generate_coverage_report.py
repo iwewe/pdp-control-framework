@@ -10,6 +10,7 @@ def find_repo_root(start):
     raise RuntimeError("Repository root not found")
 
 ROOT = find_repo_root(Path(__file__).parent)
+FRAMEWORK_VERSION = (ROOT/"VERSION").read_text(encoding="utf-8").strip()
 
 legal = yaml.safe_load((ROOT/"framework/legal/LEGAL_MAPPING.yml").read_text(encoding="utf-8"))
 controls = yaml.safe_load((ROOT/"framework/controls/CONTROL_CATALOGUE.yml").read_text(encoding="utf-8"))
@@ -60,7 +61,7 @@ for lr in legal["requirements"]:
 
 summary=collections.Counter(x["technical_coverage"] for x in rows)
 report={
-    "framework_version":"0.10.0-rc1",
+    "framework_version":FRAMEWORK_VERSION,
     "summary":{
         "legal_requirements_total":len(rows),
         "with_wazuh_test_coverage":summary["TECHNICAL_TEST_COVERAGE"],
@@ -76,7 +77,7 @@ out_json.write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding="utf
 lines=[]
 lines.append("# Coverage Report")
 lines.append("")
-lines.append("**Framework version:** 0.10.0-rc1")
+lines.append(f"**Framework version:** {FRAMEWORK_VERSION}")
 lines.append("")
 lines.append("> This report measures engineering traceability/technical test coverage. It is not a legal compliance score.")
 lines.append("")

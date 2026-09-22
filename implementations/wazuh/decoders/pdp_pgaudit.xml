@@ -1,9 +1,19 @@
+<!--
+  Prefix-aware by design: PostgreSQL writes this event behind its own
+  log_line_prefix + severity tag (e.g. "2026-... UTC [12345] user@db addr
+  LOG:  AUDIT: ..."), see implementations/wazuh/postgresql/postgresql-pdp.conf.example.
+  The patterns below therefore locate "AUDIT: <type>," anywhere in the raw
+  line instead of anchoring at the start of the message. This still requires
+  lab validation against a real Wazuh 4.14.7 + PostgreSQL 17 + pgAudit
+  pipeline before promotion beyond STATIC_VALIDATED (see
+  reports/WAZUH_IMPLEMENTATION_GAP_ANALYSIS.md).
+-->
 <decoder name="pdp-pgaudit">
-  <prematch type="pcre2">^AUDIT:\s+</prematch>
+  <prematch type="pcre2">AUDIT:\s+(SESSION|OBJECT),</prematch>
 </decoder>
 
 <decoder name="pdp-pgaudit-fields">
   <parent>pdp-pgaudit</parent>
-  <regex type="pcre2">^AUDIT:\s+(SESSION|OBJECT),([0-9]+),([0-9]+),([A-Z_]+),([A-Z ]+),([^,]*),([^,]*),(.*)$</regex>
+  <regex type="pcre2">AUDIT:\s+(SESSION|OBJECT),([0-9]+),([0-9]+),([A-Z_]+),([A-Z ]+),([^,]*),([^,]*),(.*)$</regex>
   <order>pdp.audit_type,pdp.statement_id,pdp.substatement_id,pdp.audit_class,pdp.command,pdp.object_type,pdp.object_name,pdp.audit_detail</order>
 </decoder>
