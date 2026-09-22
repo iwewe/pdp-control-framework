@@ -1,0 +1,116 @@
+{
+  "index_patterns": [
+    "pdp-evidence-*"
+  ],
+  "template": {
+    "settings": {
+      "index.number_of_shards": "1",
+      "index.number_of_replicas": "1",
+      "index.refresh_interval": "5s",
+      "mapping.total_fields.limit": "2000"
+    },
+    "mappings": {
+      "dynamic": "strict",
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "schema_version": {
+          "type": "keyword"
+        },
+        "evidence_id": {
+          "type": "keyword"
+        },
+        "source.type": {
+          "type": "keyword"
+        },
+        "source.system": {
+          "type": "keyword"
+        },
+        "source.version": {
+          "type": "keyword"
+        },
+        "source.source_ref": {
+          "type": "keyword"
+        },
+        "source.collector_health": {
+          "type": "keyword"
+        },
+        "scope.processing_activity_ids": {
+          "type": "keyword"
+        },
+        "scope.asset_ids": {
+          "type": "keyword"
+        },
+        "scope.environment": {
+          "type": "keyword"
+        },
+        "scope.organization_role": {
+          "type": "keyword"
+        },
+        "test.id": {
+          "type": "keyword"
+        },
+        "test.engine": {
+          "type": "keyword"
+        },
+        "test.fixture": {
+          "type": "keyword"
+        },
+        "test.expected_rule_id": {
+          "type": "integer"
+        },
+        "test.observed_rule_id": {
+          "type": "integer"
+        },
+        "test.decoder": {
+          "type": "keyword"
+        },
+        "result": {
+          "type": "keyword"
+        },
+        "traceability.requirements": {
+          "type": "keyword"
+        },
+        "traceability.controls": {
+          "type": "keyword"
+        },
+        "traceability.legal_requirements": {
+          "type": "keyword"
+        },
+        "event.taxonomy_ids": {
+          "type": "keyword"
+        },
+        "event.technical_severity": {
+          "type": "keyword"
+        },
+        "event.privacy_impact": {
+          "type": "keyword"
+        },
+        "event.confidence": {
+          "type": "keyword"
+        },
+        "quality.level": {
+          "type": "keyword"
+        },
+        "quality.freshness": {
+          "type": "keyword"
+        },
+        "quality.integrity": {
+          "type": "keyword"
+        },
+        "quality.coverage_percent": {
+          "type": "float"
+        },
+        "review.state": {
+          "type": "keyword"
+        }
+      }
+    }
+  },
+  "priority": 200,
+  "_meta": {
+    "framework": "PDP Control Framework",
+    "version": "0.9.0-draft"
+  }
+}

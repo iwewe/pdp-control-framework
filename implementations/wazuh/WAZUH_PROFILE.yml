@@ -1,0 +1,252 @@
+profile:
+  id: wazuh
+  name: Wazuh Implementation and Evidence Profile
+  version: 0.4.0-draft
+  profile_type:
+  - implementation
+  - evidence
+  - continuous_monitoring
+  boundary_statement: Wazuh evaluates technical tests and collects evidence; it does not determine legal compliance.
+capabilities:
+  sca:
+    purpose: Configuration assessment and baseline testing
+    supports:
+    - REQ-CFG-001
+    - REQ-IAM-001
+    - REQ-NET-001
+    - REQ-CRY-001
+    - REQ-CRY-002
+    - REQ-LOG-002
+  fim:
+    purpose: File/configuration integrity and change evidence
+    supports:
+    - REQ-CFG-002
+    - REQ-INT-001
+    - REQ-RET-002
+  log_analysis:
+    purpose: Collect, decode, correlate and alert on system/application/security logs
+    supports:
+    - REQ-LOG-001
+    - REQ-MON-001
+    - REQ-MON-002
+    - REQ-INC-001
+    - REQ-INC-002
+    - REQ-PRC-001
+  vulnerability_detection:
+    purpose: Identify vulnerable software/packages on monitored endpoints
+    supports:
+    - REQ-VUL-001
+    - REQ-VUL-002
+  syscollector:
+    purpose: Endpoint inventory context for software/system observations
+    supports:
+    - REQ-INV-002
+    - REQ-VUL-001
+  agent_labels:
+    purpose: Attach PDP contextual metadata to agent-generated alerts
+    supports:
+    - REQ-INV-002
+    - REQ-EVD-001
+  agent_groups:
+    purpose: Apply profile-specific centralized configuration to scoped assets
+    supports:
+    - REQ-CFG-001
+    - REQ-INV-002
+  active_response:
+    purpose: Optional automated containment actions after approved design
+    supports:
+    - REQ-INC-001
+    guardrail: Active response is an operational security action, not a legal compliance decision.
+context_labels:
+  recommended:
+  - pdp.asset_id
+  - pdp.processing_activity_id
+  - pdp.data_classification
+  - pdp.criticality
+  - pdp.organization_role
+  - pdp.environment
+  avoid:
+  - raw personal data
+  - names of data subjects
+  - sensitive identifiers
+  - legal conclusions such as compliant/non_compliant
+requirement_mapping:
+- requirement_id: REQ-GOV-001
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-INV-001
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-INV-002
+  applicability: HIGH
+  capabilities:
+  - syscollector
+  - agent_labels
+  - agent_groups
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-IAM-001
+  applicability: MEDIUM
+  capabilities:
+  - sca
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-IAM-002
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-IAM-003
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-CFG-001
+  applicability: HIGH
+  capabilities:
+  - sca
+  - agent_groups
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-CFG-002
+  applicability: MEDIUM
+  capabilities:
+  - fim
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-VUL-001
+  applicability: HIGH
+  capabilities:
+  - vulnerability_detection
+  - syscollector
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-VUL-002
+  applicability: MEDIUM
+  capabilities:
+  - vulnerability_detection
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-LOG-001
+  applicability: MEDIUM
+  capabilities:
+  - log_analysis
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-LOG-002
+  applicability: MEDIUM
+  capabilities:
+  - sca
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-LOG-003
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-MON-001
+  applicability: MEDIUM
+  capabilities:
+  - log_analysis
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-MON-002
+  applicability: MEDIUM
+  capabilities:
+  - log_analysis
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-MON-003
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-INT-001
+  applicability: MEDIUM
+  capabilities:
+  - fim
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-CRY-001
+  applicability: MEDIUM
+  capabilities:
+  - sca
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-CRY-002
+  applicability: MEDIUM
+  capabilities:
+  - sca
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-NET-001
+  applicability: MEDIUM
+  capabilities:
+  - sca
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-AVL-001
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-AVL-002
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-RET-001
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-RET-002
+  applicability: MEDIUM
+  capabilities:
+  - fim
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-INC-001
+  applicability: HIGH
+  capabilities:
+  - log_analysis
+  - active_response
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-INC-002
+  applicability: MEDIUM
+  capabilities:
+  - log_analysis
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-INC-003
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-PRC-001
+  applicability: MEDIUM
+  capabilities:
+  - log_analysis
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-TRF-001
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.
+- requirement_id: REQ-EVD-001
+  applicability: MEDIUM
+  capabilities:
+  - agent_labels
+  status: DESIGN_REQUIRED
+  notes: Product-specific tests will be defined in WAZUH_TEST_CATALOGUE.yml.
+- requirement_id: REQ-EVD-002
+  applicability: LOW
+  capabilities: []
+  status: EXTERNAL_OR_MANUAL
+  notes: Primary implementation/evidence is expected outside Wazuh.

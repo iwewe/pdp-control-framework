@@ -1,0 +1,56 @@
+name: Validate PDP Framework
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  static-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Validate framework structure
+        run: python tools/validation/validate_structure.py
+
+      - name: Validate lab fixtures
+        run: python implementations/wazuh/tests/scripts/validate_fixtures.py
+
+
+      - name: Validate evidence example
+        run: |
+          mkdir -p implementations/wazuh/tests/results
+          cp examples/evidence.example.json implementations/wazuh/tests/results/example.evidence.json
+          python tools/validation/validate_evidence.py
+          rm implementations/wazuh/tests/results/example.evidence.json
+
+
+      - name: Validate finding example
+        run: |
+          python - <<'PY'
+          import json
+          from jsonschema import Draft202012Validator, FormatChecker
+          schema=json.load(open('framework/schemas/finding.schema.json'))
+          doc=json.load(open('examples/finding.example.json'))
+          Draft202012Validator(schema, format_checker=FormatChecker()).validate(doc)
+          print('finding example OK')
+          PY
+
+      - name: Validate index templates
+        run: |
+          python - <<'PY'
+          import json, glob
+          for path in glob.glob('implementations/wazuh/indexer/templates/*.json'):
+              json.load(open(path))
+              print(path, 'OK')
+          PY

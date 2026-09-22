@@ -1,0 +1,258 @@
+metadata:
+  framework: PDP Control Framework
+  version: 0.5.0-draft
+  purpose: Normalize security/privacy-relevant events independently from any SIEM product.
+  principle: An event category indicates technical/privacy relevance, not a legal conclusion.
+impact_dimensions:
+- CONFIDENTIALITY
+- INTEGRITY
+- AVAILABILITY
+- ACCOUNTABILITY
+event_categories:
+- id: PDP-EVT-AUTH-001
+  name: Repeated authentication failure
+  impact_dimensions:
+  - CONFIDENTIALITY
+  description: Repeated failed authentication that may indicate credential guessing, misuse, or unauthorized access attempts.
+  supports_controls:
+  - PDP-ACC-003
+  - PDP-INC-001
+  supports_requirements:
+  - REQ-MON-001
+  - REQ-INC-001
+  example_signals:
+  - multiple failed logins
+  - authentication failure burst
+  default_engineering_priority: MEDIUM
+- id: PDP-EVT-AUTH-002
+  name: Successful privileged authentication
+  impact_dimensions:
+  - CONFIDENTIALITY
+  - ACCOUNTABILITY
+  description: Successful authentication to a privileged or administrative context.
+  supports_controls:
+  - PDP-ACC-002
+  - PDP-ACC-003
+  supports_requirements:
+  - REQ-IAM-002
+  - REQ-MON-002
+  example_signals:
+  - root/admin login
+  - sudo elevation
+  - administrator session
+  default_engineering_priority: MEDIUM
+- id: PDP-EVT-AUTH-003
+  name: Dormant or disabled account activity
+  impact_dimensions:
+  - CONFIDENTIALITY
+  description: Activity associated with an account expected to be disabled, dormant, or retired.
+  supports_controls:
+  - PDP-ACC-003
+  - PDP-GOV-001
+  supports_requirements:
+  - REQ-IAM-003
+  - REQ-MON-001
+  example_signals:
+  - disabled account login attempt
+  - terminated account activity
+  default_engineering_priority: HIGH
+- id: PDP-EVT-PRIV-001
+  name: Privilege escalation
+  impact_dimensions:
+  - CONFIDENTIALITY
+  - INTEGRITY
+  description: Elevation of privileges that may alter the effective authorization boundary.
+  supports_controls:
+  - PDP-ACC-002
+  - PDP-ACC-003
+  - PDP-INC-001
+  supports_requirements:
+  - REQ-IAM-002
+  - REQ-MON-002
+  - REQ-INC-001
+  example_signals:
+  - sudo/su elevation
+  - Windows privilege assignment
+  - service privilege abuse
+  default_engineering_priority: HIGH
+- id: PDP-EVT-INT-001
+  name: Critical configuration change
+  impact_dimensions:
+  - INTEGRITY
+  - ACCOUNTABILITY
+  description: Change to a security-relevant configuration or protected file.
+  supports_controls:
+  - PDP-SEC-003
+  - PDP-INC-001
+  supports_requirements:
+  - REQ-CFG-002
+  - REQ-INT-001
+  example_signals:
+  - sshd_config changed
+  - firewall config changed
+  - audit policy changed
+  default_engineering_priority: HIGH
+- id: PDP-EVT-INT-002
+  name: Personal-data store modification anomaly
+  impact_dimensions:
+  - INTEGRITY
+  description: Unexpected or suspicious modification to a data store or path associated with Personal Data.
+  supports_controls:
+  - PDP-SEC-003
+  - PDP-INC-001
+  supports_requirements:
+  - REQ-INT-001
+  - REQ-INC-001
+  example_signals:
+  - unexpected bulk modification
+  - schema modification
+  - critical file modification
+  default_engineering_priority: HIGH
+- id: PDP-EVT-DEL-001
+  name: Deletion of protected data/path
+  impact_dimensions:
+  - INTEGRITY
+  - AVAILABILITY
+  description: Deletion of a monitored data object, backup, or protected directory.
+  supports_controls:
+  - PDP-RET-002
+  - PDP-RET-003
+  - PDP-INC-001
+  supports_requirements:
+  - REQ-RET-002
+  - REQ-INT-001
+  - REQ-INC-001
+  example_signals:
+  - file deletion
+  - backup deletion
+  - table/data deletion audit event
+  default_engineering_priority: HIGH
+  legal_note: Deletion may be legitimate retention execution or a security incident; context is required.
+- id: PDP-EVT-MAL-001
+  name: Malware on PDP asset
+  impact_dimensions:
+  - CONFIDENTIALITY
+  - INTEGRITY
+  - AVAILABILITY
+  description: Malware or malicious-code indication on an asset supporting Personal Data processing.
+  supports_controls:
+  - PDP-SEC-001
+  - PDP-INC-001
+  supports_requirements:
+  - REQ-INC-001
+  example_signals:
+  - malware alert
+  - YARA match
+  - suspicious binary
+  default_engineering_priority: HIGH
+- id: PDP-EVT-EXF-001
+  name: Potential data exfiltration
+  impact_dimensions:
+  - CONFIDENTIALITY
+  description: Technical indicators suggesting possible unauthorized extraction or transfer of data.
+  supports_controls:
+  - PDP-ACC-001
+  - PDP-ACC-003
+  - PDP-INC-001
+  - PDP-INC-002
+  supports_requirements:
+  - abnormal bulk export
+  - large outbound transfer
+  - archive creation followed by outbound connection
+  example_signals: CRITICAL
+  default_engineering_priority: Potential exfiltration is not automatically a legally confirmed Personal Data breach.
+- id: PDP-EVT-VUL-001
+  name: Critical vulnerability exposure
+  impact_dimensions:
+  - CONFIDENTIALITY
+  - INTEGRITY
+  - AVAILABILITY
+  description: A high-impact vulnerability is present on an in-scope asset.
+  supports_controls:
+  - PDP-SEC-001
+  - PDP-SEC-002
+  supports_requirements:
+  - REQ-VUL-001
+  - REQ-VUL-002
+  example_signals:
+  - critical CVE on production asset
+  - known exploited vulnerability
+  default_engineering_priority: HIGH
+- id: PDP-EVT-LOG-001
+  name: Security logging disabled
+  impact_dimensions:
+  - ACCOUNTABILITY
+  description: Security or audit logging is disabled or materially reduced.
+  supports_controls:
+  - PDP-LOG-001
+  - PDP-GOV-001
+  supports_requirements:
+  - REQ-LOG-001
+  - REQ-LOG-003
+  example_signals:
+  - audit service stopped
+  - logging configuration disabled
+  default_engineering_priority: HIGH
+- id: PDP-EVT-TEL-001
+  name: Telemetry source unavailable
+  impact_dimensions:
+  - ACCOUNTABILITY
+  description: Expected telemetry source is unavailable beyond the defined freshness window.
+  supports_controls:
+  - PDP-LOG-001
+  - PDP-GOV-001
+  - PDP-INC-001
+  supports_requirements:
+  - REQ-MON-003
+  - REQ-EVD-002
+  example_signals:
+  - agent disconnected
+  - collector stale
+  - last_seen threshold exceeded
+  default_engineering_priority: HIGH
+  legal_note: Absence of telemetry must not be interpreted as absence of incidents.
+- id: PDP-EVT-TIME-001
+  name: Time synchronization failure
+  impact_dimensions:
+  - ACCOUNTABILITY
+  description: System time is materially unsynchronized or trusted time configuration is unavailable.
+  supports_controls:
+  - PDP-LOG-001
+  - PDP-INC-002
+  supports_requirements:
+  - REQ-LOG-002
+  example_signals:
+  - NTP service stopped
+  - clock drift
+  - time source misconfigured
+  default_engineering_priority: MEDIUM
+- id: PDP-EVT-NET-001
+  name: Unexpected externally reachable service
+  impact_dimensions:
+  - CONFIDENTIALITY
+  description: A service on a PDP asset is reachable beyond the intended network boundary.
+  supports_controls:
+  - PDP-ACC-003
+  - PDP-SEC-001
+  supports_requirements:
+  - REQ-NET-001
+  example_signals:
+  - new listening service
+  - firewall rule exposure
+  - unexpected bind address
+  default_engineering_priority: HIGH
+- id: PDP-EVT-REC-001
+  name: Backup/recovery failure
+  impact_dimensions:
+  - AVAILABILITY
+  description: Backup or recovery control fails on an in-scope Personal Data asset.
+  supports_controls:
+  - PDP-SEC-002
+  - PDP-INC-004
+  supports_requirements:
+  - REQ-AVL-001
+  - REQ-AVL-002
+  example_signals:
+  - backup job failure
+  - restore test failure
+  default_engineering_priority: HIGH

@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.9",
+  "finding_id": "FIND-example-001",
+  "control_id": "PDP-ACC-003",
+  "scope": {
+    "processing_activity_id": "PA-LAB-001",
+    "asset_ids": [
+      "ASSET-DB-LAB-001"
+    ]
+  },
+  "status": "OPEN",
+  "severity": "HIGH",
+  "statement": "Control PDP-ACC-003 failed for the assessed scope.",
+  "evidence": [
+    "EV-example-pg-role-001"
+  ],
+  "assessment_id": "ASM-example-001",
+  "remediation_id": null,
+  "exception_id": null,
+  "created_at": "2026-09-22T07:00:00Z",
+  "updated_at": null,
+  "owner": "Infrastructure Team",
+  "risk_owner": null,
+  "legal_review_state": "NOT_REVIEWED",
+  "notes": "Engineering example only."
+}

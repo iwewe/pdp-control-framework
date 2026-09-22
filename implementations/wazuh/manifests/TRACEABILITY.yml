@@ -1,0 +1,174 @@
+metadata:
+  framework_version: 0.7.0-draft
+  implementation_profile: wazuh
+  status: LAB_VALIDATION_REQUIRED
+  purpose: Trace implementation artifacts to Wazuh tests, generic requirements, PDP controls, and legal requirements.
+artifacts:
+- path: implementations/wazuh/sca/pdp_linux_baseline.yml
+  type: wazuh_sca_policy
+  tests:
+  - WZ-SCA-IAM-001
+  - WZ-SCA-IAM-002
+  - WZ-SCA-LOG-001
+  - WZ-SCA-TIME-001
+  - WZ-SCA-NET-001
+  - WZ-HLT-EVD-001
+  requirements:
+  - REQ-IAM-001
+  - REQ-IAM-002
+  - REQ-LOG-001
+  - REQ-LOG-002
+  - REQ-NET-001
+  - REQ-MON-003
+  - REQ-EVD-002
+  controls:
+  - PDP-ACC-001
+  - PDP-ACC-003
+  - PDP-LOG-001
+  - PDP-GOV-001
+  - PDP-INC-002
+  - PDP-SEC-001
+  - PDP-INC-001
+  legal_requirements:
+  - LR-031-01
+  - LR-035-01
+  - LR-036-01
+  - LR-038-01
+  - LR-039-01
+  - LR-046-02
+  - LR-047-01
+- path: implementations/wazuh/rules/pdp_authentication.xml
+  type: wazuh_custom_rules
+  tests:
+  - WZ-RUL-AUTH-001
+  - WZ-RUL-AUTH-002
+  requirements:
+  - REQ-MON-001
+  - REQ-INC-001
+  - REQ-LOG-001
+  controls:
+  - PDP-ACC-003
+  - PDP-INC-001
+  - PDP-LOG-001
+  legal_requirements:
+  - LR-031-01
+  - LR-039-01
+  - LR-046-01
+- path: implementations/wazuh/rules/pdp_privileged_access.xml
+  type: wazuh_custom_rules
+  tests:
+  - WZ-RUL-PRIV-001
+  requirements:
+  - REQ-IAM-002
+  - REQ-MON-002
+  controls:
+  - PDP-ACC-002
+  - PDP-ACC-003
+  legal_requirements:
+  - LR-037-01
+  - LR-039-01
+- path: implementations/wazuh/rules/pdp_fim.xml
+  type: wazuh_custom_rules
+  tests:
+  - WZ-FIM-INT-001
+  - WZ-FIM-INT-002
+  - WZ-FIM-RET-001
+  requirements:
+  - REQ-INT-001
+  - REQ-CFG-002
+  - REQ-RET-002
+  controls:
+  - PDP-SEC-003
+  - PDP-RET-002
+  - PDP-RET-003
+  - PDP-INC-001
+  legal_requirements:
+  - LR-038-01
+  - LR-043-01
+  - LR-044-01
+  - LR-046-01
+- path: implementations/wazuh/rules/pdp_telemetry_health.xml
+  type: wazuh_custom_rules
+  tests:
+  - WZ-HLT-EVD-001
+  - WZ-HLT-LOG-001
+  requirements:
+  - REQ-MON-003
+  - REQ-EVD-002
+  - REQ-LOG-003
+  controls:
+  - PDP-GOV-001
+  - PDP-LOG-001
+  - PDP-INC-001
+  legal_requirements:
+  - LR-031-01
+  - LR-046-01
+  - LR-047-01
+- path: implementations/wazuh/decoders/pdp_pgaudit.xml
+  type: wazuh_custom_decoder
+  tests:
+  - WZ-RUL-PG-001
+  - WZ-RUL-PG-002
+  - WZ-RUL-PG-003
+  - WZ-RUL-PG-004
+  - WZ-RUL-PG-005
+  requirements:
+  - REQ-LOG-001
+  - REQ-MON-002
+  - REQ-INC-001
+  controls:
+  - PDP-LOG-001
+  - PDP-ACC-002
+  - PDP-INC-001
+  legal_requirements:
+  - LR-031-01
+  - LR-037-01
+  - LR-046-01
+- path: implementations/wazuh/rules/pdp_postgresql.xml
+  type: wazuh_custom_rules
+  tests:
+  - WZ-RUL-PG-001
+  - WZ-RUL-PG-002
+  - WZ-RUL-PG-003
+  - WZ-RUL-PG-004
+  - WZ-RUL-PG-005
+  requirements:
+  - REQ-LOG-001
+  - REQ-MON-002
+  - REQ-INC-001
+  controls:
+  - PDP-LOG-001
+  - PDP-ACC-002
+  - PDP-SEC-003
+  - PDP-INC-001
+  legal_requirements:
+  - LR-031-01
+  - LR-037-01
+  - LR-038-01
+  - LR-046-01
+- path: implementations/wazuh/postgresql/POSTGRESQL_AUDIT_PROFILE.yml
+  type: database_audit_profile
+  tests:
+  - WZ-RUL-PG-001
+  - WZ-RUL-PG-002
+  - WZ-RUL-PG-003
+  - WZ-RUL-PG-004
+  - WZ-RUL-PG-005
+  requirements:
+  - REQ-LOG-001
+  - REQ-MON-001
+  - REQ-MON-002
+  - REQ-INC-001
+  - REQ-EVD-001
+  controls:
+  - PDP-LOG-001
+  - PDP-ACC-002
+  - PDP-ACC-003
+  - PDP-INC-001
+  - PDP-INC-002
+  legal_requirements:
+  - LR-031-01
+  - LR-037-01
+  - LR-039-01
+  - LR-046-01
+  - LR-046-02

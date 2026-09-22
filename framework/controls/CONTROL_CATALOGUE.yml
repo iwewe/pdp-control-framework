@@ -1,0 +1,893 @@
+framework:
+  name: PDP Control Framework
+  version: 0.1.0-draft
+  jurisdiction: Indonesia
+  primary_legal_source: UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi
+  assessment_methods:
+  - AUTOMATED
+  - PARTIAL
+  - MANUAL
+  assessment_results:
+  - PASS
+  - FAIL
+  - REVIEW
+  - NOT_APPLICABLE
+controls:
+- id: PDP-LAW-001
+  title:
+    id: Dasar pemrosesan yang sah
+    en: Lawful basis for processing
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 20
+    paragraph: 1
+  objective:
+    id: Setiap aktivitas pemrosesan Data Pribadi memiliki dasar pemrosesan yang terdokumentasi.
+    en: Each Personal Data processing activity has a documented lawful basis.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - register_of_processing
+    - lawful_basis_record
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+- id: PDP-LAW-002
+  title:
+    id: Pembatasan tujuan pemrosesan
+    en: Purpose limitation
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 27
+  - instrument: UU-27-2022
+    article: 28
+  objective:
+    id: Pemrosesan dilakukan secara terbatas, spesifik, sah, transparan, dan sesuai tujuan yang telah
+      ditetapkan.
+    en: Processing is limited, specific, lawful, transparent, and consistent with its defined purpose.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - processing_purpose
+    - privacy_notice
+    operational:
+    - processing_review
+  implementation_profiles:
+    wazuh:
+      applicability: LOW
+      capabilities:
+      - log-analysis
+- id: PDP-CNS-001
+  title:
+    id: Informasi sebelum persetujuan
+    en: Pre-consent information
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 21
+    paragraph: 1
+  objective:
+    id: Informasi wajib tentang pemrosesan tersedia kepada Subjek Data sebelum persetujuan digunakan sebagai
+      dasar pemrosesan.
+    en: Required processing information is provided before consent is relied upon.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - privacy_notice
+    - consent_notice
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+- id: PDP-CNS-002
+  title:
+    id: Persetujuan dapat dibuktikan
+    en: Demonstrable consent
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 22
+  - instrument: UU-27-2022
+    article: 24
+  objective:
+    id: Persetujuan dicatat dalam bentuk yang sah dan bukti persetujuan dapat ditunjukkan.
+    en: Consent is recorded in a valid form and evidence of consent can be demonstrated.
+  assessment_method: PARTIAL
+  evidence:
+    documentary:
+    - consent_record
+    technical:
+    - consent_audit_log
+  implementation_profiles:
+    wazuh:
+      applicability: LOW
+      capabilities:
+      - log-analysis
+- id: PDP-CNS-003
+  title:
+    id: Persetujuan khusus data anak
+    en: Child data consent
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 25
+  objective:
+    id: Pemrosesan Data Pribadi anak mengikuti mekanisme khusus dan persetujuan orang tua/wali yang dipersyaratkan.
+    en: Processing of children's Personal Data follows required special handling and parental/guardian
+      consent.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - guardian_consent
+    - age_processing_procedure
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+- id: PDP-CNS-004
+  title:
+    id: Pemrosesan data penyandang disabilitas
+    en: Processing data of persons with disabilities
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 26
+  objective:
+    id: Pemrosesan menyediakan mekanisme komunikasi dan persetujuan yang sesuai bagi penyandang disabilitas.
+    en: Processing provides appropriate communication and consent mechanisms for persons with disabilities.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - accessible_consent_procedure
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+- id: PDP-DATA-001
+  title:
+    id: Akurasi, kelengkapan, dan konsistensi
+    en: Accuracy, completeness and consistency
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 29
+  objective:
+    id: Data Pribadi diverifikasi dan dipelihara agar akurat, lengkap, dan konsisten.
+    en: Personal Data is verified and maintained for accuracy, completeness, and consistency.
+  assessment_method: PARTIAL
+  evidence:
+    documentary:
+    - data_quality_procedure
+    operational:
+    - verification_record
+  implementation_profiles:
+    wazuh:
+      applicability: LOW
+      capabilities:
+      - log-analysis
+- id: PDP-RGT-001
+  title:
+    id: Perbaikan dan pembaruan tepat waktu
+    en: Timely correction and update
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 30
+  objective:
+    id: Permintaan pembaruan/perbaikan diproses dalam batas waktu hukum dan hasilnya diberitahukan kepada
+      Subjek Data.
+    en: Correction/update requests are completed within the legal timeframe and the result is communicated
+      to the data subject.
+  assessment_method: PARTIAL
+  evidence:
+    operational:
+    - request_timestamp
+    - completion_timestamp
+    - notification_record
+  implementation_profiles:
+    wazuh:
+      applicability: LOW
+      capabilities:
+      - log-analysis
+- id: PDP-LOG-001
+  title:
+    id: Perekaman kegiatan pemrosesan
+    en: Recording of processing activities
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 31
+  objective:
+    id: Kegiatan pemrosesan Data Pribadi memiliki rekaman yang memadai untuk penelusuran dan pertanggungjawaban.
+    en: Personal Data processing activities are sufficiently recorded for traceability and accountability.
+  assessment_method: PARTIAL
+  evidence:
+    documentary:
+    - processing_register
+    technical:
+    - application_logs
+    - database_audit_logs
+    - system_logs
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - log-analysis
+      - fim
+- id: PDP-RGT-002
+  title:
+    id: Akses dan rekam jejak pemrosesan
+    en: Access and processing history
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 32
+  objective:
+    id: Subjek Data dapat memperoleh akses terhadap Data Pribadi dan rekam jejak pemrosesan sesuai ketentuan
+      yang berlaku.
+    en: Data subjects can access their Personal Data and processing history as required.
+  assessment_method: MANUAL
+  evidence:
+    operational:
+    - subject_access_request
+    - response_record
+  implementation_profiles:
+    wazuh:
+      applicability: LOW
+      capabilities:
+      - log-analysis
+- id: PDP-DPIA-001
+  title:
+    id: Identifikasi pemrosesan berisiko tinggi
+    en: High-risk processing identification
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 34
+    paragraph: 1
+  objective:
+    id: Organisasi memiliki proses untuk menentukan apakah pemrosesan berpotensi berisiko tinggi bagi
+      Subjek Data.
+    en: The organization has a process to determine whether processing may pose high risk to data subjects.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - risk_screening
+    - processing_inventory
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+- id: PDP-DPIA-002
+  title:
+    id: Penilaian dampak pelindungan data
+    en: Data protection impact assessment
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 34
+  objective:
+    id: Pemrosesan berisiko tinggi menjalani penilaian dampak dan mitigasi risiko yang terdokumentasi.
+    en: High-risk processing undergoes a documented impact assessment and risk mitigation process.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - dpia
+    - risk_treatment_plan
+    technical:
+    - vulnerability_findings
+    - security_events
+  implementation_profiles:
+    wazuh:
+      applicability: MEDIUM
+      capabilities:
+      - vulnerability-detection
+      - sca
+      - log-analysis
+- id: PDP-SEC-001
+  title:
+    id: Langkah teknis dan operasional
+    en: Technical and operational safeguards
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 35
+    paragraph: 1
+  objective:
+    id: Langkah teknis dan operasional disusun dan diterapkan untuk melindungi Data Pribadi.
+    en: Technical and operational measures are established and implemented to protect Personal Data.
+  assessment_method: PARTIAL
+  evidence:
+    documentary:
+    - security_standard
+    technical:
+    - secure_configuration
+    - security_events
+    - vulnerability_findings
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - sca
+      - vulnerability-detection
+      - log-analysis
+      - fim
+- id: PDP-SEC-002
+  title:
+    id: Keamanan berbasis sifat dan risiko data
+    en: Risk-based security level
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 35
+    paragraph: 2
+  objective:
+    id: Tingkat keamanan ditentukan berdasarkan sifat dan risiko Data Pribadi yang diproses.
+    en: Security levels are determined according to the nature and risk of the Personal Data processed.
+  assessment_method: PARTIAL
+  evidence:
+    documentary:
+    - data_classification
+    - risk_assessment
+    technical:
+    - asset_profile
+    - security_configuration
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - agent-groups
+      - sca
+      - log-analysis
+- id: PDP-ACC-001
+  title:
+    id: Kerahasiaan Data Pribadi
+    en: Personal Data confidentiality
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 36
+  objective:
+    id: Kontrol mencegah pengungkapan atau penggunaan Data Pribadi oleh pihak yang tidak berwenang.
+    en: Controls prevent unauthorized disclosure or use of Personal Data.
+  assessment_method: PARTIAL
+  evidence:
+    technical:
+    - authentication_logs
+    - access_logs
+    - privileged_activity
+    - encryption_configuration
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - log-analysis
+      - sca
+      - fim
+- id: PDP-ACC-002
+  title:
+    id: Pengawasan pihak yang terlibat
+    en: Supervision of involved parties
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 37
+  objective:
+    id: Aktivitas pihak yang terlibat dalam pemrosesan di bawah kendali organisasi dapat diawasi dan ditelusuri.
+    en: Activities of parties involved in processing under the organization's control can be supervised
+      and traced.
+  assessment_method: PARTIAL
+  evidence:
+    organizational:
+    - role_assignment
+    technical:
+    - user_activity_logs
+    - privileged_activity
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - log-analysis
+- id: PDP-SEC-003
+  title:
+    id: Perlindungan dari pemrosesan tidak sah
+    en: Protection against unlawful processing
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 38
+  objective:
+    id: Sistem dan proses memiliki kontrol untuk mencegah serta mendeteksi pemrosesan Data Pribadi yang
+      tidak sah.
+    en: Systems and processes include controls to prevent and detect unlawful Personal Data processing.
+  assessment_method: PARTIAL
+  evidence:
+    technical:
+    - security_events
+    - application_logs
+    - database_audit_logs
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - log-analysis
+      - fim
+- id: PDP-ACC-003
+  title:
+    id: Pencegahan akses tidak sah
+    en: Prevention of unauthorized access
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 39
+  objective:
+    id: Sistem yang memproses Data Pribadi menerapkan kontrol keamanan untuk mencegah akses tidak sah.
+    en: Systems processing Personal Data implement security controls to prevent unauthorized access.
+  assessment_method: PARTIAL
+  evidence:
+    technical:
+    - authentication_configuration
+    - authentication_logs
+    - privileged_access_logs
+    - security_alerts
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - sca
+      - log-analysis
+      - active-response
+- id: PDP-RGT-003
+  title:
+    id: Penghentian setelah penarikan persetujuan
+    en: Processing cessation after consent withdrawal
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 40
+  objective:
+    id: Pemrosesan yang bergantung pada persetujuan dihentikan sesuai batas waktu setelah persetujuan
+      ditarik.
+    en: Processing that relies on consent is stopped within the required timeframe after consent withdrawal.
+  assessment_method: PARTIAL
+  evidence:
+    operational:
+    - withdrawal_request
+    - processing_stop_record
+    - timestamp_evidence
+  implementation_profiles:
+    wazuh:
+      applicability: LOW
+      capabilities:
+      - log-analysis
+- id: PDP-RGT-004
+  title:
+    id: Penundaan dan pembatasan pemrosesan
+    en: Restriction and suspension of processing
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 41
+  objective:
+    id: Permintaan penundaan/pembatasan pemrosesan dilaksanakan dan diberitahukan sesuai ketentuan.
+    en: Requests to suspend/restrict processing are executed and communicated as required.
+  assessment_method: MANUAL
+  evidence:
+    operational:
+    - restriction_request
+    - restriction_record
+    - notification_record
+  implementation_profiles:
+    wazuh:
+      applicability: LOW
+      capabilities:
+      - log-analysis
+- id: PDP-RET-001
+  title:
+    id: Pengakhiran pemrosesan
+    en: Termination of processing
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 42
+  objective:
+    id: Pemrosesan diakhiri ketika masa retensi berakhir, tujuan tercapai, atau kondisi hukum lain terpenuhi.
+    en: Processing ends when retention expires, the purpose is achieved, or another legal condition applies.
+  assessment_method: PARTIAL
+  evidence:
+    documentary:
+    - retention_schedule
+    operational:
+    - processing_termination_record
+  implementation_profiles:
+    wazuh:
+      applicability: MEDIUM
+      capabilities:
+      - log-analysis
+      - fim
+- id: PDP-RET-002
+  title:
+    id: Penghapusan Data Pribadi
+    en: Deletion of Personal Data
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 43
+  objective:
+    id: Data Pribadi dihapus ketika kondisi penghapusan yang berlaku terpenuhi.
+    en: Personal Data is deleted when applicable deletion conditions are met.
+  assessment_method: PARTIAL
+  evidence:
+    documentary:
+    - deletion_policy
+    operational:
+    - deletion_record
+    technical:
+    - file_change_events
+    - database_audit_logs
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - fim
+      - log-analysis
+- id: PDP-RET-003
+  title:
+    id: Pemusnahan Data Pribadi
+    en: Destruction of Personal Data
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 44
+  objective:
+    id: Data Pribadi dimusnahkan sehingga tidak lagi dapat digunakan untuk mengidentifikasi Subjek Data
+      sesuai kondisi hukum yang berlaku.
+    en: Personal Data is destroyed so it can no longer identify the data subject when legally required.
+  assessment_method: PARTIAL
+  evidence:
+    documentary:
+    - destruction_procedure
+    operational:
+    - destruction_record
+  implementation_profiles:
+    wazuh:
+      applicability: MEDIUM
+      capabilities:
+      - fim
+      - log-analysis
+- id: PDP-RET-004
+  title:
+    id: Pemberitahuan penghapusan/pemusnahan
+    en: Deletion/destruction notification
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 45
+  objective:
+    id: Penghapusan atau pemusnahan yang diwajibkan disertai pemberitahuan kepada Subjek Data.
+    en: Required deletion or destruction is accompanied by notification to the data subject.
+  assessment_method: MANUAL
+  evidence:
+    operational:
+    - notification_record
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+- id: PDP-INC-001
+  title:
+    id: Deteksi kegagalan pelindungan
+    en: Personal Data breach detection
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 46
+  objective:
+    id: Organisasi memiliki kemampuan mendeteksi indikasi kegagalan Pelindungan Data Pribadi.
+    en: The organization has capability to detect indications of Personal Data protection failures.
+  assessment_method: PARTIAL
+  evidence:
+    technical:
+    - security_alerts
+    - fim_events
+    - authentication_events
+    - network_or_application_events
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - log-analysis
+      - fim
+      - vulnerability-detection
+- id: PDP-INC-002
+  title:
+    id: Pencatatan waktu dan ruang lingkup insiden
+    en: Incident timing and scope evidence
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 46
+    paragraph: 2
+  objective:
+    id: Insiden memiliki evidence yang memadai untuk menentukan data yang terdampak serta kapan dan bagaimana
+      pengungkapan terjadi.
+    en: Incidents contain sufficient evidence to determine affected data and when/how exposure occurred.
+  assessment_method: PARTIAL
+  evidence:
+    technical:
+    - event_timestamps
+    - audit_logs
+    - security_alerts
+    operational:
+    - incident_record
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - log-analysis
+      - fim
+- id: PDP-INC-003
+  title:
+    id: Pemberitahuan kegagalan pelindungan
+    en: Breach notification
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 46
+    paragraph: 1
+  objective:
+    id: Kegagalan Pelindungan Data Pribadi yang memenuhi kriteria pemberitahuan ditangani dalam batas
+      waktu hukum.
+    en: Qualifying Personal Data protection failures are handled within the legal notification timeframe.
+  assessment_method: MANUAL
+  evidence:
+    operational:
+    - incident_start_time
+    - notification_record
+    - notification_timestamp
+  implementation_profiles:
+    wazuh:
+      applicability: MEDIUM
+      capabilities:
+      - log-analysis
+  notes: Wazuh may provide detection timestamps and evidence but must not determine the legal notification
+    obligation by itself.
+- id: PDP-INC-004
+  title:
+    id: Evidence penanganan dan pemulihan
+    en: Containment and recovery evidence
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 46
+    paragraph: 2
+  objective:
+    id: Upaya penanganan dan pemulihan insiden didokumentasikan dan dapat ditelusuri.
+    en: Incident containment and recovery actions are documented and traceable.
+  assessment_method: PARTIAL
+  evidence:
+    operational:
+    - containment_record
+    - recovery_record
+    technical:
+    - response_events
+  implementation_profiles:
+    wazuh:
+      applicability: HIGH
+      capabilities:
+      - log-analysis
+      - active-response
+- id: PDP-GOV-001
+  title:
+    id: Pertanggungjawaban pemrosesan
+    en: Processing accountability
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 47
+  objective:
+    id: Organisasi dapat menunjukkan pertanggungjawaban atas pelaksanaan prinsip Pelindungan Data Pribadi.
+    en: The organization can demonstrate accountability for implementing Personal Data Protection principles.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - policies
+    - control_assessments
+    - processing_register
+    technical:
+    - security_evidence
+  implementation_profiles:
+    wazuh:
+      applicability: MEDIUM
+      capabilities:
+      - sca
+      - log-analysis
+      - fim
+      - vulnerability-detection
+- id: PDP-PRC-001
+  title:
+    id: Pemrosesan berdasarkan instruksi pengendali
+    en: Processing under controller instruction
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 51
+    paragraph: 1
+  objective:
+    id: Prosesor memproses Data Pribadi berdasarkan instruksi Pengendali.
+    en: Processors process Personal Data according to controller instructions.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - processor_agreement
+    - processing_instruction
+  implementation_profiles:
+    wazuh:
+      applicability: LOW
+      capabilities:
+      - log-analysis
+- id: PDP-PRC-002
+  title:
+    id: Persetujuan subprosesor
+    en: Subprocessor authorization
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 51
+    paragraph: 5
+  objective:
+    id: Keterlibatan subprosesor mendapatkan persetujuan tertulis yang dipersyaratkan.
+    en: Engagement of subprocessors receives the required written controller authorization.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - subprocessor_authorization
+    - processor_register
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+- id: PDP-PRC-003
+  title:
+    id: Batas instruksi dan tujuan prosesor
+    en: Processor instruction and purpose boundary
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 51
+    paragraph: 6
+  objective:
+    id: Pemrosesan oleh prosesor dapat dievaluasi terhadap instruksi dan tujuan yang ditetapkan Pengendali.
+    en: Processor activity can be evaluated against controller instructions and defined purposes.
+  assessment_method: PARTIAL
+  evidence:
+    documentary:
+    - processing_instruction
+    technical:
+    - processor_activity_logs
+  implementation_profiles:
+    wazuh:
+      applicability: MEDIUM
+      capabilities:
+      - log-analysis
+- id: PDP-DPO-001
+  title:
+    id: Penilaian kewajiban fungsi PDP
+    en: PDP function applicability assessment
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 53
+    paragraph: 1
+  - instrument: MK-151-PUU-XXII-2024
+    decision_date: '2025-07-30'
+  objective:
+    id: Organisasi menilai dan mendokumentasikan apakah wajib menunjuk pejabat/petugas fungsi Pelindungan
+      Data Pribadi.
+    en: The organization assesses and documents whether appointment of a Personal Data Protection function
+      is required.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - dpo_applicability_assessment
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+  notes: Article 53(1) must be read together with Constitutional Court Decision 151/PUU-XXII/2024.
+- id: PDP-DPO-002
+  title:
+    id: Kompetensi pejabat/petugas PDP
+    en: PDP officer competence
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 53
+    paragraph: 2
+  objective:
+    id: Pejabat/petugas fungsi PDP memiliki profesionalitas, pengetahuan, dan kemampuan yang sesuai.
+    en: The PDP officer/function has appropriate professionalism, knowledge, and capability.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - appointment_record
+    - competence_evidence
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+- id: PDP-DPO-003
+  title:
+    id: Pemantauan kepatuhan oleh fungsi PDP
+    en: Compliance monitoring by PDP function
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 54
+    paragraph: 1
+  objective:
+    id: Fungsi PDP melaksanakan tugas pemberian saran, pemantauan kepatuhan, dan fungsi lain yang dipersyaratkan.
+    en: The PDP function performs advisory, compliance-monitoring, and other required duties.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - dpo_workplan
+    - compliance_review
+    operational:
+    - advisory_record
+  implementation_profiles:
+    wazuh:
+      applicability: MEDIUM
+      capabilities:
+      - dashboard
+      - log-analysis
+- id: PDP-TRF-001
+  title:
+    id: Pelindungan pada transfer domestik
+    en: Protection in domestic transfers
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 55
+    paragraph: 2
+  objective:
+    id: Pihak pengirim dan penerima transfer domestik menerapkan Pelindungan Data Pribadi.
+    en: Sending and receiving parties in domestic transfers implement Personal Data Protection.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - data_transfer_agreement
+    - recipient_due_diligence
+  implementation_profiles:
+    wazuh:
+      applicability: LOW
+      capabilities:
+      - log-analysis
+- id: PDP-TRF-002
+  title:
+    id: Penilaian transfer lintas batas
+    en: Cross-border transfer assessment
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 56
+    paragraph: 2
+  objective:
+    id: Transfer lintas batas didahului penilaian tingkat Pelindungan Data Pribadi negara/organisasi penerima.
+    en: Cross-border transfer is preceded by assessment of the recipient jurisdiction/organization's protection
+      level.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - transfer_assessment
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+- id: PDP-TRF-003
+  title:
+    id: Safeguard yang memadai dan mengikat
+    en: Adequate and binding safeguards
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 56
+    paragraph: 3
+  objective:
+    id: Jika tingkat pelindungan setara/lebih tinggi tidak terpenuhi, tersedia pelindungan yang memadai
+      dan mengikat.
+    en: Where equivalent or higher protection is not established, adequate and binding safeguards are
+      in place.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - binding_safeguards
+    - transfer_agreement
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []
+- id: PDP-TRF-004
+  title:
+    id: Persetujuan untuk transfer lintas batas
+    en: Consent for cross-border transfer
+  legal_basis:
+  - instrument: UU-27-2022
+    article: 56
+    paragraph: 4
+  objective:
+    id: Jika dasar safeguard sebelumnya tidak terpenuhi, persetujuan Subjek Data diperoleh sesuai ketentuan.
+    en: Where preceding safeguards are unavailable, data-subject consent is obtained as required.
+  assessment_method: MANUAL
+  evidence:
+    documentary:
+    - transfer_consent_record
+  implementation_profiles:
+    wazuh:
+      applicability: NONE
+      capabilities: []

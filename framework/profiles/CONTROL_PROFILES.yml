@@ -1,0 +1,165 @@
+metadata:
+  framework: PDP Control Framework
+  version: 0.5.0-draft
+  purpose: Reusable applicability profiles that activate control requirements for common PDP processing contexts.
+  important: Profiles are engineering baselines. They do not replace legal applicability analysis.
+profiles:
+- id: PDP-PROFILE-BASELINE
+  name: PDP Technical Baseline
+  purpose: Minimum technical and evidence baseline for assets supporting Personal Data processing.
+  applicability_triggers:
+  - asset supports an active Processing Activity
+  - asset processes, stores, transmits, or secures Personal Data
+  required_requirements:
+  - REQ-GOV-001
+  - REQ-INV-001
+  - REQ-INV-002
+  - REQ-IAM-001
+  - REQ-IAM-002
+  - REQ-IAM-003
+  - REQ-CFG-001
+  - REQ-CFG-002
+  - REQ-VUL-001
+  - REQ-VUL-002
+  - REQ-LOG-001
+  - REQ-LOG-002
+  - REQ-LOG-003
+  - REQ-MON-001
+  - REQ-MON-002
+  - REQ-MON-003
+  - REQ-INT-001
+  - REQ-NET-001
+  - REQ-INC-001
+  - REQ-INC-002
+  - REQ-EVD-001
+  - REQ-EVD-002
+  conditional_requirements:
+  - REQ-CRY-001
+  - REQ-CRY-002
+  - REQ-AVL-001
+  - REQ-AVL-002
+  - REQ-RET-001
+  - REQ-RET-002
+- id: PDP-PROFILE-HIGH-RISK
+  name: High-Risk Processing
+  purpose: Additional controls for processing classified as high risk or requiring enhanced safeguards.
+  applicability_triggers:
+  - processing activity risk.classification = high/critical
+  - DPIA applicability = applicable/review_required
+  - large-scale or systematic monitoring
+  - specific Personal Data with material impact potential
+  required_requirements:
+  - REQ-GOV-001
+  - REQ-INV-001
+  - REQ-INV-002
+  - REQ-IAM-001
+  - REQ-IAM-002
+  - REQ-IAM-003
+  - REQ-CFG-001
+  - REQ-CFG-002
+  - REQ-VUL-001
+  - REQ-VUL-002
+  - REQ-LOG-001
+  - REQ-LOG-002
+  - REQ-LOG-003
+  - REQ-MON-001
+  - REQ-MON-002
+  - REQ-MON-003
+  - REQ-INT-001
+  - REQ-NET-001
+  - REQ-INC-001
+  - REQ-INC-002
+  - REQ-EVD-001
+  - REQ-EVD-002
+  - REQ-CRY-001
+  - REQ-CRY-002
+  - REQ-AVL-001
+  - REQ-AVL-002
+  - REQ-INC-003
+  - REQ-RET-001
+  - REQ-RET-002
+  notes: This profile does not itself determine whether Article 34 legally requires a DPIA.
+- id: PDP-PROFILE-DATABASE
+  name: Personal Data Database
+  purpose: Technical profile for database systems storing or processing Personal Data.
+  applicability_triggers:
+  - asset_type = database_server
+  - asset is linked to a Personal Data Processing Activity
+  required_requirements:
+  - REQ-INV-002
+  - REQ-IAM-001
+  - REQ-IAM-002
+  - REQ-IAM-003
+  - REQ-CFG-001
+  - REQ-CFG-002
+  - REQ-VUL-001
+  - REQ-VUL-002
+  - REQ-LOG-001
+  - REQ-LOG-002
+  - REQ-LOG-003
+  - REQ-MON-001
+  - REQ-MON-002
+  - REQ-MON-003
+  - REQ-INT-001
+  - REQ-CRY-001
+  - REQ-CRY-002
+  - REQ-NET-001
+  - REQ-AVL-001
+  - REQ-AVL-002
+  - REQ-INC-001
+  - REQ-INC-002
+  - REQ-EVD-001
+  - REQ-EVD-002
+  conditional_requirements:
+  - REQ-RET-002
+- id: PDP-PROFILE-PROCESSOR
+  name: Processor-Managed Processing
+  purpose: Profile for processing activities where a processor or subprocessor operates relevant systems.
+  applicability_triggers:
+  - organization_role.processor = true
+  - external processor has technical custody of relevant processing
+  required_requirements:
+  - REQ-INV-001
+  - REQ-INV-002
+  - REQ-PRC-001
+  - REQ-LOG-001
+  - REQ-LOG-003
+  - REQ-INC-001
+  - REQ-INC-002
+  - REQ-EVD-001
+  - REQ-EVD-002
+  conditional_requirements:
+  - REQ-TRF-001
+  - REQ-INC-003
+- id: PDP-PROFILE-SECURITY-MONITORING
+  name: Security Monitoring Platform
+  purpose: Profile for SIEM/SOC/security-monitoring systems because they themselves process user, endpoint, and activity
+    metadata.
+  applicability_triggers:
+  - asset_type = security_device/platform
+  - processing purpose includes security monitoring or incident response
+  required_requirements:
+  - REQ-INV-001
+  - REQ-INV-002
+  - REQ-IAM-001
+  - REQ-IAM-002
+  - REQ-IAM-003
+  - REQ-CFG-001
+  - REQ-CFG-002
+  - REQ-VUL-001
+  - REQ-VUL-002
+  - REQ-LOG-001
+  - REQ-LOG-002
+  - REQ-LOG-003
+  - REQ-MON-003
+  - REQ-INT-001
+  - REQ-CRY-001
+  - REQ-CRY-002
+  - REQ-NET-001
+  - REQ-AVL-001
+  - REQ-AVL-002
+  - REQ-EVD-001
+  - REQ-EVD-002
+  conditional_requirements:
+  - REQ-RET-001
+  - REQ-RET-002

@@ -1,0 +1,81 @@
+metadata:
+  version: 0.9.0-draft
+  title: PDP Continuous Control Dashboard
+  indices:
+  - pdp-evidence-*
+  - pdp-assessment-*
+  - pdp-findings-*
+  principle: Dashboard reports engineering control/evidence state, not a legal compliance score.
+filters:
+- scope.processing_activity_id
+- scope.asset_ids
+- control_id
+- result
+- evidence_health
+- severity
+- status
+- legal_review_state
+panels:
+- id: PDP-DASH-001
+  title: Control Assessment State
+  index: pdp-assessment-*
+  type: metric+distribution
+  metrics:
+  - count
+  buckets:
+  - result
+  notes: Show PASS/FAIL/REVIEW/NOT_APPLICABLE counts. Do not label as legal compliance percentage.
+- id: PDP-DASH-002
+  title: Evidence Health
+  index: pdp-assessment-*
+  type: pie
+  buckets:
+  - evidence_health
+- id: PDP-DASH-003
+  title: Open Findings by Severity
+  index: pdp-findings-*
+  type: bar
+  filter: 'status: OPEN OR status: IN_PROGRESS'
+  buckets:
+  - severity
+- id: PDP-DASH-004
+  title: Findings by Processing Activity
+  index: pdp-findings-*
+  type: table
+  buckets:
+  - scope.processing_activity_id
+  - control_id
+  - severity
+  - status
+- id: PDP-DASH-005
+  title: Controls Requiring Review
+  index: pdp-assessment-*
+  type: table
+  filter: 'result: REVIEW'
+  buckets:
+  - scope.processing_activity_id
+  - control_id
+  - evidence_health
+  - coverage.coverage_percent
+- id: PDP-DASH-006
+  title: Evidence Quality Distribution
+  index: pdp-evidence-*
+  type: bar
+  buckets:
+  - quality.level
+- id: PDP-DASH-007
+  title: PDP Event Categories Over Time
+  index: pdp-evidence-*
+  type: timeseries
+  time_field: '@timestamp'
+  buckets:
+  - event.taxonomy_ids
+- id: PDP-DASH-008
+  title: Technical Traceability
+  index: pdp-evidence-*
+  type: table
+  buckets:
+  - test.id
+  - traceability.requirements
+  - traceability.controls
+  - traceability.legal_requirements

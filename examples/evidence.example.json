@@ -1,0 +1,83 @@
+{
+  "schema_version": "0.8",
+  "evidence_id": "EV-example-pg-role-001",
+  "source": {
+    "type": "wazuh_logtest",
+    "system": "Wazuh",
+    "version": null,
+    "source_ref": "CASE-001",
+    "collector_health": "HEALTHY"
+  },
+  "observed_at": "2026-09-22T06:30:00Z",
+  "collected_at": "2026-09-22T06:30:01Z",
+  "scope": {
+    "processing_activity_ids": [
+      "PA-LAB-001"
+    ],
+    "asset_ids": [
+      "ASSET-DB-LAB-001"
+    ],
+    "environment": "lab",
+    "organization_role": "controller"
+  },
+  "test": {
+    "id": "WZ-RUL-PG-001",
+    "engine": "log_analysis",
+    "fixture": "postgresql/pgaudit_role_create.log",
+    "expected_rule_id": 110402,
+    "observed_rule_id": 110402,
+    "decoder": "pdp-pgaudit"
+  },
+  "result": "PASS",
+  "traceability": {
+    "requirements": [
+      "REQ-LOG-001",
+      "REQ-MON-002"
+    ],
+    "controls": [
+      "PDP-LOG-001",
+      "PDP-ACC-002"
+    ],
+    "legal_requirements": [
+      "LR-031-01",
+      "LR-037-01"
+    ]
+  },
+  "event": {
+    "taxonomy_ids": [
+      "PDP-EVT-PRIV-001"
+    ],
+    "technical_severity": "MEDIUM",
+    "privacy_impact": "UNKNOWN",
+    "confidence": "HIGH",
+    "raw_reference": "synthetic"
+  },
+  "quality": {
+    "level": "Q3",
+    "freshness": "FRESH",
+    "integrity": "UNVERIFIED",
+    "coverage_percent": 100.0
+  },
+  "payload": {
+    "rule_level": 8,
+    "rule_description": "PDP PostgreSQL privileged role or privilege-management activity.",
+    "rule_groups": [
+      "pdp_event",
+      "pdp_postgresql",
+      "pdp_privileged"
+    ],
+    "location": "pdp-lab->/var/log/pdp-lab.log",
+    "agent": {
+      "id": "000",
+      "name": "wazuh-manager"
+    },
+    "manager": {
+      "name": "wazuh-manager"
+    }
+  },
+  "review": {
+    "state": "UNREVIEWED",
+    "reviewer": null,
+    "notes": "Synthetic example."
+  }
+}

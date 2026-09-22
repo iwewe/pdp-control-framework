@@ -1,0 +1,57 @@
+framework:
+  name: PDP Control Framework
+  version: 0.10.0-rc2
+  release_stage: pre-1.0
+  jurisdiction: Indonesia
+  primary_legal_source: UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi
+  implementation_profiles:
+  - wazuh
+  status: RELEASE_CANDIDATE
+counts:
+  legal_requirements: 64
+  controls: 39
+  generic_requirements: 31
+  control_profiles: 5
+  event_categories: 15
+  wazuh_tests: 35
+normative_core:
+- PDP_CONTROL_FRAMEWORK.md
+- framework/legal/LEGAL_MAPPING.yml
+- framework/controls/CONTROL_CATALOGUE.yml
+- framework/requirements/CONTROL_REQUIREMENTS.yml
+- framework/profiles/CONTROL_PROFILES.yml
+- framework/taxonomy/PDP_EVENT_TAXONOMY.yml
+- docs/architecture/assessment-methodology.md
+- docs/architecture/applicability-model.md
+- docs/architecture/traceability-model.md
+implementation_artifacts:
+- implementations/wazuh/WAZUH_PROFILE.yml
+- implementations/wazuh/WAZUH_TEST_CATALOGUE.yml
+- implementations/wazuh/manifests/TRACEABILITY.yml
+- implementations/wazuh/sca/pdp_linux_baseline.yml
+- implementations/wazuh/rules/
+- implementations/wazuh/decoders/
+- implementations/wazuh/postgresql/
+- implementations/wazuh/indexer/templates/
+- implementations/wazuh/dashboard/
+schemas:
+- framework/schemas/evidence.schema.json
+- framework/schemas/control-assessment.schema.json
+- framework/schemas/finding.schema.json
+- framework/schemas/evidence-registry.schema.json
+release_requirements:
+  legal_review_required_for_1_0: true
+  wazuh_lab_validation_required_for_1_0: true
+  postgresql_lab_validation_required_for_1_0: true
+  dashboard_import_validation_required_for_1_0: true
+  coverage_report_required_for_1_0: true
+  authoritative_legal_source_review_complete: true
+  real_wazuh_4_14_7_runtime_validation_complete: false
+  real_dashboard_import_validation_complete: false
+compatibility_baseline:
+  wazuh_target: 4.14.7
+  postgresql_target: '17'
+  ubuntu_target: 24.04 LTS
+  python_ci: '3.12'
+  json_schema: 2020-12
+repository_layout: final-github-v1

@@ -1,0 +1,78 @@
+version: 0.8.0-draft
+transport:
+  preferred: wazuh_server_api
+  endpoint: /logtest
+  fallback: wazuh-logtest-cli
+defaults:
+  log_format: syslog
+  location: pdp-lab->/var/log/pdp-lab.log
+  evidence_quality: Q3
+  collector_health: HEALTHY
+cases:
+- id: CASE-001
+  fixture: postgresql/pgaudit_role_create.log
+  test_id: WZ-RUL-PG-001
+  expected:
+    rule_id: 110402
+    decoder: pdp-pgaudit
+    fields:
+      pdp.audit_class: ROLE
+      pdp.command: CREATE ROLE
+  session_required: false
+- id: CASE-002
+  fixture: postgresql/pgaudit_ddl_alter_table.log
+  test_id: WZ-RUL-PG-002
+  expected:
+    rule_id: 110403
+    decoder: pdp-pgaudit
+    fields:
+      pdp.audit_class: DDL
+      pdp.command: ALTER TABLE
+      pdp.object_name: public.employee
+  session_required: false
+- id: CASE-003
+  fixture: postgresql/pgaudit_write_update.log
+  test_id: WZ-RUL-PG-003
+  expected:
+    rule_id: 110404
+    decoder: pdp-pgaudit
+    fields:
+      pdp.audit_class: WRITE
+      pdp.command: UPDATE
+      pdp.object_name: public.employee
+  session_required: false
+- id: CASE-004
+  fixture: postgresql/pgaudit_read_select.log
+  test_id: WZ-RUL-PG-004
+  expected:
+    rule_id: 110405
+    decoder: pdp-pgaudit
+    fields:
+      pdp.audit_class: READ
+      pdp.command: SELECT
+      pdp.object_name: public.employee
+  session_required: false
+- id: CASE-005
+  fixture: postgresql/pgaudit_repeated_read_20.log
+  test_id: WZ-RUL-PG-005
+  expected:
+    rule_id: 110406
+    decoder: pdp-pgaudit
+    fields: {}
+  session_required: true
+- id: CASE-006
+  fixture: authentication/ssh_failed_once.log
+  test_id: WZ-RUL-AUTH-001
+  expected:
+    rule_id: 110001
+    decoder: null
+    fields: {}
+  session_required: false
+- id: CASE-007
+  fixture: authentication/ssh_failed_8.log
+  test_id: WZ-RUL-AUTH-001
+  expected:
+    rule_id: 110002
+    decoder: null
+    fields: {}
+  session_required: true

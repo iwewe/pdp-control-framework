@@ -1,0 +1,119 @@
+policy:
+  id: pdp_linux_baseline_v01
+  file: pdp_linux_baseline.yml
+  name: PDP Control Framework - Linux Technical Baseline
+  description: Draft technical baseline supporting PDP Control Framework requirements. This policy evaluates technical conditions
+    only and does not determine legal compliance.
+  references:
+  - https://documentation.wazuh.com/current/user-manual/capabilities/sec-config-assessment/creating-custom-policies.html
+  regex_type: pcre2
+requirements:
+  title: Linux endpoint applicability
+  description: Run this draft baseline on Linux endpoints with standard system utilities.
+  condition: any
+  rules:
+  - f:/etc/os-release
+  - f:/etc/ssh/sshd_config
+checks:
+- id: 910001
+  title: 'PDP: Direct SSH root login is disabled'
+  description: Checks the effective OpenSSH server configuration.
+  rationale: Supports restricted privileged access to systems processing Personal Data.
+  remediation: Configure OpenSSH so PermitRootLogin resolves to no, then reload/restart sshd.
+  compliance:
+  - pdp_control:
+    - PDP-ACC-001
+    - PDP-ACC-003
+  - pdp_requirement:
+    - REQ-IAM-001
+    - REQ-IAM-002
+  - pdp_test:
+    - WZ-SCA-IAM-001
+  condition: all
+  rules:
+  - c:sshd -T -> r:^\s*permitrootlogin\s+no$
+- id: 910002
+  title: 'PDP: SSH empty-password authentication is disabled'
+  description: Checks the effective OpenSSH PermitEmptyPasswords setting.
+  rationale: Reduces unauthorized access risk.
+  remediation: Set PermitEmptyPasswords no in OpenSSH configuration, then reload/restart sshd.
+  compliance:
+  - pdp_control:
+    - PDP-ACC-003
+  - pdp_requirement:
+    - REQ-IAM-001
+  - pdp_test:
+    - WZ-SCA-IAM-002
+  condition: all
+  rules:
+  - c:sshd -T -> r:^\s*permitemptypasswords\s+no$
+- id: 910003
+  title: 'PDP: System audit service is enabled'
+  description: Checks whether auditd is enabled.
+  rationale: Supports traceability and accountability for security-relevant activity.
+  remediation: Install/configure auditd where required by the selected platform profile and enable the service.
+  compliance:
+  - pdp_control:
+    - PDP-LOG-001
+    - PDP-GOV-001
+  - pdp_requirement:
+    - REQ-LOG-001
+  - pdp_test:
+    - WZ-SCA-LOG-001
+  condition: all
+  rules:
+  - c:systemctl is-enabled auditd -> r:^enabled$
+- id: 910004
+  title: 'PDP: Time synchronization service is active'
+  description: Checks for an enabled common Linux time synchronization service.
+  rationale: Reliable timestamps support incident reconstruction and evidence quality.
+  remediation: Enable and configure chrony, systemd-timesyncd, or the approved time synchronization service.
+  compliance:
+  - pdp_control:
+    - PDP-LOG-001
+    - PDP-INC-002
+  - pdp_requirement:
+    - REQ-LOG-002
+  - pdp_test:
+    - WZ-SCA-TIME-001
+  condition: any
+  rules:
+  - c:systemctl is-enabled chrony -> r:^enabled$
+  - c:systemctl is-enabled chronyd -> r:^enabled$
+  - c:systemctl is-enabled systemd-timesyncd -> r:^enabled$
+- id: 910005
+  title: 'PDP: A supported host firewall is enabled'
+  description: Checks common Linux host firewall services.
+  rationale: Supports restriction of network access to Personal Data processing assets.
+  remediation: Enable and configure the approved host firewall or document an equivalent compensating control.
+  compliance:
+  - pdp_control:
+    - PDP-SEC-001
+    - PDP-ACC-003
+  - pdp_requirement:
+    - REQ-NET-001
+  - pdp_test:
+    - WZ-SCA-NET-001
+  condition: any
+  rules:
+  - c:systemctl is-enabled ufw -> r:^enabled$
+  - c:systemctl is-enabled firewalld -> r:^enabled$
+  - c:systemctl is-enabled nftables -> r:^enabled$
+- id: 910006
+  title: 'PDP: Wazuh agent service is enabled'
+  description: Checks whether the Wazuh agent service is enabled on the endpoint.
+  rationale: Continuous technical evidence depends on a functioning telemetry source.
+  remediation: Enable and start wazuh-agent, or mark the endpoint outside this implementation profile.
+  compliance:
+  - pdp_control:
+    - PDP-LOG-001
+    - PDP-GOV-001
+    - PDP-INC-001
+  - pdp_requirement:
+    - REQ-MON-003
+    - REQ-EVD-002
+  - pdp_test:
+    - WZ-HLT-EVD-001
+  condition: all
+  rules:
+  - c:systemctl is-enabled wazuh-agent -> r:^enabled$

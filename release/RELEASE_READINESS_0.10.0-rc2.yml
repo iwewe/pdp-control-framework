@@ -1,0 +1,26 @@
+framework_version: 0.10.0-rc2
+date: '2026-09-22'
+release_target: 1.0.0
+workstreams:
+  legal_review_coverage:
+    authoritative_source_review: PASS
+    constitutional_court_update: PASS
+    external_legal_counsel: OPEN
+    status: SOURCE_VERIFIED_NOT_COUNSEL_SIGNED
+  wazuh_4_14_7_lab:
+    static_repository_validation: PASS
+    real_runtime_execution: BLOCKED
+    reason: No Wazuh/Docker runtime available in current execution environment.
+    status: OPEN
+  dashboard_import:
+    saved_objects_static_validation: PASS
+    index_template_static_validation: PASS
+    real_indexer_import: BLOCKED
+    real_dashboard_import: BLOCKED
+    reason: No Wazuh Indexer/Dashboard runtime available in current execution environment.
+    status: OPEN
+coverage:
+  legal_requirements_total: 64
+  with_wazuh_test_coverage: 24
+  with_generic_requirement_only: 8
+  without_technical_coverage: 32

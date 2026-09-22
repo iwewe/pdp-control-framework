@@ -1,0 +1,15 @@
+framework_version: 0.10.0-rc1
+release_target: 1.0.0
+gates:
+  traceability:
+    every_control_has_legal_mapping: true
+    every_requirement_has_control_mapping: true
+    every_wazuh_test_has_requirement_or_control_mapping: true
+  implementation:
+    all_normative_wazuh_tests_must_be_lab_validated: true
+    static_validation_must_pass: true
+    no_duplicate_rule_ids: true
+  coverage:
+    legal_requirements_may_remain_manual: true
+    technical_coverage_percentage_is_not_a_release_compliance_score: true
+    uncovered_legal_requirements_must_be_explained: true

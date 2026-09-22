@@ -1,0 +1,16 @@
+framework_version: 0.10.0-rc2
+target: Wazuh Dashboard 4.14.7 / OpenSearch Dashboards saved-object API
+validation_date: '2026-09-22'
+static_ndjson_validation: PASS
+index_template_json_validation: PASS
+runtime_index_import: NOT_RUN
+runtime_saved_object_import: NOT_RUN
+status: BLOCKED_NO_WAZUH_INDEXER_DASHBOARD_RUNTIME_IN_CURRENT_ENVIRONMENT
+required_for_promotion:
+- three index templates accepted
+- temporary PDP indices created
+- sample evidence/assessment/finding documents indexed
+- saved-object NDJSON import reports success=true
+- three index patterns discoverable
+- dashboard saved object discoverable
+- cleanup succeeds

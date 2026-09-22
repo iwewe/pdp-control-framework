@@ -1,0 +1,19 @@
+framework_version: 0.10.0-rc2
+target: Wazuh 4.14.7
+validation_date: '2026-09-22'
+status: BLOCKED_NO_WAZUH_RUNTIME_IN_CURRENT_ENVIRONMENT
+static_validation: PASS
+real_runtime_validation: NOT_RUN
+environment_observations:
+- Docker/Podman not present in current execution environment.
+- APT network update timed out.
+- Direct Wazuh package download could not be completed from current execution environment.
+required_for_promotion:
+- manager reports version v4.14.7
+- custom decoder loads
+- custom rules load
+- fixture logtest matches expected rules
+- correlation fixtures pass in same session
+- agent.conf validation passes
+- SCA policy executes on Ubuntu 24.04 test agent
+promotion_target: LAB_VALIDATED

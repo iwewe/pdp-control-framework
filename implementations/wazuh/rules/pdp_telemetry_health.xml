@@ -1,0 +1,9 @@
+<group name="pdp,telemetry_health,">
+  <!-- Manager/agent health events differ by deployment; these rules are intentionally conservative wrappers. -->
+
+  <rule id="110301" level="8">
+    <match type="pcre2">(?i)(agent.*disconnected|agent.*inactive|collector.*stopped|logging.*stopped)</match>
+    <description>PDP evidence-health candidate: telemetry source may be unavailable or degraded.</description>
+    <group>pdp_event,pdp_telemetry,pdp_evt_tel_001,pdp_req_evd_002,pdp_control_log_001,</group>
+  </rule>
+</group>

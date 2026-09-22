@@ -1,0 +1,1501 @@
+{
+  "framework_version": "0.10.0-rc1",
+  "summary": {
+    "legal_requirements_total": 64,
+    "with_wazuh_test_coverage": 24,
+    "with_generic_requirement_only": 8,
+    "without_technical_coverage": 32
+  },
+  "rows": [
+    {
+      "legal_requirement_id": "LR-020-01",
+      "article": 20,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-LAW-001"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-020-02",
+      "article": 20,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-LAW-001"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-021-01",
+      "article": 21,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-001",
+        "PDP-LAW-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-021-02",
+      "article": 21,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-001"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-022-01",
+      "article": 22,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-022-02",
+      "article": 22,
+      "paragraph": 4,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-022-03",
+      "article": 22,
+      "paragraph": 5,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-023-01",
+      "article": 23,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-024-01",
+      "article": 24,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-025-01",
+      "article": 25,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-003"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-025-02",
+      "article": 25,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-003"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-026-01",
+      "article": 26,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-004"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-026-02",
+      "article": 26,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-004"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-026-03",
+      "article": 26,
+      "paragraph": 3,
+      "topic": null,
+      "controls": [
+        "PDP-CNS-004"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-027-01",
+      "article": 27,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-LAW-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-028-01",
+      "article": 28,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-LAW-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-029-01",
+      "article": 29,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-DATA-001"
+      ],
+      "generic_requirements": [
+        "REQ-INV-001"
+      ],
+      "wazuh_tests": [],
+      "technical_coverage": "REQUIREMENT_ONLY"
+    },
+    {
+      "legal_requirement_id": "LR-029-02",
+      "article": 29,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-DATA-001"
+      ],
+      "generic_requirements": [
+        "REQ-INV-001"
+      ],
+      "wazuh_tests": [],
+      "technical_coverage": "REQUIREMENT_ONLY"
+    },
+    {
+      "legal_requirement_id": "LR-030-01",
+      "article": 30,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-RGT-001"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-030-02",
+      "article": 30,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-RGT-001"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-031-01",
+      "article": 31,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-LOG-001",
+        "PDP-GOV-001"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-002",
+        "REQ-CFG-002",
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-GOV-001",
+        "REQ-IAM-003",
+        "REQ-INV-001",
+        "REQ-INV-002",
+        "REQ-LOG-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-003",
+        "REQ-PRC-001",
+        "REQ-RET-001",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-003",
+        "WZ-RUL-PG-004",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-032-01",
+      "article": 32,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-RGT-002",
+        "PDP-LOG-001"
+      ],
+      "generic_requirements": [
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-INV-001",
+        "REQ-INV-002",
+        "REQ-LOG-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-003",
+        "REQ-PRC-001"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-003",
+        "WZ-RUL-PG-004",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-032-02",
+      "article": 32,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-RGT-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-033-01",
+      "article": 33,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-RGT-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-034-01",
+      "article": 34,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-DPIA-001",
+        "PDP-DPIA-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-034-02",
+      "article": 34,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-DPIA-001",
+        "PDP-DPIA-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-035-01",
+      "article": 35,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-SEC-001",
+        "PDP-SEC-003",
+        "PDP-LOG-001"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-001",
+        "REQ-CFG-001",
+        "REQ-CFG-002",
+        "REQ-CRY-001",
+        "REQ-CRY-002",
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-IAM-001",
+        "REQ-INC-001",
+        "REQ-INT-001",
+        "REQ-INV-001",
+        "REQ-INV-002",
+        "REQ-LOG-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-003",
+        "REQ-NET-001",
+        "REQ-PRC-001",
+        "REQ-VUL-001",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-AUTH-001",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-MAL-001",
+        "WZ-RUL-NET-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-003",
+        "WZ-RUL-PG-004",
+        "WZ-RUL-PG-005",
+        "WZ-RUL-PRIV-001",
+        "WZ-SCA-CFG-001",
+        "WZ-SCA-CRY-001",
+        "WZ-SCA-CRY-002",
+        "WZ-SCA-IAM-001",
+        "WZ-SCA-IAM-002",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-NET-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-035-02",
+      "article": 35,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-SEC-002",
+        "PDP-DPIA-002"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-002",
+        "REQ-INV-002",
+        "REQ-VUL-001",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-VUL-VUL-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-036-01",
+      "article": 36,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-ACC-001",
+        "PDP-SEC-001"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-001",
+        "REQ-CFG-001",
+        "REQ-CFG-002",
+        "REQ-CRY-001",
+        "REQ-CRY-002",
+        "REQ-IAM-001",
+        "REQ-IAM-002",
+        "REQ-IAM-003",
+        "REQ-NET-001",
+        "REQ-VUL-001",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-RUL-AUTH-002",
+        "WZ-RUL-MAL-001",
+        "WZ-RUL-NET-001",
+        "WZ-RUL-PRIV-001",
+        "WZ-SCA-CFG-001",
+        "WZ-SCA-CRY-001",
+        "WZ-SCA-CRY-002",
+        "WZ-SCA-IAM-001",
+        "WZ-SCA-IAM-002",
+        "WZ-SCA-IAM-003",
+        "WZ-SCA-NET-001",
+        "WZ-VUL-VUL-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-037-01",
+      "article": 37,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-ACC-002",
+        "PDP-LOG-001"
+      ],
+      "generic_requirements": [
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-IAM-002",
+        "REQ-INV-001",
+        "REQ-INV-002",
+        "REQ-LOG-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-002",
+        "REQ-MON-003",
+        "REQ-PRC-001"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-AUTH-002",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-003",
+        "WZ-RUL-PG-004",
+        "WZ-RUL-PG-005",
+        "WZ-RUL-PRIV-001",
+        "WZ-SCA-IAM-001",
+        "WZ-SCA-IAM-003",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-038-01",
+      "article": 38,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-SEC-003",
+        "PDP-ACC-003",
+        "PDP-LOG-001"
+      ],
+      "generic_requirements": [
+        "REQ-CFG-001",
+        "REQ-CFG-002",
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-IAM-001",
+        "REQ-IAM-002",
+        "REQ-IAM-003",
+        "REQ-INC-001",
+        "REQ-INT-001",
+        "REQ-INV-001",
+        "REQ-INV-002",
+        "REQ-LOG-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-001",
+        "REQ-MON-002",
+        "REQ-MON-003",
+        "REQ-NET-001",
+        "REQ-PRC-001"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-AUTH-001",
+        "WZ-RUL-AUTH-002",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-MAL-001",
+        "WZ-RUL-NET-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-003",
+        "WZ-RUL-PG-004",
+        "WZ-RUL-PG-005",
+        "WZ-RUL-PRIV-001",
+        "WZ-SCA-CFG-001",
+        "WZ-SCA-IAM-001",
+        "WZ-SCA-IAM-002",
+        "WZ-SCA-IAM-003",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-NET-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-039-01",
+      "article": 39,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-ACC-003",
+        "PDP-ACC-001",
+        "PDP-SEC-003"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-001",
+        "REQ-CFG-001",
+        "REQ-CFG-002",
+        "REQ-CRY-001",
+        "REQ-CRY-002",
+        "REQ-IAM-001",
+        "REQ-IAM-002",
+        "REQ-IAM-003",
+        "REQ-INC-001",
+        "REQ-INT-001",
+        "REQ-MON-001",
+        "REQ-MON-002",
+        "REQ-NET-001"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001",
+        "WZ-RUL-AUTH-001",
+        "WZ-RUL-AUTH-002",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-MAL-001",
+        "WZ-RUL-NET-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-004",
+        "WZ-RUL-PG-005",
+        "WZ-RUL-PRIV-001",
+        "WZ-SCA-CFG-001",
+        "WZ-SCA-CRY-001",
+        "WZ-SCA-CRY-002",
+        "WZ-SCA-IAM-001",
+        "WZ-SCA-IAM-002",
+        "WZ-SCA-IAM-003",
+        "WZ-SCA-NET-001"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-039-02",
+      "article": 39,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-ACC-003",
+        "PDP-SEC-001",
+        "PDP-SEC-003"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-001",
+        "REQ-CFG-001",
+        "REQ-CFG-002",
+        "REQ-CRY-001",
+        "REQ-CRY-002",
+        "REQ-IAM-001",
+        "REQ-IAM-002",
+        "REQ-IAM-003",
+        "REQ-INC-001",
+        "REQ-INT-001",
+        "REQ-MON-001",
+        "REQ-MON-002",
+        "REQ-NET-001",
+        "REQ-VUL-001",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001",
+        "WZ-RUL-AUTH-001",
+        "WZ-RUL-AUTH-002",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-MAL-001",
+        "WZ-RUL-NET-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-004",
+        "WZ-RUL-PG-005",
+        "WZ-RUL-PRIV-001",
+        "WZ-SCA-CFG-001",
+        "WZ-SCA-CRY-001",
+        "WZ-SCA-CRY-002",
+        "WZ-SCA-IAM-001",
+        "WZ-SCA-IAM-002",
+        "WZ-SCA-IAM-003",
+        "WZ-SCA-NET-001",
+        "WZ-VUL-VUL-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-040-01",
+      "article": 40,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-RGT-003"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-040-02",
+      "article": 40,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-RGT-003"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-041-01",
+      "article": 41,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-RGT-004"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-041-02",
+      "article": 41,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-RGT-004"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-041-03",
+      "article": 41,
+      "paragraph": 3,
+      "topic": null,
+      "controls": [
+        "PDP-RGT-004"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-042-01",
+      "article": 42,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-RET-001"
+      ],
+      "generic_requirements": [
+        "REQ-RET-001"
+      ],
+      "wazuh_tests": [],
+      "technical_coverage": "REQUIREMENT_ONLY"
+    },
+    {
+      "legal_requirement_id": "LR-043-01",
+      "article": 43,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-RET-002"
+      ],
+      "generic_requirements": [
+        "REQ-INT-001",
+        "REQ-RET-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-044-01",
+      "article": 44,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-RET-003"
+      ],
+      "generic_requirements": [
+        "REQ-INT-001",
+        "REQ-RET-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-045-01",
+      "article": 45,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-RET-004"
+      ],
+      "generic_requirements": [
+        "REQ-RET-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-RET-001"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-046-01",
+      "article": 46,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-INC-001",
+        "PDP-INC-003"
+      ],
+      "generic_requirements": [
+        "REQ-EVD-002",
+        "REQ-INC-001",
+        "REQ-INC-003",
+        "REQ-INT-001",
+        "REQ-MON-001",
+        "REQ-MON-002",
+        "REQ-MON-003"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-NOT-001",
+        "WZ-RUL-AUTH-001",
+        "WZ-RUL-AUTH-002",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-MAL-001",
+        "WZ-RUL-NET-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-004",
+        "WZ-RUL-PG-005",
+        "WZ-RUL-PRIV-001"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-046-02",
+      "article": 46,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-INC-002",
+        "PDP-INC-004"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-001",
+        "REQ-AVL-002",
+        "REQ-INC-002",
+        "REQ-INV-002",
+        "REQ-LOG-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003"
+      ],
+      "wazuh_tests": [
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-003",
+        "WZ-RUL-PG-004",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-TIME-001"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-046-03",
+      "article": 46,
+      "paragraph": 3,
+      "topic": null,
+      "controls": [
+        "PDP-INC-003"
+      ],
+      "generic_requirements": [
+        "REQ-INC-003"
+      ],
+      "wazuh_tests": [
+        "WZ-INC-NOT-001"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-047-01",
+      "article": 47,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-GOV-001",
+        "PDP-LOG-001"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-002",
+        "REQ-CFG-002",
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-GOV-001",
+        "REQ-IAM-003",
+        "REQ-INV-001",
+        "REQ-INV-002",
+        "REQ-LOG-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-003",
+        "REQ-PRC-001",
+        "REQ-RET-001",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-003",
+        "WZ-RUL-PG-004",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-048-01",
+      "article": 48,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-GOV-001",
+        "PDP-TRF-001"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-002",
+        "REQ-CFG-002",
+        "REQ-CRY-001",
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-GOV-001",
+        "REQ-IAM-003",
+        "REQ-INV-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-003",
+        "REQ-RET-001",
+        "REQ-TRF-001",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-LOG-001",
+        "WZ-SCA-CRY-001",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-048-02",
+      "article": 48,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-GOV-001"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-002",
+        "REQ-CFG-002",
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-GOV-001",
+        "REQ-IAM-003",
+        "REQ-INV-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-003",
+        "REQ-RET-001",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-LOG-001",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-048-03",
+      "article": 48,
+      "paragraph": 3,
+      "topic": null,
+      "controls": [
+        "PDP-RET-001",
+        "PDP-RET-002",
+        "PDP-RET-003",
+        "PDP-TRF-001"
+      ],
+      "generic_requirements": [
+        "REQ-CRY-001",
+        "REQ-INT-001",
+        "REQ-RET-001",
+        "REQ-RET-002",
+        "REQ-TRF-001"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001",
+        "WZ-SCA-CRY-001"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-048-04",
+      "article": 48,
+      "paragraph": 4,
+      "topic": null,
+      "controls": [
+        "PDP-GOV-001",
+        "PDP-RET-004"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-002",
+        "REQ-CFG-002",
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-GOV-001",
+        "REQ-IAM-003",
+        "REQ-INV-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-003",
+        "REQ-RET-001",
+        "REQ-RET-002",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-LOG-001",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-049-01",
+      "article": 49,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-GOV-001"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-002",
+        "REQ-CFG-002",
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-GOV-001",
+        "REQ-IAM-003",
+        "REQ-INV-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-003",
+        "REQ-RET-001",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-LOG-001",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-050-01",
+      "article": 50,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-GOV-001",
+        "PDP-RGT-001",
+        "PDP-RGT-002",
+        "PDP-ACC-001",
+        "PDP-RET-001",
+        "PDP-RET-002",
+        "PDP-RET-003",
+        "PDP-RET-004",
+        "PDP-INC-003"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-001",
+        "REQ-AVL-002",
+        "REQ-CFG-002",
+        "REQ-CRY-001",
+        "REQ-CRY-002",
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-GOV-001",
+        "REQ-IAM-001",
+        "REQ-IAM-002",
+        "REQ-IAM-003",
+        "REQ-INC-003",
+        "REQ-INT-001",
+        "REQ-INV-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-003",
+        "REQ-RET-001",
+        "REQ-RET-002",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-NOT-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-AUTH-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-PRIV-001",
+        "WZ-SCA-CRY-001",
+        "WZ-SCA-CRY-002",
+        "WZ-SCA-IAM-001",
+        "WZ-SCA-IAM-002",
+        "WZ-SCA-IAM-003",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-051-01",
+      "article": 51,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-PRC-001"
+      ],
+      "generic_requirements": [
+        "REQ-PRC-001"
+      ],
+      "wazuh_tests": [],
+      "technical_coverage": "REQUIREMENT_ONLY"
+    },
+    {
+      "legal_requirement_id": "LR-051-02",
+      "article": 51,
+      "paragraph": 5,
+      "topic": null,
+      "controls": [
+        "PDP-PRC-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-051-03",
+      "article": 51,
+      "paragraph": 6,
+      "topic": null,
+      "controls": [
+        "PDP-PRC-003"
+      ],
+      "generic_requirements": [
+        "REQ-PRC-001"
+      ],
+      "wazuh_tests": [],
+      "technical_coverage": "REQUIREMENT_ONLY"
+    },
+    {
+      "legal_requirement_id": "LR-052-01",
+      "article": 52,
+      "paragraph": null,
+      "topic": null,
+      "controls": [
+        "PDP-PRC-001",
+        "PDP-PRC-003",
+        "PDP-DATA-001",
+        "PDP-LOG-001",
+        "PDP-SEC-001",
+        "PDP-SEC-002",
+        "PDP-ACC-001",
+        "PDP-ACC-002",
+        "PDP-ACC-003",
+        "PDP-SEC-003"
+      ],
+      "generic_requirements": [
+        "REQ-AVL-001",
+        "REQ-AVL-002",
+        "REQ-CFG-001",
+        "REQ-CFG-002",
+        "REQ-CRY-001",
+        "REQ-CRY-002",
+        "REQ-EVD-001",
+        "REQ-EVD-002",
+        "REQ-IAM-001",
+        "REQ-IAM-002",
+        "REQ-IAM-003",
+        "REQ-INC-001",
+        "REQ-INT-001",
+        "REQ-INV-001",
+        "REQ-INV-002",
+        "REQ-LOG-001",
+        "REQ-LOG-002",
+        "REQ-LOG-003",
+        "REQ-MON-001",
+        "REQ-MON-002",
+        "REQ-MON-003",
+        "REQ-NET-001",
+        "REQ-PRC-001",
+        "REQ-VUL-001",
+        "REQ-VUL-002"
+      ],
+      "wazuh_tests": [
+        "WZ-FIM-INT-001",
+        "WZ-FIM-INT-002",
+        "WZ-FIM-RET-001",
+        "WZ-FIM-TEL-001",
+        "WZ-HLT-EVD-001",
+        "WZ-HLT-EVD-002",
+        "WZ-HLT-EVD-003",
+        "WZ-HLT-LOG-001",
+        "WZ-INC-TML-001",
+        "WZ-RUL-AUTH-001",
+        "WZ-RUL-AUTH-002",
+        "WZ-RUL-DB-001",
+        "WZ-RUL-DB-002",
+        "WZ-RUL-LOG-001",
+        "WZ-RUL-MAL-001",
+        "WZ-RUL-NET-001",
+        "WZ-RUL-PG-001",
+        "WZ-RUL-PG-002",
+        "WZ-RUL-PG-003",
+        "WZ-RUL-PG-004",
+        "WZ-RUL-PG-005",
+        "WZ-RUL-PRIV-001",
+        "WZ-SCA-CFG-001",
+        "WZ-SCA-CRY-001",
+        "WZ-SCA-CRY-002",
+        "WZ-SCA-IAM-001",
+        "WZ-SCA-IAM-002",
+        "WZ-SCA-IAM-003",
+        "WZ-SCA-LOG-001",
+        "WZ-SCA-NET-001",
+        "WZ-SCA-TIME-001",
+        "WZ-VUL-VUL-001",
+        "WZ-VUL-VUL-002",
+        "WZ-VUL-VUL-003"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-053-01",
+      "article": 53,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-DPO-001"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-053-02",
+      "article": 53,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-DPO-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-054-01",
+      "article": 54,
+      "paragraph": 1,
+      "topic": null,
+      "controls": [
+        "PDP-DPO-003",
+        "PDP-DPIA-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-054-02",
+      "article": 54,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-DPO-003",
+        "PDP-DPIA-002"
+      ],
+      "generic_requirements": [],
+      "wazuh_tests": [],
+      "technical_coverage": "NO_TECHNICAL_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-055-01",
+      "article": 55,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-TRF-001"
+      ],
+      "generic_requirements": [
+        "REQ-CRY-001",
+        "REQ-TRF-001"
+      ],
+      "wazuh_tests": [
+        "WZ-SCA-CRY-001"
+      ],
+      "technical_coverage": "TECHNICAL_TEST_COVERAGE"
+    },
+    {
+      "legal_requirement_id": "LR-056-01",
+      "article": 56,
+      "paragraph": 2,
+      "topic": null,
+      "controls": [
+        "PDP-TRF-002"
+      ],
+      "generic_requirements": [
+        "REQ-TRF-001"
+      ],
+      "wazuh_tests": [],
+      "technical_coverage": "REQUIREMENT_ONLY"
+    },
+    {
+      "legal_requirement_id": "LR-056-02",
+      "article": 56,
+      "paragraph": 3,
+      "topic": null,
+      "controls": [
+        "PDP-TRF-003"
+      ],
+      "generic_requirements": [
+        "REQ-TRF-001"
+      ],
+      "wazuh_tests": [],
+      "technical_coverage": "REQUIREMENT_ONLY"
+    },
+    {
+      "legal_requirement_id": "LR-056-03",
+      "article": 56,
+      "paragraph": 4,
+      "topic": null,
+      "controls": [
+        "PDP-TRF-004"
+      ],
+      "generic_requirements": [
+        "REQ-TRF-001"
+      ],
+      "wazuh_tests": [],
+      "technical_coverage": "REQUIREMENT_ONLY"
+    }
+  ]
+}

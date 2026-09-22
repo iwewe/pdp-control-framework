@@ -1,0 +1,32 @@
+processing_activity_id: PA-001
+assets:
+- asset_id: ASSET-DB-001
+  profiles:
+  - PDP-PROFILE-BASELINE
+  - PDP-PROFILE-HIGH-RISK
+  - PDP-PROFILE-DATABASE
+  effective_requirements:
+  - REQ-IAM-001
+  - REQ-IAM-002
+  - REQ-IAM-003
+  - REQ-CFG-001
+  - REQ-CFG-002
+  - REQ-VUL-001
+  - REQ-VUL-002
+  - REQ-LOG-001
+  - REQ-LOG-002
+  - REQ-LOG-003
+  - REQ-MON-001
+  - REQ-MON-002
+  - REQ-MON-003
+  - REQ-INT-001
+  - REQ-CRY-001
+  - REQ-CRY-002
+  - REQ-NET-001
+  - REQ-AVL-001
+  - REQ-AVL-002
+  - REQ-INC-001
+  - REQ-INC-002
+  - REQ-INC-003
+  - REQ-EVD-001
+  - REQ-EVD-002

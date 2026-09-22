@@ -1,0 +1,157 @@
+pdp-control-framework/
+├── .github/
+│   └── workflows/
+│       └── validate.yml
+├── docs/
+│   ├── architecture/
+│   │   ├── applicability-model.md
+│   │   ├── assessment-methodology.md
+│   │   ├── compliance-operating-model.md
+│   │   ├── LIFECYCLE_RETENTION_POLICY.md
+│   │   └── traceability-model.md
+│   ├── history/
+│   │   ├── architecture-v0.4.md
+│   │   ├── engineering-spec-v0.5.md
+│   │   ├── v0.7-postgresql-lab.md
+│   │   ├── v0.8-evidence-normalization.md
+│   │   ├── v0.9-findings-dashboard.md
+│   │   └── wazuh-lab-validation-v0.6.md
+│   ├── REPOSITORY_LAYOUT.md
+│   └── REPOSITORY_TREE.txt
+├── examples/
+│   ├── evidence.example.json
+│   ├── finding.example.json
+│   ├── processing-activity.example.yml
+│   └── profile-application.example.yml
+├── framework/
+│   ├── controls/
+│   │   └── CONTROL_CATALOGUE.yml
+│   ├── evidence/
+│   │   └── EVIDENCE_TYPES.yml
+│   ├── legal/
+│   │   ├── review/
+│   │   │   ├── LEGAL_REVIEW_STATUS.yml
+│   │   │   └── LEGAL_SOURCE_REVIEW_0.10.0-rc2.md
+│   │   └── LEGAL_MAPPING.yml
+│   ├── models/
+│   │   ├── ASSET_MODEL.md
+│   │   ├── CONTROL_TEST_MODEL.md
+│   │   ├── EVIDENCE_PROVENANCE_MODEL.md
+│   │   ├── FINDING_EXCEPTION_REMEDIATION_MODEL.md
+│   │   └── PROCESSING_ACTIVITY_MODEL.md
+│   ├── profiles/
+│   │   └── CONTROL_PROFILES.yml
+│   ├── requirements/
+│   │   └── CONTROL_REQUIREMENTS.yml
+│   ├── schemas/
+│   │   ├── control-assessment.schema.json
+│   │   ├── evidence-registry.schema.json
+│   │   ├── evidence.schema.json
+│   │   └── finding.schema.json
+│   ├── taxonomy/
+│   │   └── PDP_EVENT_TAXONOMY.yml
+│   └── README.md
+├── implementations/
+│   └── wazuh/
+│       ├── dashboard/
+│       │   ├── saved-objects/
+│       │   │   └── pdp-dashboard-shell.ndjson
+│       │   ├── DASHBOARD_SPEC.yml
+│       │   └── README.md
+│       ├── decoders/
+│       │   └── pdp_pgaudit.xml
+│       ├── indexer/
+│       │   ├── templates/
+│       │   │   ├── pdp-assessment-template.json
+│       │   │   ├── pdp-evidence-template.json
+│       │   │   └── pdp-findings-template.json
+│       │   └── README.md
+│       ├── manifests/
+│       │   └── TRACEABILITY.yml
+│       ├── postgresql/
+│       │   ├── pgaudit-setup.sql
+│       │   ├── postgresql-pdp.conf.example
+│       │   └── POSTGRESQL_AUDIT_PROFILE.yml
+│       ├── rules/
+│       │   ├── pdp_authentication.xml
+│       │   ├── pdp_fim.xml
+│       │   ├── pdp_postgresql.xml
+│       │   ├── pdp_privileged_access.xml
+│       │   └── pdp_telemetry_health.xml
+│       ├── sca/
+│       │   └── pdp_linux_baseline.yml
+│       ├── shared/
+│       │   ├── pdp-database/
+│       │   │   └── agent.conf
+│       │   └── pdp-linux-baseline/
+│       │       └── agent.conf
+│       ├── tests/
+│       │   ├── expected/
+│       │   │   └── EXPECTED_RESULTS.yml
+│       │   ├── fixtures/
+│       │   │   ├── authentication/
+│       │   │   │   ├── ssh_failed_8.log
+│       │   │   │   └── ssh_failed_once.log
+│       │   │   └── postgresql/
+│       │   │       ├── pgaudit_ddl_alter_table.log
+│       │   │       ├── pgaudit_read_payroll.log
+│       │   │       ├── pgaudit_read_select.log
+│       │   │       ├── pgaudit_repeated_read_20.log
+│       │   │       ├── pgaudit_role_create.log
+│       │   │       └── pgaudit_write_update.log
+│       │   ├── harness/
+│       │   │   ├── HARNESS.yml
+│       │   │   └── run_api_logtest.py
+│       │   ├── results/
+│       │   │   └── .gitkeep
+│       │   └── scripts/
+│       │       ├── run_wazuh_logtest.sh
+│       │       └── validate_fixtures.py
+│       ├── README.md
+│       ├── WAZUH_PROFILE.yml
+│       └── WAZUH_TEST_CATALOGUE.yml
+├── release/
+│   ├── compatibility/
+│   │   └── COMPATIBILITY_MATRIX.yml
+│   ├── runtime-validation/
+│   │   ├── dashboard/
+│   │   │   ├── README.md
+│   │   │   ├── STATUS.yml
+│   │   │   └── validate_real_import.py
+│   │   └── wazuh-4.14.7/
+│   │       ├── README.md
+│   │       ├── run_real_lab_validation.py
+│   │       └── STATUS.yml
+│   ├── CHANGELOG_0.10.0-rc1.md
+│   ├── CHANGELOG_0.10.0-rc2.md
+│   ├── PRE_1_0_CHECKLIST.md
+│   ├── RELEASE_GATES.yml
+│   ├── RELEASE_READINESS_0.10.0-rc2.yml
+│   └── SHA256SUMS.txt
+├── reports/
+│   ├── COVERAGE_REPORT.json
+│   └── COVERAGE_REPORT.md
+├── tools/
+│   ├── assessment/
+│   │   ├── assess_controls.py
+│   │   └── WAZUH_EVIDENCE_MAPPING.yml
+│   ├── evidence/
+│   │   └── register_evidence.py
+│   ├── export/
+│   │   └── export_bulk_ndjson.py
+│   ├── findings/
+│   │   └── generate_findings.py
+│   ├── reporting/
+│   │   └── generate_coverage_report.py
+│   └── validation/
+│       ├── validate_evidence.py
+│       └── validate_structure.py
+├── .gitignore
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── FRAMEWORK_MANIFEST.yml
+├── PDP_CONTROL_FRAMEWORK.md
+├── README.md
+├── requirements-dev.txt
+├── SECURITY.md
+└── VERSION

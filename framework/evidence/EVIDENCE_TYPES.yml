@@ -1,0 +1,56 @@
+version: 0.2.0-draft
+evidence_classes:
+  documentary:
+    description: Approved or maintained documents that describe legal, governance, policy, contractual, or procedural
+      state.
+    examples:
+    - privacy_notice
+    - processing_register
+    - dpia
+    - retention_schedule
+    - processor_agreement
+    - dpo_appointment
+  organizational:
+    description: Evidence of assigned responsibilities, governance decisions, review, oversight, and accountability.
+    examples:
+    - role_assignment
+    - approval_record
+    - risk_acceptance
+    - committee_review
+    - training_record
+  technical:
+    description: Machine-generated or machine-verifiable evidence from systems, applications, endpoints, networks,
+      or security tools.
+    examples:
+    - authentication_logs
+    - database_audit_logs
+    - fim_events
+    - vulnerability_findings
+    - secure_configuration
+    - security_alerts
+  operational:
+    description: Evidence that a process was executed in practice.
+    examples:
+    - incident_ticket
+    - deletion_record
+    - notification_timestamp
+    - access_review
+    - recovery_record
+    - subject_request_record
+evidence_quality:
+  Q0: No evidence
+  Q1: Self-asserted / undocumented
+  Q2: Documented but not independently verifiable
+  Q3: Verifiable evidence with timestamps/ownership
+  Q4: Continuously collected, tamper-resistant or independently corroborated evidence
+evidence_attributes:
+- source
+- owner
+- scope
+- timestamp
+- retention
+- integrity_protection
+- collection_method
+- control_ids
+- legal_requirement_ids
+- review_status

@@ -1,0 +1,10 @@
+version: 0.10.0-rc2
+review_date: '2026-09-22'
+scope: UU 27/2022 Articles 20-56 + MK 151/PUU-XXII/2024
+authoritative_text_review: COMPLETE
+requirements_source_verified: 64
+external_legal_counsel_review: NOT_PERFORMED
+constitutional_court_interpretation_applied: true
+release_gate:
+  source_text_review: PASS
+  independent_legal_review: OPEN

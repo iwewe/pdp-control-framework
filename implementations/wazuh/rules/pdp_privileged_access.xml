@@ -1,0 +1,16 @@
+<group name="pdp,privileged_access,">
+  <!-- Generic privileged-activity wrappers. Context enrichment occurs through PDP asset metadata. -->
+
+  <rule id="110101" level="7">
+    <if_group>authentication_success</if_group>
+    <match type="pcre2">(?i)(sudo|su:|administrator|root)</match>
+    <description>PDP context candidate: privileged authentication or elevation activity.</description>
+    <group>pdp_event,pdp_privileged,pdp_evt_auth_002,pdp_req_iam_002,pdp_control_acc_002,</group>
+  </rule>
+
+  <rule id="110102" level="9" frequency="3" timeframe="300">
+    <if_matched_sid>110101</if_matched_sid>
+    <description>PDP context candidate: repeated privileged activity within short interval.</description>
+    <group>pdp_event,pdp_privileged,pdp_evt_priv_001,pdp_req_mon_002,pdp_control_acc_003,</group>
+  </rule>
+</group>

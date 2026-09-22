@@ -1,0 +1,323 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/pdp-control-framework/framework/schemas/evidence.schema.json",
+  "title": "PDP Control Framework Normalized Evidence",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "evidence_id",
+    "source",
+    "observed_at",
+    "scope",
+    "test",
+    "result",
+    "traceability",
+    "quality"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.8"
+    },
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^EV-[A-Za-z0-9_.:-]+$"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "type",
+        "system"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "wazuh_logtest",
+            "wazuh_alert",
+            "wazuh_sca",
+            "wazuh_fim",
+            "wazuh_vulnerability",
+            "manual",
+            "documentary",
+            "other"
+          ]
+        },
+        "system": {
+          "type": "string"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "collector_health": {
+          "enum": [
+            "HEALTHY",
+            "DEGRADED",
+            "MISSING",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "collected_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "scope": {
+      "type": "object",
+      "required": [
+        "processing_activity_ids",
+        "asset_ids"
+      ],
+      "properties": {
+        "processing_activity_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "environment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "organization_role": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "test": {
+      "type": "object",
+      "required": [
+        "id",
+        "engine"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^WZ-|^MAN-|^DOC-"
+        },
+        "engine": {
+          "type": "string"
+        },
+        "fixture": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "expected_rule_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "observed_rule_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "decoder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "REVIEW",
+        "ERROR",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "traceability": {
+      "type": "object",
+      "required": [
+        "requirements",
+        "controls",
+        "legal_requirements"
+      ],
+      "properties": {
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^REQ-"
+          }
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^PDP-"
+          }
+        },
+        "legal_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^LR-"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "event": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "taxonomy_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^PDP-EVT-"
+          }
+        },
+        "technical_severity": {
+          "enum": [
+            "INFO",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL",
+            "UNKNOWN"
+          ]
+        },
+        "privacy_impact": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL",
+            "UNKNOWN"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "UNKNOWN"
+          ]
+        },
+        "raw_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "quality": {
+      "type": "object",
+      "required": [
+        "level",
+        "freshness",
+        "integrity"
+      ],
+      "properties": {
+        "level": {
+          "enum": [
+            "Q0",
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4"
+          ]
+        },
+        "freshness": {
+          "enum": [
+            "FRESH",
+            "STALE",
+            "UNKNOWN"
+          ]
+        },
+        "integrity": {
+          "enum": [
+            "VERIFIED",
+            "PROTECTED",
+            "UNVERIFIED",
+            "UNKNOWN"
+          ]
+        },
+        "coverage_percent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "additionalProperties": false
+    },
+    "payload": {
+      "type": "object",
+      "description": "Normalized, minimized technical evidence. Avoid raw Personal Data.",
+      "additionalProperties": true
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "UNREVIEWED",
+            "TECHNICAL_REVIEWED",
+            "PRIVACY_REVIEWED",
+            "LEGAL_REVIEWED"
+          ]
+        },
+        "reviewer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

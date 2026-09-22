@@ -1,0 +1,43 @@
+metadata:
+  version: 0.7.0-draft
+  purpose: Expected lab outcomes. Exact decoder/rule behavior must be confirmed on real Wazuh.
+fixtures:
+- file: postgresql/pgaudit_role_create.log
+  expected_decoder: pdp-pgaudit
+  expected_rule_id: 110402
+  expected_fields:
+    pdp.audit_class: ROLE
+    pdp.command: CREATE ROLE
+- file: postgresql/pgaudit_ddl_alter_table.log
+  expected_decoder: pdp-pgaudit
+  expected_rule_id: 110403
+  expected_fields:
+    pdp.audit_class: DDL
+    pdp.command: ALTER TABLE
+    pdp.object_name: public.employee
+- file: postgresql/pgaudit_write_update.log
+  expected_decoder: pdp-pgaudit
+  expected_rule_id: 110404
+  expected_fields:
+    pdp.audit_class: WRITE
+    pdp.command: UPDATE
+    pdp.object_name: public.employee
+- file: postgresql/pgaudit_read_select.log
+  expected_decoder: pdp-pgaudit
+  expected_rule_id: 110405
+  expected_fields:
+    pdp.audit_class: READ
+    pdp.command: SELECT
+    pdp.object_name: public.employee
+- file: postgresql/pgaudit_repeated_read_20.log
+  expected_decoder: pdp-pgaudit
+  expected_rule_id: 110406
+  session_required: true
+  notes: Correlation test; all lines must be fed into the same wazuh-logtest session.
+- file: authentication/ssh_failed_once.log
+  expected_rule_id: 110001
+  notes: Depends on Wazuh built-in sshd/authentication decoder and group.
+- file: authentication/ssh_failed_8.log
+  expected_rule_id: 110002
+  session_required: true
+  notes: Correlation test; all lines must be fed into the same wazuh-logtest session.

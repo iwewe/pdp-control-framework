@@ -1,0 +1,16 @@
+<group name="pdp,syscheck,">
+  <!-- FIM wrapper rules. These rules classify existing syscheck events into PDP engineering taxonomy. -->
+
+  <rule id="110201" level="7">
+    <if_group>syscheck</if_group>
+    <description>PDP context candidate: integrity event on monitored path - $(file).</description>
+    <group>pdp_event,pdp_integrity,pdp_evt_int_001,pdp_req_int_001,pdp_control_sec_003,</group>
+  </rule>
+
+  <rule id="110202" level="10">
+    <if_sid>110201</if_sid>
+    <field name="type">deleted</field>
+    <description>PDP context candidate: deletion detected on monitored path - $(file).</description>
+    <group>pdp_event,pdp_deletion,pdp_evt_del_001,pdp_req_ret_002,pdp_control_ret_002,</group>
+  </rule>
+</group>

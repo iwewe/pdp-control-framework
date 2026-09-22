@@ -1,0 +1,77 @@
+{
+  "index_patterns": [
+    "pdp-assessment-*"
+  ],
+  "template": {
+    "settings": {
+      "index.number_of_shards": "1",
+      "index.number_of_replicas": "1",
+      "index.refresh_interval": "5s",
+      "mapping.total_fields.limit": "2000"
+    },
+    "mappings": {
+      "dynamic": "strict",
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "schema_version": {
+          "type": "keyword"
+        },
+        "assessment_id": {
+          "type": "keyword"
+        },
+        "control_id": {
+          "type": "keyword"
+        },
+        "scope.processing_activity_id": {
+          "type": "keyword"
+        },
+        "scope.asset_ids": {
+          "type": "keyword"
+        },
+        "scope.period_start": {
+          "type": "date"
+        },
+        "scope.period_end": {
+          "type": "date"
+        },
+        "method": {
+          "type": "keyword"
+        },
+        "result": {
+          "type": "keyword"
+        },
+        "evidence": {
+          "type": "keyword"
+        },
+        "evidence_health": {
+          "type": "keyword"
+        },
+        "coverage.required_tests": {
+          "type": "integer"
+        },
+        "coverage.passed_tests": {
+          "type": "integer"
+        },
+        "coverage.failed_tests": {
+          "type": "integer"
+        },
+        "coverage.error_tests": {
+          "type": "integer"
+        },
+        "coverage.review_tests": {
+          "type": "integer"
+        },
+        "coverage.coverage_percent": {
+          "type": "float"
+        }
+      }
+    }
+  },
+  "priority": 200,
+  "_meta": {
+    "framework": "PDP Control Framework",
+    "version": "0.9.0-draft"
+  }
+}

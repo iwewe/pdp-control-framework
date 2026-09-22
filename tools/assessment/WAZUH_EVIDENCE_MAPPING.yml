@@ -1,0 +1,608 @@
+metadata:
+  version: 0.8.0-draft
+tests:
+  WZ-SCA-IAM-001:
+    engine: sca
+    traceability:
+      requirements:
+      - REQ-IAM-001
+      - REQ-IAM-002
+      controls:
+      - PDP-ACC-001
+      - PDP-ACC-003
+      legal_requirements:
+      - LR-031-01
+      - LR-035-01
+      - LR-036-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-02
+      - LR-047-01
+    event_categories: []
+    default_event_context: []
+  WZ-SCA-IAM-002:
+    engine: sca
+    traceability:
+      requirements:
+      - REQ-IAM-001
+      controls:
+      - PDP-ACC-003
+      legal_requirements:
+      - LR-031-01
+      - LR-035-01
+      - LR-036-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-02
+      - LR-047-01
+    event_categories: []
+    default_event_context: []
+  WZ-SCA-IAM-003:
+    engine: sca
+    traceability:
+      requirements:
+      - REQ-IAM-002
+      controls:
+      - PDP-ACC-002
+      - PDP-ACC-003
+      legal_requirements: []
+    event_categories: []
+    default_event_context: []
+  WZ-SCA-LOG-001:
+    engine: sca
+    traceability:
+      requirements:
+      - REQ-LOG-001
+      controls:
+      - PDP-LOG-001
+      - PDP-GOV-001
+      legal_requirements:
+      - LR-031-01
+      - LR-035-01
+      - LR-036-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-02
+      - LR-047-01
+    event_categories: []
+    default_event_context: []
+  WZ-SCA-TIME-001:
+    engine: sca
+    traceability:
+      requirements:
+      - REQ-LOG-002
+      controls:
+      - PDP-LOG-001
+      - PDP-INC-002
+      legal_requirements:
+      - LR-031-01
+      - LR-035-01
+      - LR-036-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-02
+      - LR-047-01
+    event_categories: []
+    default_event_context: []
+  WZ-SCA-NET-001:
+    engine: sca
+    traceability:
+      requirements:
+      - REQ-NET-001
+      controls:
+      - PDP-SEC-001
+      - PDP-ACC-003
+      legal_requirements:
+      - LR-031-01
+      - LR-035-01
+      - LR-036-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-02
+      - LR-047-01
+    event_categories: []
+    default_event_context: []
+  WZ-SCA-CFG-001:
+    engine: sca
+    traceability:
+      requirements:
+      - REQ-CFG-001
+      controls:
+      - PDP-SEC-001
+      legal_requirements: []
+    event_categories: []
+    default_event_context: []
+  WZ-SCA-CRY-001:
+    engine: sca
+    traceability:
+      requirements:
+      - REQ-CRY-001
+      controls:
+      - PDP-SEC-001
+      - PDP-ACC-001
+      legal_requirements: []
+    event_categories: []
+    default_event_context: []
+  WZ-SCA-CRY-002:
+    engine: sca
+    traceability:
+      requirements:
+      - REQ-CRY-002
+      controls:
+      - PDP-SEC-001
+      - PDP-ACC-001
+      legal_requirements: []
+    event_categories: []
+    default_event_context: []
+  WZ-FIM-INT-001:
+    engine: fim
+    traceability:
+      requirements:
+      - REQ-INT-001
+      - REQ-CFG-002
+      controls:
+      - PDP-SEC-003
+      - PDP-INC-001
+      legal_requirements:
+      - LR-038-01
+      - LR-043-01
+      - LR-044-01
+      - LR-046-01
+    event_categories:
+    - PDP-EVT-INT-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-INT-001
+      technical_priority: HIGH
+      impact_dimensions: &id001
+      - INTEGRITY
+      - ACCOUNTABILITY
+  WZ-FIM-INT-002:
+    engine: fim
+    traceability:
+      requirements:
+      - REQ-INT-001
+      - REQ-CFG-002
+      controls:
+      - PDP-SEC-003
+      - PDP-INC-001
+      legal_requirements:
+      - LR-038-01
+      - LR-043-01
+      - LR-044-01
+      - LR-046-01
+    event_categories:
+    - PDP-EVT-INT-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-INT-001
+      technical_priority: HIGH
+      impact_dimensions: *id001
+  WZ-FIM-RET-001:
+    engine: fim
+    traceability:
+      requirements:
+      - REQ-RET-002
+      - REQ-INT-001
+      controls:
+      - PDP-RET-002
+      - PDP-RET-003
+      - PDP-INC-001
+      legal_requirements:
+      - LR-038-01
+      - LR-043-01
+      - LR-044-01
+      - LR-046-01
+    event_categories:
+    - PDP-EVT-DEL-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-DEL-001
+      technical_priority: HIGH
+      impact_dimensions:
+      - INTEGRITY
+      - AVAILABILITY
+  WZ-FIM-TEL-001:
+    engine: fim
+    traceability:
+      requirements:
+      - REQ-MON-003
+      - REQ-EVD-002
+      controls:
+      - PDP-LOG-001
+      - PDP-GOV-001
+      legal_requirements: []
+    event_categories:
+    - PDP-EVT-TEL-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-TEL-001
+      technical_priority: HIGH
+      impact_dimensions: &id006
+      - ACCOUNTABILITY
+  WZ-RUL-AUTH-001:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-MON-001
+      - REQ-INC-001
+      controls:
+      - PDP-ACC-003
+      - PDP-INC-001
+      legal_requirements:
+      - LR-031-01
+      - LR-039-01
+      - LR-046-01
+    event_categories:
+    - PDP-EVT-AUTH-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-AUTH-001
+      technical_priority: MEDIUM
+      impact_dimensions: &id002
+      - CONFIDENTIALITY
+  WZ-RUL-AUTH-002:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-IAM-002
+      - REQ-MON-002
+      controls:
+      - PDP-ACC-002
+      - PDP-ACC-003
+      legal_requirements:
+      - LR-031-01
+      - LR-039-01
+      - LR-046-01
+    event_categories:
+    - PDP-EVT-AUTH-002
+    default_event_context:
+    - taxonomy_id: PDP-EVT-AUTH-002
+      technical_priority: MEDIUM
+      impact_dimensions: &id003
+      - CONFIDENTIALITY
+      - ACCOUNTABILITY
+  WZ-RUL-PRIV-001:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-IAM-002
+      - REQ-MON-002
+      - REQ-INC-001
+      controls:
+      - PDP-ACC-002
+      - PDP-INC-001
+      legal_requirements:
+      - LR-037-01
+      - LR-039-01
+    event_categories:
+    - PDP-EVT-PRIV-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-PRIV-001
+      technical_priority: HIGH
+      impact_dimensions: &id004
+      - CONFIDENTIALITY
+      - INTEGRITY
+  WZ-RUL-LOG-001:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-LOG-001
+      - REQ-LOG-003
+      - REQ-INC-001
+      controls:
+      - PDP-LOG-001
+      - PDP-GOV-001
+      legal_requirements: []
+    event_categories:
+    - PDP-EVT-LOG-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-LOG-001
+      technical_priority: HIGH
+      impact_dimensions:
+      - ACCOUNTABILITY
+  WZ-RUL-MAL-001:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-INC-001
+      controls:
+      - PDP-SEC-001
+      - PDP-INC-001
+      legal_requirements: []
+    event_categories:
+    - PDP-EVT-MAL-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-MAL-001
+      technical_priority: HIGH
+      impact_dimensions:
+      - CONFIDENTIALITY
+      - INTEGRITY
+      - AVAILABILITY
+  WZ-RUL-DB-001:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-LOG-001
+      - REQ-MON-001
+      controls:
+      - PDP-ACC-003
+      - PDP-LOG-001
+      legal_requirements: []
+    event_categories:
+    - PDP-EVT-AUTH-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-AUTH-001
+      technical_priority: MEDIUM
+      impact_dimensions: *id002
+  WZ-RUL-DB-002:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-LOG-001
+      - REQ-MON-002
+      controls:
+      - PDP-ACC-002
+      - PDP-LOG-001
+      legal_requirements: []
+    event_categories:
+    - PDP-EVT-AUTH-002
+    - PDP-EVT-PRIV-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-AUTH-002
+      technical_priority: MEDIUM
+      impact_dimensions: *id003
+    - taxonomy_id: PDP-EVT-PRIV-001
+      technical_priority: HIGH
+      impact_dimensions: *id004
+  WZ-VUL-VUL-001:
+    engine: vulnerability_detection
+    traceability:
+      requirements:
+      - REQ-VUL-001
+      controls:
+      - PDP-SEC-001
+      - PDP-SEC-002
+      legal_requirements: []
+    event_categories:
+    - PDP-EVT-VUL-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-VUL-001
+      technical_priority: HIGH
+      impact_dimensions: &id005
+      - CONFIDENTIALITY
+      - INTEGRITY
+      - AVAILABILITY
+  WZ-VUL-VUL-002:
+    engine: vulnerability_detection
+    traceability:
+      requirements:
+      - REQ-VUL-001
+      - REQ-VUL-002
+      controls:
+      - PDP-SEC-001
+      - PDP-SEC-002
+      legal_requirements: []
+    event_categories:
+    - PDP-EVT-VUL-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-VUL-001
+      technical_priority: HIGH
+      impact_dimensions: *id005
+  WZ-VUL-VUL-003:
+    engine: vulnerability_detection
+    traceability:
+      requirements:
+      - REQ-VUL-002
+      - REQ-EVD-001
+      controls:
+      - PDP-SEC-001
+      - PDP-GOV-001
+      legal_requirements: []
+    event_categories: []
+    default_event_context: []
+  WZ-HLT-EVD-001:
+    engine: agent_health
+    traceability:
+      requirements:
+      - REQ-MON-003
+      - REQ-EVD-002
+      controls:
+      - PDP-GOV-001
+      - PDP-LOG-001
+      - PDP-INC-001
+      legal_requirements:
+      - LR-031-01
+      - LR-035-01
+      - LR-036-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-01
+      - LR-046-02
+      - LR-047-01
+    event_categories:
+    - PDP-EVT-TEL-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-TEL-001
+      technical_priority: HIGH
+      impact_dimensions: *id006
+  WZ-HLT-EVD-002:
+    engine: agent_labels
+    traceability:
+      requirements:
+      - REQ-INV-002
+      - REQ-EVD-001
+      controls:
+      - PDP-GOV-001
+      - PDP-LOG-001
+      legal_requirements: []
+    event_categories: []
+    default_event_context: []
+  WZ-HLT-EVD-003:
+    engine: agent_inventory
+    traceability:
+      requirements:
+      - REQ-INV-002
+      - REQ-EVD-001
+      controls:
+      - PDP-GOV-001
+      - PDP-LOG-001
+      legal_requirements: []
+    event_categories: []
+    default_event_context: []
+  WZ-HLT-LOG-001:
+    engine: agent_health
+    traceability:
+      requirements:
+      - REQ-LOG-003
+      - REQ-MON-003
+      - REQ-EVD-002
+      controls:
+      - PDP-LOG-001
+      - PDP-INC-001
+      legal_requirements:
+      - LR-031-01
+      - LR-046-01
+      - LR-047-01
+    event_categories:
+    - PDP-EVT-TEL-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-TEL-001
+      technical_priority: HIGH
+      impact_dimensions: *id006
+  WZ-RUL-NET-001:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-NET-001
+      - REQ-INC-001
+      controls:
+      - PDP-ACC-003
+      - PDP-SEC-001
+      legal_requirements: []
+    event_categories:
+    - PDP-EVT-NET-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-NET-001
+      technical_priority: HIGH
+      impact_dimensions:
+      - CONFIDENTIALITY
+  WZ-INC-TML-001:
+    engine: correlation
+    traceability:
+      requirements:
+      - REQ-INC-002
+      - REQ-EVD-001
+      controls:
+      - PDP-INC-002
+      - PDP-INC-004
+      legal_requirements: []
+    event_categories: []
+    default_event_context: []
+  WZ-INC-NOT-001:
+    engine: correlation
+    traceability:
+      requirements:
+      - REQ-INC-003
+      controls:
+      - PDP-INC-003
+      legal_requirements: []
+    event_categories: []
+    default_event_context: []
+  WZ-RUL-PG-001:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-LOG-001
+      - REQ-MON-002
+      controls:
+      - PDP-LOG-001
+      - PDP-ACC-002
+      legal_requirements:
+      - LR-031-01
+      - LR-037-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-01
+      - LR-046-02
+    event_categories:
+    - PDP-EVT-PRIV-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-PRIV-001
+      technical_priority: HIGH
+      impact_dimensions: *id004
+  WZ-RUL-PG-002:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-LOG-001
+      - REQ-INC-001
+      controls:
+      - PDP-LOG-001
+      - PDP-SEC-003
+      legal_requirements:
+      - LR-031-01
+      - LR-037-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-01
+      - LR-046-02
+    event_categories:
+    - PDP-EVT-INT-002
+    default_event_context:
+    - taxonomy_id: PDP-EVT-INT-002
+      technical_priority: HIGH
+      impact_dimensions:
+      - INTEGRITY
+  WZ-RUL-PG-003:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-LOG-001
+      controls:
+      - PDP-LOG-001
+      legal_requirements:
+      - LR-031-01
+      - LR-037-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-01
+      - LR-046-02
+    event_categories: []
+    default_event_context: []
+  WZ-RUL-PG-004:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-LOG-001
+      - REQ-MON-002
+      controls:
+      - PDP-LOG-001
+      - PDP-ACC-002
+      legal_requirements:
+      - LR-031-01
+      - LR-037-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-01
+      - LR-046-02
+    event_categories: []
+    default_event_context: []
+  WZ-RUL-PG-005:
+    engine: log_analysis
+    traceability:
+      requirements:
+      - REQ-INC-001
+      - REQ-MON-002
+      controls:
+      - PDP-INC-001
+      - PDP-ACC-002
+      legal_requirements:
+      - LR-031-01
+      - LR-037-01
+      - LR-038-01
+      - LR-039-01
+      - LR-046-01
+      - LR-046-02
+    event_categories:
+    - PDP-EVT-EXF-001
+    default_event_context:
+    - taxonomy_id: PDP-EVT-EXF-001
+      technical_priority: Potential exfiltration is not automatically a legally confirmed Personal Data breach.
+      impact_dimensions:
+      - CONFIDENTIALITY

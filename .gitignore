@@ -1,0 +1,23 @@
+# Runtime/generated evidence and state
+runtime/
+implementations/wazuh/tests/results/*
+!implementations/wazuh/tests/results/.gitkeep
+release/runtime-validation/**/RESULT.json
+
+# Local exports / temp
+*.ndjson.tmp
+*.local
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

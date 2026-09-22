@@ -1,0 +1,35 @@
+# PDP Control Framework - PostgreSQL 17 + pgAudit draft baseline
+# LAB_VALIDATION_REQUIRED
+#
+# This snippet is intentionally privacy-aware. Review it against the
+# processing activity, threat model, and organizational logging policy.
+
+# PostgreSQL logging
+logging_collector = on
+log_destination = 'stderr'
+log_connections = on
+log_disconnections = on
+log_line_prefix = '%m [%p] %u@%d %r '
+
+# Avoid blanket SQL statement logging here.
+# pgAudit provides more structured audit classes.
+log_statement = 'none'
+
+# pgAudit must be preloaded.
+shared_preload_libraries = 'pgaudit'
+
+# Recommended PDP baseline audit classes.
+# READ is intentionally not enabled by default because SELECT statements
+# can generate high volume and may expose sensitive query context.
+pgaudit.log = 'write,ddl,role'
+pgaudit.log_relation = on
+
+# Privacy-preserving defaults:
+pgaudit.log_parameter = off
+pgaudit.log_statement = off
+pgaudit.log_rows = on
+pgaudit.log_catalog = off
+pgaudit.log_client = off
+
+# Optional, after risk/privacy review:
+# pgaudit.log = 'read,write,ddl,role'

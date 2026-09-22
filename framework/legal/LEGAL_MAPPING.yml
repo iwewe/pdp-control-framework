@@ -1,0 +1,934 @@
+metadata:
+  framework: PDP Control Framework
+  version: 0.10.0-rc2
+  jurisdiction: Indonesia
+  primary_instrument: UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi
+  authoritative_source: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+  review_type: authoritative-text source review
+  review_date: '2026-09-22'
+  legal_counsel_review: NOT_PERFORMED
+  interpretation_notes:
+  - instrument: Putusan MK 151/PUU-XXII/2024
+    decision_date: '2025-07-30'
+    source: https://www.mkri.id/perkara/persidangan/putusan?jenis=PUU&page=1&perPage=50&search=151%2FPUU-XXII%2F2024
+    affects:
+    - Pasal 53 ayat (1) huruf b
+    effect: Kata 'dan' tidak mempunyai kekuatan hukum mengikat secara bersyarat sepanjang tidak dimaknai 'dan/atau'.
+requirements:
+- id: LR-020-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 20
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 10
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib memiliki dasar pemrosesan Data Pribadi.
+  mapped_controls:
+  - PDP-LAW-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-020-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 20
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 11
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: 'Dasar pemrosesan harus sesuai dengan salah satu dasar yang diakui UU: persetujuan eksplisit, perjanjian,
+    kewajiban hukum, kepentingan vital, kepentingan umum/pelayanan publik/kewenangan, dan/atau kepentingan sah dengan penyeimbangan
+    kepentingan.'
+  mapped_controls:
+  - PDP-LAW-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-021-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 21
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 11
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Jika pemrosesan didasarkan pada persetujuan, Pengendali wajib memberikan informasi yang diwajibkan
+    mengenai legalitas, tujuan, jenis/relevansi data, retensi, rincian informasi, jangka waktu pemrosesan, dan hak Subjek
+    Data.
+  mapped_controls:
+  - PDP-CNS-001
+  - PDP-LAW-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-021-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 21
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 12
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Jika informasi persetujuan berubah, Pengendali wajib memberitahukan perubahan kepada Subjek Data sebelum
+    perubahan tersebut terjadi.
+  mapped_controls:
+  - PDP-CNS-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-022-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 22
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 12
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Persetujuan pemrosesan dilakukan secara tertulis atau terekam dan dapat disampaikan secara elektronik
+    atau nonelektronik.
+  mapped_controls:
+  - PDP-CNS-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-022-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 22
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 4
+    pdf_page: 12
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Jika permintaan persetujuan memuat tujuan lain, permintaan tersebut harus dapat dibedakan secara jelas,
+    mudah dipahami dan diakses, serta menggunakan bahasa sederhana dan jelas.
+  mapped_controls:
+  - PDP-CNS-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-022-03
+  legal_source:
+    instrument: UU-27-2022
+    article: 22
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 5
+    pdf_page: 12
+  actor: Pengendali Data Pribadi
+  requirement_type: validity_condition
+  requirement_summary: Persetujuan yang tidak memenuhi ketentuan bentuk dan pemisahan tujuan yang diwajibkan UU batal demi
+    hukum.
+  mapped_controls:
+  - PDP-CNS-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-023-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 23
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 12
+  actor: Pengendali Data Pribadi
+  requirement_type: validity_condition
+  requirement_summary: Klausul perjanjian yang meminta pemrosesan Data Pribadi tanpa persetujuan sah secara eksplisit dari
+    Subjek Data batal demi hukum.
+  mapped_controls:
+  - PDP-CNS-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-024-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 24
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 12
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Dalam melakukan pemrosesan, Pengendali wajib dapat menunjukkan bukti persetujuan yang diberikan Subjek
+    Data.
+  mapped_controls:
+  - PDP-CNS-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-025-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 25
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 13
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pemrosesan Data Pribadi anak diselenggarakan secara khusus.
+  mapped_controls:
+  - PDP-CNS-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-025-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 25
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 13
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pemrosesan Data Pribadi anak wajib mendapat persetujuan orang tua dan/atau wali sesuai peraturan perundang-undangan.
+  mapped_controls:
+  - PDP-CNS-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-026-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 26
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 13
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pemrosesan Data Pribadi penyandang disabilitas diselenggarakan secara khusus.
+  mapped_controls:
+  - PDP-CNS-004
+  source_review_status: SOURCE_VERIFIED
+- id: LR-026-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 26
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 13
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pemrosesan Data Pribadi penyandang disabilitas dilakukan melalui komunikasi dengan cara tertentu sesuai
+    peraturan perundang-undangan.
+  mapped_controls:
+  - PDP-CNS-004
+  source_review_status: SOURCE_VERIFIED
+- id: LR-026-03
+  legal_source:
+    instrument: UU-27-2022
+    article: 26
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 3
+    pdf_page: 13
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pemrosesan Data Pribadi penyandang disabilitas wajib mendapat persetujuan penyandang disabilitas dan/atau
+    walinya sesuai peraturan perundang-undangan.
+  mapped_controls:
+  - PDP-CNS-004
+  source_review_status: SOURCE_VERIFIED
+- id: LR-027-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 27
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 13
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib melakukan pemrosesan secara terbatas dan spesifik, sah secara hukum, dan transparan.
+  mapped_controls:
+  - PDP-LAW-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-028-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 28
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 13
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib melakukan pemrosesan sesuai dengan tujuan pemrosesan Data Pribadi.
+  mapped_controls:
+  - PDP-LAW-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-029-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 29
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 13
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib memastikan akurasi, kelengkapan, dan konsistensi Data Pribadi.
+  mapped_controls:
+  - PDP-DATA-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-029-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 29
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 14
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Untuk memastikan akurasi, kelengkapan, dan konsistensi, Pengendali wajib melakukan verifikasi.
+  mapped_controls:
+  - PDP-DATA-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-030-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 30
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 14
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib memperbarui dan/atau memperbaiki kesalahan/ketidakakuratan paling lambat 3 x 24 jam
+    sejak menerima permintaan.
+  mapped_controls:
+  - PDP-RGT-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-030-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 30
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 14
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib memberitahukan hasil pembaruan dan/atau perbaikan kepada Subjek Data.
+  mapped_controls:
+  - PDP-RGT-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-031-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 31
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 14
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib melakukan perekaman terhadap seluruh kegiatan pemrosesan Data Pribadi.
+  mapped_controls:
+  - PDP-LOG-001
+  - PDP-GOV-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-032-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 32
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 14
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib memberikan akses kepada Subjek Data terhadap Data Pribadi yang diproses beserta rekam
+    jejak pemrosesan sesuai jangka waktu penyimpanan.
+  mapped_controls:
+  - PDP-RGT-002
+  - PDP-LOG-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-032-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 32
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 14
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Akses wajib diberikan paling lambat 3 x 24 jam sejak permintaan akses diterima.
+  mapped_controls:
+  - PDP-RGT-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-033-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 33
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 14
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation_with_conditions
+  requirement_summary: Pengendali wajib menolak akses perubahan Data Pribadi dalam kondisi yang ditetapkan UU, termasuk risiko
+    terhadap keamanan/kesehatan, pengungkapan Data Pribadi orang lain, dan kepentingan pertahanan/keamanan nasional.
+  mapped_controls:
+  - PDP-RGT-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-034-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 34
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 15
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib melakukan penilaian dampak Pelindungan Data Pribadi jika pemrosesan memiliki potensi
+    risiko tinggi terhadap Subjek Data.
+  mapped_controls:
+  - PDP-DPIA-001
+  - PDP-DPIA-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-034-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 34
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 15
+  actor: Pengendali Data Pribadi
+  requirement_type: applicability_criteria
+  requirement_summary: Kategori pemrosesan berpotensi risiko tinggi mencakup keputusan otomatis berdampak signifikan, Data
+    Pribadi spesifik, skala besar, evaluasi/penskoran/pemantauan sistematis, pencocokan/penggabungan data, teknologi baru,
+    dan/atau pemrosesan yang membatasi hak.
+  mapped_controls:
+  - PDP-DPIA-001
+  - PDP-DPIA-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-035-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 35
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    letter: a
+    pdf_page: 16
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib menyusun dan menerapkan langkah teknis operasional untuk melindungi Data Pribadi dari
+    gangguan pemrosesan yang bertentangan dengan peraturan perundang-undangan.
+  mapped_controls:
+  - PDP-SEC-001
+  - PDP-SEC-003
+  - PDP-LOG-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-035-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 35
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    letter: b
+    pdf_page: 16
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib menentukan tingkat keamanan Data Pribadi dengan memperhatikan sifat dan risiko Data
+    Pribadi yang harus dilindungi dalam pemrosesan.
+  mapped_controls:
+  - PDP-SEC-002
+  - PDP-DPIA-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-036-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 36
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 16
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Dalam melakukan pemrosesan, Pengendali wajib menjaga kerahasiaan Data Pribadi.
+  mapped_controls:
+  - PDP-ACC-001
+  - PDP-SEC-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-037-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 37
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 16
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib mengawasi setiap pihak yang terlibat dalam pemrosesan di bawah kendalinya.
+  mapped_controls:
+  - PDP-ACC-002
+  - PDP-LOG-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-038-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 38
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 16
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib melindungi Data Pribadi dari pemrosesan yang tidak sah.
+  mapped_controls:
+  - PDP-SEC-003
+  - PDP-ACC-003
+  - PDP-LOG-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-039-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 39
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 16
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib mencegah Data Pribadi diakses secara tidak sah.
+  mapped_controls:
+  - PDP-ACC-003
+  - PDP-ACC-001
+  - PDP-SEC-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-039-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 39
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 16
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pencegahan akses tidak sah dilakukan dengan sistem keamanan terhadap Data Pribadi yang diproses dan/atau
+    sistem elektronik yang memproses Data Pribadi secara andal, aman, dan bertanggung jawab.
+  mapped_controls:
+  - PDP-ACC-003
+  - PDP-SEC-001
+  - PDP-SEC-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-040-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 40
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 17
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib menghentikan pemrosesan ketika Subjek Data menarik kembali persetujuan.
+  mapped_controls:
+  - PDP-RGT-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-040-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 40
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 17
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Penghentian pemrosesan setelah penarikan persetujuan dilakukan paling lambat 3 x 24 jam sejak permintaan
+    diterima.
+  mapped_controls:
+  - PDP-RGT-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-041-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 41
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 17
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib melakukan penundaan dan pembatasan pemrosesan, sebagian atau seluruhnya, paling lambat
+    3 x 24 jam sejak menerima permintaan.
+  mapped_controls:
+  - PDP-RGT-004
+  source_review_status: SOURCE_VERIFIED
+- id: LR-041-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 41
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 17
+  actor: Pengendali Data Pribadi
+  requirement_type: applicability_exception
+  requirement_summary: Penundaan dan pembatasan pemrosesan tunduk pada pengecualian yang secara khusus ditetapkan dalam Pasal
+    41 ayat (2).
+  mapped_controls:
+  - PDP-RGT-004
+  source_review_status: SOURCE_VERIFIED
+- id: LR-041-03
+  legal_source:
+    instrument: UU-27-2022
+    article: 41
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 3
+    pdf_page: 17
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib memberitahukan kepada Subjek Data bahwa penundaan dan pembatasan pemrosesan telah
+    dilaksanakan.
+  mapped_controls:
+  - PDP-RGT-004
+  source_review_status: SOURCE_VERIFIED
+- id: LR-042-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 42
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 18
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib mengakhiri pemrosesan jika masa retensi tercapai, tujuan pemrosesan tercapai, atau
+    terdapat permintaan Subjek Data.
+  mapped_controls:
+  - PDP-RET-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-043-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 43
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 18
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib menghapus Data Pribadi jika tidak lagi diperlukan untuk tujuan pemrosesan, persetujuan
+    ditarik, terdapat permintaan Subjek Data, atau data diperoleh/diproses secara melawan hukum.
+  mapped_controls:
+  - PDP-RET-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-044-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 44
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 18
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib memusnahkan Data Pribadi jika kondisi pemusnahan dalam Pasal 44 ayat (1) terpenuhi,
+    termasuk habisnya retensi tertentu, permintaan Subjek Data, tidak terkait penyelesaian perkara, dan/atau data diperoleh/diproses
+    secara melawan hukum.
+  mapped_controls:
+  - PDP-RET-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-045-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 45
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 19
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib memberitahukan penghapusan dan/atau pemusnahan Data Pribadi kepada Subjek Data.
+  mapped_controls:
+  - PDP-RET-004
+  source_review_status: SOURCE_VERIFIED
+- id: LR-046-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 46
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 19
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Jika terjadi kegagalan Pelindungan Data Pribadi, Pengendali wajib menyampaikan pemberitahuan tertulis
+    paling lambat 3 x 24 jam kepada Subjek Data dan lembaga.
+  mapped_controls:
+  - PDP-INC-001
+  - PDP-INC-003
+  source_review_status: SOURCE_VERIFIED
+  notes: Penjelasan Pasal 46 ayat (1) mendefinisikan kegagalan Pelindungan Data Pribadi mencakup kegagalan kerahasiaan, integritas,
+    dan ketersediaan, termasuk perusakan, kehilangan, perubahan, pengungkapan, atau akses tidak sah.
+- id: LR-046-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 46
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 19
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pemberitahuan tertulis minimal memuat Data Pribadi yang terungkap, kapan dan bagaimana data terungkap,
+    serta upaya penanganan dan pemulihan.
+  mapped_controls:
+  - PDP-INC-002
+  - PDP-INC-004
+  source_review_status: SOURCE_VERIFIED
+- id: LR-046-03
+  legal_source:
+    instrument: UU-27-2022
+    article: 46
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 3
+    pdf_page: 19
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Dalam hal tertentu, Pengendali wajib memberitahukan kepada masyarakat mengenai kegagalan Pelindungan
+    Data Pribadi.
+  mapped_controls:
+  - PDP-INC-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-047-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 47
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 19
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali wajib bertanggung jawab atas pemrosesan dan menunjukkan pertanggungjawaban dalam pemenuhan
+    kewajiban pelaksanaan prinsip Pelindungan Data Pribadi.
+  mapped_controls:
+  - PDP-GOV-001
+  - PDP-LOG-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-048-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 48
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 19
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali berbentuk badan hukum yang melakukan penggabungan, pemisahan, pengambilalihan, peleburan,
+    atau pembubaran wajib menyampaikan pemberitahuan pengalihan Data Pribadi kepada Subjek Data.
+  mapped_controls:
+  - PDP-GOV-001
+  - PDP-TRF-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-048-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 48
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 20
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pemberitahuan pengalihan Data Pribadi dilakukan sebelum dan sesudah tindakan perubahan badan hukum
+    sebagaimana Pasal 48 ayat (1).
+  mapped_controls:
+  - PDP-GOV-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-048-03
+  legal_source:
+    instrument: UU-27-2022
+    article: 48
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 3
+    pdf_page: 20
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Dalam pembubaran badan hukum, penyimpanan, pentransferan, penghapusan, dan/atau pemusnahan Data Pribadi
+    dilaksanakan sesuai peraturan perundang-undangan.
+  mapped_controls:
+  - PDP-RET-001
+  - PDP-RET-002
+  - PDP-RET-003
+  - PDP-TRF-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-048-04
+  legal_source:
+    instrument: UU-27-2022
+    article: 48
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 4
+    pdf_page: 20
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Penyimpanan, pentransferan, penghapusan, atau pemusnahan dalam pembubaran badan hukum diberitahukan
+    kepada Subjek Data.
+  mapped_controls:
+  - PDP-GOV-001
+  - PDP-RET-004
+  source_review_status: SOURCE_VERIFIED
+- id: LR-049-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 49
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 20
+  actor: Pengendali Data Pribadi dan/atau Prosesor Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali dan/atau Prosesor wajib melaksanakan perintah lembaga dalam rangka penyelenggaraan Pelindungan
+    Data Pribadi sesuai UU.
+  mapped_controls:
+  - PDP-GOV-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-050-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 50
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 20
+  actor: Pengendali Data Pribadi
+  requirement_type: applicability_exception
+  requirement_summary: Pengecualian terhadap kewajiban tertentu hanya berlaku untuk kepentingan yang secara limitatif disebut
+    Pasal 50 dan hanya dalam rangka pelaksanaan ketentuan UU.
+  mapped_controls:
+  - PDP-GOV-001
+  - PDP-RGT-001
+  - PDP-RGT-002
+  - PDP-ACC-001
+  - PDP-RET-001
+  - PDP-RET-002
+  - PDP-RET-003
+  - PDP-RET-004
+  - PDP-INC-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-051-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 51
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 21
+  actor: Prosesor Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Jika Pengendali menunjuk Prosesor, Prosesor wajib melakukan pemrosesan berdasarkan perintah Pengendali.
+  mapped_controls:
+  - PDP-PRC-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-051-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 51
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 5
+    pdf_page: 21
+  actor: Prosesor Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Prosesor wajib memperoleh persetujuan tertulis Pengendali sebelum melibatkan Prosesor lain.
+  mapped_controls:
+  - PDP-PRC-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-051-03
+  legal_source:
+    instrument: UU-27-2022
+    article: 51
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 6
+    pdf_page: 21
+  actor: Prosesor Data Pribadi
+  requirement_type: responsibility_rule
+  requirement_summary: Jika Prosesor memproses di luar perintah dan tujuan yang ditetapkan Pengendali, pemrosesan tersebut
+    menjadi tanggung jawab Prosesor.
+  mapped_controls:
+  - PDP-PRC-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-052-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 52
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    pdf_page: 21
+  actor: Prosesor Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Kewajiban Pengendali dalam Pasal 29, 31, 35, 36, 37, 38, dan 39 berlaku juga terhadap Prosesor Data
+    Pribadi.
+  mapped_controls:
+  - PDP-PRC-001
+  - PDP-PRC-003
+  - PDP-DATA-001
+  - PDP-LOG-001
+  - PDP-SEC-001
+  - PDP-SEC-002
+  - PDP-ACC-001
+  - PDP-ACC-002
+  - PDP-ACC-003
+  - PDP-SEC-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-053-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 53
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 22
+  actor: Pengendali Data Pribadi dan Prosesor Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali dan Prosesor wajib menunjuk pejabat/petugas fungsi Pelindungan Data Pribadi apabila salah
+    satu kondisi pemicu yang berlaku terpenuhi, dengan Pasal 53 ayat (1) huruf b dibaca sesuai Putusan MK 151/PUU-XXII/2024.
+  mapped_controls:
+  - PDP-DPO-001
+  source_review_status: SOURCE_VERIFIED
+  interpretation_source:
+    instrument: MK-151-PUU-XXII-2024
+    source_url: https://www.mkri.id/perkara/persidangan/putusan?jenis=PUU&page=1&perPage=50&search=151%2FPUU-XXII%2F2024
+    decision_date: '2025-07-30'
+- id: LR-053-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 53
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 22
+  actor: Pengendali Data Pribadi dan Prosesor Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pejabat/petugas fungsi Pelindungan Data Pribadi ditunjuk berdasarkan profesionalitas, pengetahuan hukum
+    dan praktik Pelindungan Data Pribadi, serta kemampuan memenuhi tugas.
+  mapped_controls:
+  - PDP-DPO-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-054-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 54
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 1
+    pdf_page: 23
+  actor: Pejabat/Petugas Fungsi Pelindungan Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Fungsi Pelindungan Data Pribadi paling sedikit menginformasikan/memberi saran, memantau dan memastikan
+    kepatuhan, memberi saran mengenai DPIA dan memantau kinerja, serta berkoordinasi dan menjadi narahubung isu pemrosesan.
+  mapped_controls:
+  - PDP-DPO-003
+  - PDP-DPIA-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-054-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 54
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 23
+  actor: Pejabat/Petugas Fungsi Pelindungan Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Dalam melaksanakan tugasnya, fungsi Pelindungan Data Pribadi memperhatikan risiko pemrosesan dengan
+    mempertimbangkan sifat, ruang lingkup, konteks, dan tujuan pemrosesan.
+  mapped_controls:
+  - PDP-DPO-003
+  - PDP-DPIA-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-055-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 55
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 24
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Pengendali yang mengirim dan menerima transfer Data Pribadi di dalam wilayah hukum Indonesia wajib
+    melakukan Pelindungan Data Pribadi sesuai UU.
+  mapped_controls:
+  - PDP-TRF-001
+  source_review_status: SOURCE_VERIFIED
+- id: LR-056-01
+  legal_source:
+    instrument: UU-27-2022
+    article: 56
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 2
+    pdf_page: 24
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Dalam transfer lintas batas, Pengendali wajib memastikan negara penerima memiliki tingkat Pelindungan
+    Data Pribadi yang setara atau lebih tinggi.
+  mapped_controls:
+  - PDP-TRF-002
+  source_review_status: SOURCE_VERIFIED
+- id: LR-056-02
+  legal_source:
+    instrument: UU-27-2022
+    article: 56
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 3
+    pdf_page: 24
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Jika kesetaraan tingkat pelindungan tidak terpenuhi, Pengendali wajib memastikan adanya Pelindungan
+    Data Pribadi yang memadai dan bersifat mengikat.
+  mapped_controls:
+  - PDP-TRF-003
+  source_review_status: SOURCE_VERIFIED
+- id: LR-056-03
+  legal_source:
+    instrument: UU-27-2022
+    article: 56
+    source_url: https://peraturan.bpk.go.id/Download/224884/UU%20Nomor%2027%20Tahun%202022.pdf
+    paragraph: 4
+    pdf_page: 24
+  actor: Pengendali Data Pribadi
+  requirement_type: obligation
+  requirement_summary: Jika ketentuan kesetaraan dan safeguard mengikat tidak terpenuhi, Pengendali wajib memperoleh persetujuan
+    Subjek Data.
+  mapped_controls:
+  - PDP-TRF-004
+  source_review_status: SOURCE_VERIFIED

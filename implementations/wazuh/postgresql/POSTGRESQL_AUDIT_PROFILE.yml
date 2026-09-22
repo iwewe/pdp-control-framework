@@ -1,0 +1,48 @@
+profile:
+  id: wazuh-postgresql-pgaudit
+  version: 0.7.0-draft
+  status: LAB_VALIDATION_REQUIRED
+  supported_target:
+    postgresql:
+    - '17'
+    pgaudit:
+    - 17.x
+    wazuh:
+    - validate-in-lab
+  purpose: Privacy-aware PostgreSQL audit telemetry profile for PDP Control Framework.
+design:
+  audit_source: pgAudit + PostgreSQL native connection/error logging
+  privacy_default:
+    pgaudit.log_parameter: 'off'
+    pgaudit.log_statement: 'off'
+    reason: Reduce replication of raw query text and parameter values into security telemetry.
+  required_classes:
+  - write
+  - ddl
+  - role
+  conditional_classes:
+  - read
+  notes:
+  - Enable READ only when the processing risk and audit objective justify additional collection.
+  - Database-native audit logs remain best-effort telemetry and are not treated as transactional proof.
+framework_mapping:
+  requirements:
+  - REQ-LOG-001
+  - REQ-MON-001
+  - REQ-MON-002
+  - REQ-INC-001
+  - REQ-INC-002
+  - REQ-PRC-001
+  - REQ-EVD-001
+  controls:
+  - PDP-LOG-001
+  - PDP-ACC-002
+  - PDP-ACC-003
+  - PDP-INC-001
+  - PDP-INC-002
+  legal_requirements:
+  - LR-031-01
+  - LR-037-01
+  - LR-039-01
+  - LR-046-01
+  - LR-046-02

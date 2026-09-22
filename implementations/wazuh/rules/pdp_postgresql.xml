@@ -1,0 +1,42 @@
+<group name="pdp,postgresql,pgaudit,">
+  <rule id="110401" level="5">
+    <decoded_as>pdp-pgaudit</decoded_as>
+    <description>PDP PostgreSQL audit event: $(pdp.audit_class) $(pdp.command) $(pdp.object_name).</description>
+    <group>pdp_event,pdp_postgresql,pdp_audit,pdp_req_log_001,pdp_control_log_001,</group>
+  </rule>
+
+  <rule id="110402" level="8">
+    <if_sid>110401</if_sid>
+    <field name="pdp.audit_class">ROLE</field>
+    <description>PDP PostgreSQL privileged role or privilege-management activity.</description>
+    <group>pdp_event,pdp_postgresql,pdp_privileged,pdp_evt_priv_001,pdp_req_mon_002,pdp_control_acc_002,</group>
+  </rule>
+
+  <rule id="110403" level="7">
+    <if_sid>110401</if_sid>
+    <field name="pdp.audit_class">DDL</field>
+    <description>PDP PostgreSQL schema/object definition change: $(pdp.command) $(pdp.object_name).</description>
+    <group>pdp_event,pdp_postgresql,pdp_integrity,pdp_evt_int_002,pdp_req_inc_001,pdp_control_sec_003,</group>
+  </rule>
+
+  <rule id="110404" level="7">
+    <if_sid>110401</if_sid>
+    <field name="pdp.audit_class">WRITE</field>
+    <description>PDP PostgreSQL data modification audit event: $(pdp.command) $(pdp.object_name).</description>
+    <group>pdp_event,pdp_postgresql,pdp_integrity,pdp_req_log_001,pdp_control_log_001,</group>
+  </rule>
+
+  <rule id="110405" level="6">
+    <if_sid>110401</if_sid>
+    <field name="pdp.audit_class">READ</field>
+    <description>PDP PostgreSQL read audit event: $(pdp.command) $(pdp.object_name).</description>
+    <group>pdp_event,pdp_postgresql,pdp_access,pdp_req_log_001,pdp_control_acc_002,</group>
+  </rule>
+
+  <rule id="110406" level="11" frequency="20" timeframe="60">
+    <if_matched_sid>110405</if_matched_sid>
+    <same_field>pdp.object_name</same_field>
+    <description>PDP PostgreSQL candidate: high-frequency reads on same audited object.</description>
+    <group>pdp_event,pdp_postgresql,pdp_access_anomaly,pdp_evt_exf_001,pdp_req_inc_001,pdp_control_inc_001,</group>
+  </rule>
+</group>

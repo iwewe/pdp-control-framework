@@ -1,0 +1,484 @@
+metadata:
+  framework: PDP Control Framework
+  version: 0.4.0-draft
+  purpose: Technology-neutral implementation requirements derived from PDP controls.
+  rule: Controls map to generic requirements; implementation profiles map requirements to product-specific tests.
+requirement_families:
+  GOV: Governance and ownership
+  INV: Inventory and processing context
+  IAM: Identity and access management
+  CFG: Secure configuration
+  VUL: Vulnerability management
+  LOG: Logging and auditability
+  MON: Security monitoring and detection
+  INT: Integrity monitoring
+  CRY: Cryptographic protection
+  NET: Network protection
+  AVL: Availability and recovery
+  RET: Retention and secure disposal
+  INC: Incident response
+  PRC: Processor and third-party assurance
+  TRF: Transfer protection
+  EVD: Evidence assurance
+requirements:
+- id: REQ-GOV-001
+  title: Control ownership
+  objective: Setiap kontrol yang berlaku memiliki owner yang bertanggung jawab terhadap implementasi, review, dan remediation.
+  supports_controls:
+  - PDP-GOV-001
+  requirement_type:
+  - organizational
+  monitoring_mode: POINT_IN_TIME
+  expected_evidence:
+  - role_assignment
+  - control_owner_record
+  minimum_evidence_quality: Q2
+- id: REQ-INV-001
+  title: Processing activity inventory
+  objective: Aktivitas pemrosesan yang berada dalam scope dicatat dan dihubungkan ke owner, tujuan, data, aset, transfer,
+    retensi, dan risiko.
+  supports_controls:
+  - PDP-GOV-001
+  - PDP-LOG-001
+  - PDP-DATA-001
+  requirement_type:
+  - documentary
+  - organizational
+  monitoring_mode: EVENT_DRIVEN
+  expected_evidence:
+  - processing_activity_record
+  - asset_mapping
+  minimum_evidence_quality: Q2
+- id: REQ-INV-002
+  title: Personal-data asset linkage
+  objective: Aset teknis yang mendukung pemrosesan Data Pribadi dapat ditelusuri ke Processing Activity yang relevan.
+  supports_controls:
+  - PDP-SEC-002
+  - PDP-LOG-001
+  - PDP-INC-002
+  requirement_type:
+  - technical
+  - organizational
+  monitoring_mode: EVENT_DRIVEN
+  expected_evidence:
+  - asset_inventory
+  - processing_activity_asset_mapping
+  minimum_evidence_quality: Q3
+- id: REQ-IAM-001
+  title: Authentication control
+  objective: Akses ke sistem yang memproses Data Pribadi harus melalui mekanisme autentikasi yang sesuai dengan risiko.
+  supports_controls:
+  - PDP-ACC-001
+  - PDP-ACC-003
+  - PDP-SEC-001
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - authentication_configuration
+  - authentication_events
+  minimum_evidence_quality: Q3
+- id: REQ-IAM-002
+  title: Privileged access control
+  objective: Akses administratif dan privileged harus dibatasi, dapat diatribusikan, dan ditinjau.
+  supports_controls:
+  - PDP-ACC-001
+  - PDP-ACC-002
+  - PDP-ACC-003
+  requirement_type:
+  - technical
+  - organizational
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - privileged_account_inventory
+  - privileged_activity_logs
+  - access_review
+  minimum_evidence_quality: Q3
+- id: REQ-IAM-003
+  title: Account lifecycle
+  objective: Akun dibuat, diubah, dinonaktifkan, dan dihapus mengikuti kebutuhan otorisasi dan perubahan peran.
+  supports_controls:
+  - PDP-ACC-001
+  - PDP-ACC-003
+  - PDP-GOV-001
+  requirement_type:
+  - technical
+  - operational
+  monitoring_mode: EVENT_DRIVEN
+  expected_evidence:
+  - account_events
+  - identity_lifecycle_record
+  minimum_evidence_quality: Q3
+- id: REQ-CFG-001
+  title: Secure configuration baseline
+  objective: Sistem dalam scope menerapkan baseline konfigurasi keamanan yang terdokumentasi dan dapat diuji.
+  supports_controls:
+  - PDP-SEC-001
+  - PDP-ACC-003
+  requirement_type:
+  - technical
+  - documentary
+  monitoring_mode: PERIODIC
+  expected_evidence:
+  - configuration_baseline
+  - configuration_assessment
+  minimum_evidence_quality: Q3
+- id: REQ-CFG-002
+  title: Configuration drift detection
+  objective: Perubahan yang memengaruhi konfigurasi keamanan dapat dideteksi dan ditinjau.
+  supports_controls:
+  - PDP-SEC-001
+  - PDP-SEC-003
+  - PDP-GOV-001
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - configuration_change_events
+  - fim_events
+  minimum_evidence_quality: Q3
+- id: REQ-VUL-001
+  title: Vulnerability identification
+  objective: Kerentanan pada aset dalam scope diidentifikasi secara berkelanjutan atau periodik.
+  supports_controls:
+  - PDP-SEC-001
+  - PDP-SEC-002
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - vulnerability_inventory
+  - software_inventory
+  minimum_evidence_quality: Q3
+- id: REQ-VUL-002
+  title: Vulnerability remediation tracking
+  objective: Kerentanan yang relevan ditindaklanjuti berdasarkan risiko, dengan evidence remediation dan residual risk.
+  supports_controls:
+  - PDP-SEC-001
+  - PDP-SEC-002
+  - PDP-GOV-001
+  requirement_type:
+  - technical
+  - operational
+  monitoring_mode: EVENT_DRIVEN
+  expected_evidence:
+  - vulnerability_status
+  - remediation_record
+  - exception_record
+  minimum_evidence_quality: Q3
+- id: REQ-LOG-001
+  title: Security event logging
+  objective: Sistem menghasilkan log yang memadai untuk merekonstruksi aktivitas keamanan relevan.
+  supports_controls:
+  - PDP-LOG-001
+  - PDP-ACC-002
+  - PDP-INC-002
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - system_logs
+  - application_logs
+  - database_audit_logs
+  minimum_evidence_quality: Q3
+- id: REQ-LOG-002
+  title: Time integrity
+  objective: Timestamp pada evidence keamanan memiliki sumber waktu yang dapat dipercaya dan konsisten.
+  supports_controls:
+  - PDP-LOG-001
+  - PDP-INC-002
+  - PDP-GOV-001
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - time_sync_configuration
+  - timestamp_observation
+  minimum_evidence_quality: Q3
+- id: REQ-LOG-003
+  title: Log retention and availability
+  objective: Evidence log tersedia selama periode yang ditetapkan dan kehilangan telemetry dapat dideteksi.
+  supports_controls:
+  - PDP-LOG-001
+  - PDP-GOV-001
+  - PDP-INC-002
+  requirement_type:
+  - technical
+  - operational
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - log_retention_configuration
+  - telemetry_health
+  minimum_evidence_quality: Q3
+- id: REQ-MON-001
+  title: Authentication monitoring
+  objective: Aktivitas autentikasi yang relevan dimonitor untuk indikasi akses tidak sah.
+  supports_controls:
+  - PDP-ACC-003
+  - PDP-INC-001
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - authentication_alerts
+  - authentication_events
+  minimum_evidence_quality: Q3
+- id: REQ-MON-002
+  title: Privileged activity monitoring
+  objective: Aktivitas privileged dimonitor untuk tindakan yang berisiko terhadap kerahasiaan, integritas, atau ketersediaan
+    Data Pribadi.
+  supports_controls:
+  - PDP-ACC-002
+  - PDP-ACC-003
+  - PDP-INC-001
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - privileged_activity_alerts
+  - audit_logs
+  minimum_evidence_quality: Q3
+- id: REQ-MON-003
+  title: Telemetry health monitoring
+  objective: Kondisi hilang, stale, atau degraded pada sumber telemetry dapat diidentifikasi.
+  supports_controls:
+  - PDP-GOV-001
+  - PDP-LOG-001
+  - PDP-INC-001
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - agent_status
+  - collector_health
+  - last_seen
+  minimum_evidence_quality: Q3
+  notes: Absence of alerts must not be interpreted as absence of incidents when telemetry is unavailable.
+- id: REQ-INT-001
+  title: Critical file and configuration integrity
+  objective: File, konfigurasi, atau direktori kritis dimonitor terhadap perubahan yang tidak diotorisasi.
+  supports_controls:
+  - PDP-SEC-003
+  - PDP-RET-002
+  - PDP-RET-003
+  - PDP-INC-001
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - fim_events
+  - change_attribution
+  minimum_evidence_quality: Q3
+- id: REQ-CRY-001
+  title: Encryption in transit
+  objective: Transmisi Data Pribadi menggunakan proteksi kriptografis yang sesuai dengan risiko dan konteks.
+  supports_controls:
+  - PDP-SEC-001
+  - PDP-ACC-001
+  - PDP-TRF-001
+  requirement_type:
+  - technical
+  monitoring_mode: PERIODIC
+  expected_evidence:
+  - tls_configuration
+  - network_configuration
+  minimum_evidence_quality: Q3
+- id: REQ-CRY-002
+  title: Encryption at rest
+  objective: Data Pribadi yang disimpan mendapat proteksi kriptografis sesuai risiko dan konteks.
+  supports_controls:
+  - PDP-SEC-001
+  - PDP-ACC-001
+  requirement_type:
+  - technical
+  monitoring_mode: PERIODIC
+  expected_evidence:
+  - storage_encryption_configuration
+  - database_encryption_configuration
+  minimum_evidence_quality: Q3
+- id: REQ-NET-001
+  title: Network access restriction
+  objective: Eksposur dan jalur akses jaringan ke aset pemrosesan Data Pribadi dibatasi sesuai kebutuhan.
+  supports_controls:
+  - PDP-SEC-001
+  - PDP-ACC-003
+  requirement_type:
+  - technical
+  monitoring_mode: PERIODIC
+  expected_evidence:
+  - firewall_configuration
+  - listening_services
+  - network_policy
+  minimum_evidence_quality: Q3
+- id: REQ-AVL-001
+  title: Backup protection
+  objective: Backup yang mengandung Data Pribadi terlindungi terhadap akses, perubahan, dan kehilangan yang tidak sah.
+  supports_controls:
+  - PDP-SEC-001
+  - PDP-ACC-001
+  - PDP-INC-004
+  requirement_type:
+  - technical
+  - operational
+  monitoring_mode: PERIODIC
+  expected_evidence:
+  - backup_configuration
+  - backup_access_logs
+  minimum_evidence_quality: Q3
+- id: REQ-AVL-002
+  title: Recovery verification
+  objective: Kemampuan pemulihan untuk aset relevan diuji dan evidence hasil pengujian dipelihara.
+  supports_controls:
+  - PDP-SEC-002
+  - PDP-INC-004
+  - PDP-GOV-001
+  requirement_type:
+  - operational
+  monitoring_mode: PERIODIC
+  expected_evidence:
+  - recovery_test_record
+  - restore_result
+  minimum_evidence_quality: Q3
+- id: REQ-RET-001
+  title: Retention enforcement
+  objective: Kebijakan retensi yang berlaku dapat diterjemahkan menjadi tindakan operasional pada data dan evidence.
+  supports_controls:
+  - PDP-RET-001
+  - PDP-GOV-001
+  requirement_type:
+  - documentary
+  - operational
+  monitoring_mode: EVENT_DRIVEN
+  expected_evidence:
+  - retention_policy
+  - retention_execution_record
+  minimum_evidence_quality: Q2
+- id: REQ-RET-002
+  title: Deletion/destruction evidence
+  objective: Penghapusan atau pemusnahan yang diwajibkan menghasilkan evidence yang dapat diverifikasi.
+  supports_controls:
+  - PDP-RET-002
+  - PDP-RET-003
+  - PDP-RET-004
+  requirement_type:
+  - operational
+  - technical
+  monitoring_mode: EVENT_DRIVEN
+  expected_evidence:
+  - deletion_record
+  - destruction_record
+  - file_change_events
+  - database_audit_logs
+  minimum_evidence_quality: Q3
+- id: REQ-INC-001
+  title: Incident detection
+  objective: Sumber telemetry yang relevan dianalisis untuk indikasi kegagalan kerahasiaan, integritas, atau ketersediaan.
+  supports_controls:
+  - PDP-INC-001
+  - PDP-SEC-003
+  - PDP-ACC-003
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - security_alerts
+  - fim_events
+  - vulnerability_events
+  - authentication_alerts
+  minimum_evidence_quality: Q3
+- id: REQ-INC-002
+  title: Incident timeline
+  objective: Incident record menyimpan waktu deteksi, scope, evidence, tindakan, dan perubahan status.
+  supports_controls:
+  - PDP-INC-002
+  - PDP-INC-004
+  requirement_type:
+  - operational
+  - technical
+  monitoring_mode: EVENT_DRIVEN
+  expected_evidence:
+  - incident_record
+  - event_timeline
+  - evidence_links
+  minimum_evidence_quality: Q3
+- id: REQ-INC-003
+  title: Notification deadline support
+  objective: Sistem/prosedur menyediakan timestamp dan workflow yang memungkinkan pemenuhan tenggat pemberitahuan apabila
+    kewajiban hukum ditetapkan.
+  supports_controls:
+  - PDP-INC-003
+  requirement_type:
+  - operational
+  - technical
+  monitoring_mode: EVENT_DRIVEN
+  expected_evidence:
+  - detection_timestamp
+  - notification_timestamp
+  - workflow_record
+  minimum_evidence_quality: Q3
+  notes: This requirement supports timing evidence; it does not decide whether notification is legally required.
+- id: REQ-PRC-001
+  title: Processor activity traceability
+  objective: Aktivitas teknis prosesor yang relevan dapat ditelusuri ke layanan, instruksi, dan aset/processing activity
+    yang berada dalam scope.
+  supports_controls:
+  - PDP-PRC-001
+  - PDP-PRC-003
+  - PDP-LOG-001
+  requirement_type:
+  - technical
+  - documentary
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - processor_logs
+  - processor_agreement
+  - processing_instruction
+  minimum_evidence_quality: Q3
+- id: REQ-TRF-001
+  title: Transfer path visibility
+  objective: Jalur teknis transfer Data Pribadi yang relevan dapat diidentifikasi dan dikaitkan dengan keputusan transfer
+    yang terdokumentasi.
+  supports_controls:
+  - PDP-TRF-001
+  - PDP-TRF-002
+  - PDP-TRF-003
+  - PDP-TRF-004
+  requirement_type:
+  - technical
+  - documentary
+  monitoring_mode: EVENT_DRIVEN
+  expected_evidence:
+  - data_flow_record
+  - network_or_application_transfer_logs
+  - transfer_assessment
+  minimum_evidence_quality: Q2
+- id: REQ-EVD-001
+  title: Evidence provenance
+  objective: Evidence menyimpan sumber, waktu, scope, relasi kontrol, dan atribut integritas yang diperlukan.
+  supports_controls:
+  - PDP-GOV-001
+  - PDP-LOG-001
+  requirement_type:
+  - technical
+  - organizational
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - evidence_metadata
+  - source_registry
+  minimum_evidence_quality: Q3
+- id: REQ-EVD-002
+  title: Evidence source health
+  objective: Availability dan freshness sumber evidence dimonitor agar evidence gap tidak salah dibaca sebagai kondisi
+    aman.
+  supports_controls:
+  - PDP-GOV-001
+  - PDP-LOG-001
+  - PDP-INC-001
+  requirement_type:
+  - technical
+  monitoring_mode: CONTINUOUS
+  expected_evidence:
+  - source_health
+  - last_seen
+  - collection_status
+  minimum_evidence_quality: Q3

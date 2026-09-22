@@ -1,0 +1,9 @@
+<decoder name="pdp-pgaudit">
+  <prematch type="pcre2">^AUDIT:\s+</prematch>
+</decoder>
+
+<decoder name="pdp-pgaudit-fields">
+  <parent>pdp-pgaudit</parent>
+  <regex type="pcre2">^AUDIT:\s+(SESSION|OBJECT),([0-9]+),([0-9]+),([A-Z_]+),([A-Z ]+),([^,]*),([^,]*),(.*)$</regex>
+  <order>pdp.audit_type,pdp.statement_id,pdp.substatement_id,pdp.audit_class,pdp.command,pdp.object_type,pdp.object_name,pdp.audit_detail</order>
+</decoder>

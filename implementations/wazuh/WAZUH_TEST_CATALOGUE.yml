@@ -1,0 +1,726 @@
+metadata:
+  profile: wazuh
+  version: 0.7.0-draft
+  status: engineering-baseline
+  description: Expanded draft Wazuh test catalogue. Test designs require platform validation before normative release.
+  custom_rule_id_guidance: Reserve Wazuh custom rule IDs in the documented custom-rule range; assign exact IDs during implementation
+    packaging.
+tests:
+- id: WZ-SCA-IAM-001
+  title: Direct root SSH login is disabled
+  engine: sca
+  requirements:
+  - REQ-IAM-001
+  - REQ-IAM-002
+  controls:
+  - PDP-ACC-001
+  - PDP-ACC-003
+  assessment: AUTOMATED
+  expected_evidence:
+    type: configuration_observation
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  platform:
+  - linux
+  expected: PermitRootLogin is disabled
+  scope: Linux hosts using OpenSSH
+- id: WZ-SCA-IAM-002
+  title: SSH empty-password authentication is disabled
+  engine: sca
+  requirements:
+  - REQ-IAM-001
+  controls:
+  - PDP-ACC-003
+  assessment: AUTOMATED
+  expected_evidence:
+    type: configuration_observation
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  platform:
+  - linux
+  expected: PermitEmptyPasswords is disabled
+- id: WZ-SCA-IAM-003
+  title: Administrative access requires controlled privilege elevation
+  engine: sca
+  requirements:
+  - REQ-IAM-002
+  controls:
+  - PDP-ACC-002
+  - PDP-ACC-003
+  assessment: AUTOMATED
+  expected_evidence:
+    type: configuration_observation
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  platform:
+  - linux
+  expected: Administrative access is mediated through controlled privilege mechanisms
+- id: WZ-SCA-LOG-001
+  title: System audit service is enabled
+  engine: sca
+  requirements:
+  - REQ-LOG-001
+  controls:
+  - PDP-LOG-001
+  - PDP-GOV-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: configuration_observation
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  platform:
+  - linux
+  expected: Audit service enabled and configured
+- id: WZ-SCA-TIME-001
+  title: Trusted time synchronization is configured
+  engine: sca
+  requirements:
+  - REQ-LOG-002
+  controls:
+  - PDP-LOG-001
+  - PDP-INC-002
+  assessment: AUTOMATED
+  expected_evidence:
+    type: configuration_observation
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  platform:
+  - linux
+  - windows
+  expected: Trusted time synchronization enabled
+- id: WZ-SCA-NET-001
+  title: Host firewall is enabled
+  engine: sca
+  requirements:
+  - REQ-NET-001
+  controls:
+  - PDP-SEC-001
+  - PDP-ACC-003
+  assessment: AUTOMATED
+  expected_evidence:
+    type: configuration_observation
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  platform:
+  - linux
+  - windows
+  expected: Supported host firewall enabled
+- id: WZ-SCA-CFG-001
+  title: Security baseline policy is loaded and evaluated
+  engine: sca
+  requirements:
+  - REQ-CFG-001
+  controls:
+  - PDP-SEC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: sca_assessment
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  expected: Required baseline policy reports successfully
+- id: WZ-SCA-CRY-001
+  title: Approved secure transport configuration is present where locally observable
+  engine: sca
+  requirements:
+  - REQ-CRY-001
+  controls:
+  - PDP-SEC-001
+  - PDP-ACC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: configuration_observation
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  expected: Profile-defined secure transport settings present
+- id: WZ-SCA-CRY-002
+  title: Storage encryption state is observable where supported
+  engine: sca
+  requirements:
+  - REQ-CRY-002
+  controls:
+  - PDP-SEC-001
+  - PDP-ACC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: configuration_observation
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  expected: Profile-defined encryption condition satisfied
+- id: WZ-FIM-INT-001
+  title: Critical security configuration paths are monitored
+  engine: fim
+  requirements:
+  - REQ-INT-001
+  - REQ-CFG-002
+  controls:
+  - PDP-SEC-003
+  - PDP-INC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: fim_configuration
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-INT-001
+  expected: Profile-defined critical paths included in FIM scope
+- id: WZ-FIM-INT-002
+  title: Critical configuration change is detected
+  engine: fim
+  requirements:
+  - REQ-INT-001
+  - REQ-CFG-002
+  controls:
+  - PDP-SEC-003
+  - PDP-INC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: fim_event
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-INT-001
+  expected: Create/modify/delete events are observable for monitored paths
+- id: WZ-FIM-RET-001
+  title: Deletion on protected path is detected
+  engine: fim
+  requirements:
+  - REQ-RET-002
+  - REQ-INT-001
+  controls:
+  - PDP-RET-002
+  - PDP-RET-003
+  - PDP-INC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: fim_event
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-DEL-001
+  expected: Deletion events are observable for profile-defined paths
+- id: WZ-FIM-TEL-001
+  title: FIM collection freshness is within profile threshold
+  engine: fim
+  requirements:
+  - REQ-MON-003
+  - REQ-EVD-002
+  controls:
+  - PDP-LOG-001
+  - PDP-GOV-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: source_health
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-TEL-001
+  expected: FIM source is active within configured freshness threshold
+- id: WZ-RUL-AUTH-001
+  title: Repeated authentication failures are detected
+  engine: log_analysis
+  requirements:
+  - REQ-MON-001
+  - REQ-INC-001
+  controls:
+  - PDP-ACC-003
+  - PDP-INC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: security_alert
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-AUTH-001
+  expected: Repeated authentication failures trigger a correlated alert
+- id: WZ-RUL-AUTH-002
+  title: Privileged authentication is logged
+  engine: log_analysis
+  requirements:
+  - REQ-IAM-002
+  - REQ-MON-002
+  controls:
+  - PDP-ACC-002
+  - PDP-ACC-003
+  assessment: AUTOMATED
+  expected_evidence:
+    type: audit_event
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-AUTH-002
+  expected: Privileged authentication generates attributable audit evidence
+- id: WZ-RUL-PRIV-001
+  title: Privilege escalation events are detected
+  engine: log_analysis
+  requirements:
+  - REQ-IAM-002
+  - REQ-MON-002
+  - REQ-INC-001
+  controls:
+  - PDP-ACC-002
+  - PDP-INC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: security_alert
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-PRIV-001
+  expected: Privilege elevation activity is observable and attributable
+- id: WZ-RUL-LOG-001
+  title: Audit/logging service stop is detected
+  engine: log_analysis
+  requirements:
+  - REQ-LOG-001
+  - REQ-LOG-003
+  - REQ-INC-001
+  controls:
+  - PDP-LOG-001
+  - PDP-GOV-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: security_alert
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-LOG-001
+  expected: Audit/logging disablement or service stop is observable
+- id: WZ-RUL-MAL-001
+  title: Malware alert on PDP asset is contextualized
+  engine: log_analysis
+  requirements:
+  - REQ-INC-001
+  controls:
+  - PDP-SEC-001
+  - PDP-INC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: security_alert
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-MAL-001
+  expected: Malware alerts retain PDP asset and processing context
+- id: WZ-RUL-DB-001
+  title: Database authentication failures are collected and analyzed
+  engine: log_analysis
+  requirements:
+  - REQ-LOG-001
+  - REQ-MON-001
+  controls:
+  - PDP-ACC-003
+  - PDP-LOG-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: database_audit_event
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-AUTH-001
+  expected: Database authentication events are available for analysis
+  scope: Database profile; requires database audit/log source integration
+- id: WZ-RUL-DB-002
+  title: Privileged database activity is auditable
+  engine: log_analysis
+  requirements:
+  - REQ-LOG-001
+  - REQ-MON-002
+  controls:
+  - PDP-ACC-002
+  - PDP-LOG-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: database_audit_event
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-AUTH-002
+  - PDP-EVT-PRIV-001
+  expected: Privileged database actions are attributable
+  scope: Database profile; requires database-native audit telemetry
+- id: WZ-VUL-VUL-001
+  title: Vulnerability inventory is available for in-scope asset
+  engine: vulnerability_detection
+  requirements:
+  - REQ-VUL-001
+  controls:
+  - PDP-SEC-001
+  - PDP-SEC-002
+  assessment: AUTOMATED
+  expected_evidence:
+    type: vulnerability_inventory
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-VUL-001
+  expected: Vulnerability state available for monitored asset
+- id: WZ-VUL-VUL-002
+  title: Critical/high vulnerability age is tracked
+  engine: vulnerability_detection
+  requirements:
+  - REQ-VUL-001
+  - REQ-VUL-002
+  controls:
+  - PDP-SEC-001
+  - PDP-SEC-002
+  assessment: AUTOMATED
+  expected_evidence:
+    type: vulnerability_status
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-VUL-001
+  expected: Detection time and current status are available for risk-based remediation
+- id: WZ-VUL-VUL-003
+  title: Resolved vulnerability state is retained as remediation evidence
+  engine: vulnerability_detection
+  requirements:
+  - REQ-VUL-002
+  - REQ-EVD-001
+  controls:
+  - PDP-SEC-001
+  - PDP-GOV-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: remediation_evidence
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  expected: Previously detected vulnerability can be shown as resolved/remediated
+- id: WZ-HLT-EVD-001
+  title: Agent reports within expected freshness window
+  engine: agent_health
+  requirements:
+  - REQ-MON-003
+  - REQ-EVD-002
+  controls:
+  - PDP-GOV-001
+  - PDP-LOG-001
+  - PDP-INC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: source_health
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-TEL-001
+  expected: Agent last_seen is within profile threshold
+- id: WZ-HLT-EVD-002
+  title: Required PDP context labels are present
+  engine: agent_labels
+  requirements:
+  - REQ-INV-002
+  - REQ-EVD-001
+  controls:
+  - PDP-GOV-001
+  - PDP-LOG-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: context_metadata
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  expected: asset_id and processing_activity_id are available for in-scope agent
+- id: WZ-HLT-EVD-003
+  title: Evidence source registry maps Wazuh agent to stable PDP asset
+  engine: agent_inventory
+  requirements:
+  - REQ-INV-002
+  - REQ-EVD-001
+  controls:
+  - PDP-GOV-001
+  - PDP-LOG-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: source_registry
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  expected: Wazuh agent ID maps to stable asset ID and processing activity
+- id: WZ-HLT-LOG-001
+  title: Security telemetry coverage meets profile threshold
+  engine: agent_health
+  requirements:
+  - REQ-LOG-003
+  - REQ-MON-003
+  - REQ-EVD-002
+  controls:
+  - PDP-LOG-001
+  - PDP-INC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: coverage_metric
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-TEL-001
+  expected: Observed monitoring coverage meets configured engineering threshold
+- id: WZ-RUL-NET-001
+  title: Unexpected network service change is detected where telemetry exists
+  engine: log_analysis
+  requirements:
+  - REQ-NET-001
+  - REQ-INC-001
+  controls:
+  - PDP-ACC-003
+  - PDP-SEC-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: security_alert
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  event_categories:
+  - PDP-EVT-NET-001
+  expected: Profile-defined unexpected service/network exposure is alertable
+  scope: Requires suitable endpoint/network telemetry; not guaranteed by core Wazuh alone
+- id: WZ-INC-TML-001
+  title: Incident evidence includes normalized timestamps and asset context
+  engine: correlation
+  requirements:
+  - REQ-INC-002
+  - REQ-EVD-001
+  controls:
+  - PDP-INC-002
+  - PDP-INC-004
+  assessment: AUTOMATED
+  expected_evidence:
+    type: incident_timeline
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  expected: Incident evidence can be ordered by time and traced to asset/processing context
+- id: WZ-INC-NOT-001
+  title: Detection timestamp is available for notification workflow
+  engine: correlation
+  requirements:
+  - REQ-INC-003
+  controls:
+  - PDP-INC-003
+  assessment: AUTOMATED
+  expected_evidence:
+    type: detection_timestamp
+    minimum_quality: Q3
+  result_semantics:
+    pass: Observed condition satisfies test expectation
+    fail: Observed condition does not satisfy test expectation
+    error: Required evidence/collector unavailable or test execution failed
+    not_applicable: Documented scope excludes the test
+  status: DRAFT_DESIGN
+  expected: Earliest relevant detection timestamp can be preserved for human/legal workflow
+  scope: Does not determine whether legal notification is required
+- id: WZ-RUL-PG-001
+  title: pgAudit ROLE activity is detected
+  engine: log_analysis
+  requirements:
+  - REQ-LOG-001
+  - REQ-MON-002
+  controls:
+  - PDP-LOG-001
+  - PDP-ACC-002
+  event_categories:
+  - PDP-EVT-PRIV-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: database_audit_event
+    minimum_quality: Q3
+  status: LAB_VALIDATION_REQUIRED
+- id: WZ-RUL-PG-002
+  title: pgAudit DDL activity is detected
+  engine: log_analysis
+  requirements:
+  - REQ-LOG-001
+  - REQ-INC-001
+  controls:
+  - PDP-LOG-001
+  - PDP-SEC-003
+  event_categories:
+  - PDP-EVT-INT-002
+  assessment: AUTOMATED
+  expected_evidence:
+    type: database_audit_event
+    minimum_quality: Q3
+  status: LAB_VALIDATION_REQUIRED
+- id: WZ-RUL-PG-003
+  title: pgAudit WRITE activity is auditable
+  engine: log_analysis
+  requirements:
+  - REQ-LOG-001
+  controls:
+  - PDP-LOG-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: database_audit_event
+    minimum_quality: Q3
+  status: LAB_VALIDATION_REQUIRED
+- id: WZ-RUL-PG-004
+  title: pgAudit READ activity is auditable when enabled
+  engine: log_analysis
+  requirements:
+  - REQ-LOG-001
+  - REQ-MON-002
+  controls:
+  - PDP-LOG-001
+  - PDP-ACC-002
+  assessment: AUTOMATED
+  expected_evidence:
+    type: database_audit_event
+    minimum_quality: Q3
+  status: LAB_VALIDATION_REQUIRED
+- id: WZ-RUL-PG-005
+  title: High-frequency reads on the same audited object are detected
+  engine: log_analysis
+  requirements:
+  - REQ-INC-001
+  - REQ-MON-002
+  controls:
+  - PDP-INC-001
+  - PDP-ACC-002
+  event_categories:
+  - PDP-EVT-EXF-001
+  assessment: AUTOMATED
+  expected_evidence:
+    type: correlated_database_audit_event
+    minimum_quality: Q3
+  status: LAB_VALIDATION_REQUIRED
+  notes: Anomaly candidate only; not a confirmed exfiltration or breach.

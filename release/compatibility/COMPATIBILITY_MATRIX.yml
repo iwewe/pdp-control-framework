@@ -1,0 +1,42 @@
+metadata:
+  framework_version: 0.10.0-rc1
+  status: TARGET_MATRIX_NOT_FULLY_LAB_VALIDATED
+  last_reviewed: '2026-09-22'
+targets:
+- component: Wazuh central components
+  target_version: 4.14.7
+  status: TARGET
+  requirements:
+  - manager, indexer, and dashboard must use identical versions including patch level
+  notes: Primary pre-1.0 lab target.
+- component: Wazuh agent
+  target_version: 4.14.7
+  status: TARGET
+  requirements:
+  - manager version must be the same as or newer than agent version
+- component: Ubuntu
+  target_version: 24.04 LTS
+  status: TARGET
+  scope:
+  - SCA Linux baseline
+  - FIM
+  - OpenSSH
+  - auditd
+  - systemd
+  - PostgreSQL host
+- component: PostgreSQL
+  target_version: '17'
+  status: TARGET
+- component: pgAudit
+  target_version: 17.x matching PostgreSQL 17
+  status: TARGET
+- component: Python
+  target_version: '3.12'
+  status: CI_TARGET
+validation_levels:
+- UNTESTED
+- STATIC_VALIDATED
+- LAB_VALIDATED
+- PLATFORM_VALIDATED
+- SUPPORTED
+promotion_rule: No platform is marked SUPPORTED before reproducible lab evidence exists.

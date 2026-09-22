@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/pdp-control-framework/framework/schemas/finding.schema.json",
+  "title": "PDP Control Framework Finding",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "finding_id",
+    "control_id",
+    "scope",
+    "status",
+    "severity",
+    "statement",
+    "evidence",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.9"
+    },
+    "finding_id": {
+      "type": "string",
+      "pattern": "^FIND-"
+    },
+    "control_id": {
+      "type": "string",
+      "pattern": "^PDP-"
+    },
+    "scope": {
+      "type": "object",
+      "required": [
+        "processing_activity_id",
+        "asset_ids"
+      ],
+      "properties": {
+        "processing_activity_id": {
+          "type": "string"
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "enum": [
+        "OPEN",
+        "IN_PROGRESS",
+        "RISK_ACCEPTED",
+        "RESOLVED",
+        "CLOSED"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ]
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^EV-"
+      }
+    },
+    "assessment_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^ASM-"
+    },
+    "remediation_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^REM-"
+    },
+    "exception_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^EXC-"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "owner": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "risk_owner": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "legal_review_state": {
+      "enum": [
+        "NOT_REVIEWED",
+        "REVIEW_REQUIRED",
+        "REVIEWED"
+      ]
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

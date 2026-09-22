@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/pdp-control-framework/framework/schemas/control-assessment.schema.json",
+  "title": "PDP Control Assessment Result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "control_id",
+    "scope",
+    "result",
+    "evidence",
+    "method"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.8"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^ASM-"
+    },
+    "control_id": {
+      "type": "string",
+      "pattern": "^PDP-"
+    },
+    "scope": {
+      "type": "object",
+      "required": [
+        "processing_activity_id"
+      ],
+      "properties": {
+        "processing_activity_id": {
+          "type": "string"
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "period_start": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "period_end": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "method": {
+      "enum": [
+        "AUTOMATED",
+        "PARTIAL",
+        "MANUAL"
+      ]
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "REVIEW",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^EV-"
+      }
+    },
+    "evidence_health": {
+      "enum": [
+        "SUFFICIENT",
+        "DEGRADED",
+        "INSUFFICIENT",
+        "UNKNOWN"
+      ]
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "required_tests": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passed_tests": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed_tests": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error_tests": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "review_tests": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "coverage_percent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

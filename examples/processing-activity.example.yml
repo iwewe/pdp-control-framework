@@ -1,0 +1,60 @@
+processing_activity:
+  id: PA-001
+  name:
+    id: Manajemen Kepegawaian
+    en: Employee Management
+  organization_role:
+    controller: true
+    processor: false
+  owner:
+    organizational_unit: Human Resources
+    accountable_role: HR Manager
+  purpose:
+  - employment_administration
+  - payroll
+  lawful_basis:
+  - type: contract
+    reference: employment_relationship
+  - type: legal_obligation
+    reference: applicable_employment_law
+  data_subjects:
+  - employee
+  - former_employee
+  personal_data:
+    general:
+    - name
+    - address
+    - email
+    - employee_identifier
+    - bank_account
+    specific:
+    - health_information
+  cross_border_transfer:
+    enabled: false
+  risk:
+    classification: high
+    dpia_required: REVIEW_REQUIRED
+  assets:
+  - ASSET-HRIS-001
+  - ASSET-DB-001
+  applicability:
+    legal_requirements:
+    - LR-031-01
+    - LR-035-01
+    - LR-035-02
+    - LR-036-01
+    - LR-037-01
+    - LR-038-01
+    - LR-039-01
+    - LR-046-01
+    - LR-047-01
+    controls:
+    - PDP-LOG-001
+    - PDP-SEC-001
+    - PDP-SEC-002
+    - PDP-ACC-001
+    - PDP-ACC-002
+    - PDP-SEC-003
+    - PDP-ACC-003
+    - PDP-INC-001
+    - PDP-GOV-001
