@@ -10,6 +10,7 @@ availability of external government/court websites.
 | `UU_27_2022_KOMDIGI_METADATA.md` | https://jdih.komdigi.go.id/produk_hukum/view/id/832/t/crc32/ | 2026-09-22 | Metadata page for UU No. 27 Tahun 2022. Statutory article text on this page is loaded dynamically per-article and was not captured; the page itself only serves as the metadata/index record. |
 | `MK_151_PUU_XXII_2024_SOURCE.md` | https://www.mkri.id/perkara/persidangan/putusan?jenis=PUU&page=1&perPage=50&search=151%2FPUU-XXII%2F2024 | 2026-09-22 | The `mkri.id` search/listing page blocks automated fetches (HTTP 403). The official decision PDF was located instead and a local copy preserved in this directory. |
 | `putusan-mkri-151-PUU-XXII-2024.pdf` | https://s.mkri.id/public/content/persidangan/putusan/putusan_mkri_12970_1753859809.pdf | 2026-09-22 | Preserved copy of the official Constitutional Court decision PDF. |
+| `UU Nomor 27 Tahun 2022.pdf` | (uploaded directly by project maintainer) | 2026-09-22 | Full-text PDF of UU No. 27 Tahun 2022, added to close the gap noted above: the JDIH Kemkomdigi metadata page does not itself link to a downloadable full-text PDF. |
 
 ## Why this exists
 
