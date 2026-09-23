@@ -131,6 +131,54 @@ verification; the script's own temporary indices self-clean.
   Wazuh Dashboard and discoverable via the saved-objects API.
 - `dynamic: strict` enforcement still rejects genuinely unexpected fields.
 
+## Finding 3 (post-import, no code fix — operational risk) — imported saved objects did not survive a dashboard restart following a version upgrade
+
+After the validation above completed (~17:12 WIB), the 3 index patterns
+and dashboard were confirmed present via `_find`. At 17:38:54 WIB the
+`wazuh-dashboard` service was stopped and restarted (`journalctl -u
+wazuh-dashboard`: clean `Stopping...`/`Started...`, not a crash). On the
+next check, `_find` for `type=dashboard` returned `"total": 0` and none of
+the 3 `pdp-*` index patterns existed — only Wazuh's own 10 default index
+patterns remained. The `.kibana_1` index itself was not recreated (same
+index UUID before and after, confirmed via `_cat/indices/.kibana*`), so
+this was a document-level loss inside the same index, not a full index
+rebuild.
+
+Correlating with `/var/log/dpkg.log`: `wazuh-dashboard` had been upgraded
+`4.14.5-1 -> 4.14.7-1` at 14:52-14:55 WIB that same day — **before** the
+import (17:12) and **before** the restart that lost the data (17:38). The
+import itself succeeded fine on the upgraded 4.14.7 binary. The most
+consistent explanation: OpenSearch Dashboards runs its saved-objects
+migration step on every process start (`"Waiting until all OpenSearch
+nodes are compatible... before starting saved objects migrations"` /
+`"Starting saved objects migrations"`, seen in the dashboard log on every
+startup); our imported objects carried the *pre-upgrade* app's migration
+version stamps (e.g. `"migrationVersion":{"dashboard":"7.9.3"}`,
+`{"index-pattern":"7.6.0"}`). It appears the first dashboard restart
+*after* the package upgrade is what actually exercises the new version's
+migration path against those older-stamped objects, and that path did not
+preserve them here — rather than the package upgrade itself being the
+direct trigger. This is consistent with, though not proven identical to,
+what the user described from their own experience with this class of
+issue on this host.
+
+**Practical conclusion:** custom saved objects (dashboards, index
+patterns, etc.) imported into Wazuh Dashboard are **not guaranteed to
+survive a subsequent dashboard restart, especially the first restart after
+a wazuh-dashboard package upgrade**, in this environment. This is an
+operational risk for anyone relying on the imported PDP dashboard shell,
+not a defect in the PDP repository content itself (re-importing the exact
+same NDJSON worked immediately and cleanly both times). See
+`implementations/wazuh/DEPLOYMENT.md` section 4 for the resulting backup/
+reimport guidance.
+
+**Recovery performed:** re-ran
+`release/runtime-validation/dashboard/validate_real_import.py` — reported
+`"overall": "PASS"` again, identical result to the first run. Also
+re-indexed the three example documents (evidence, finding, assessment)
+and left them in place (not cleaned up) so the imported dashboard/index
+patterns have visible sample data.
+
 ## What this does NOT yet validate
 
 - The complete eight-panel dashboard (`implementations/wazuh/dashboard/DASHBOARD_SPEC.yml`)

@@ -200,3 +200,28 @@ This closes every phase originally listed as open in
 fixtures, the unresolved `sca.remote_commands` centralized-SCA blocker,
 the complete eight-panel dashboard (only the empty shell was imported),
 and a dashboard role-based access control model.
+
+## 2026-09-23 (same day) — dashboard saved objects found not to survive a restart
+
+After the above was confirmed working, the imported dashboard/index
+patterns were found completely gone shortly after a `wazuh-dashboard`
+service restart that followed a `wazuh-dashboard` package upgrade
+(`4.14.5-1 -> 4.14.7-1`) earlier the same day. The `.kibana_1` index
+itself was not recreated (same UUID before/after) — a saved-objects-level
+loss, not an index rebuild, most likely tied to how OpenSearch
+Dashboards' migration step handles objects stamped with an older app
+version's `migrationVersion`.
+
+- **Confirmed as an operational risk, not a repository defect:**
+  re-running `validate_real_import.py` restored everything immediately
+  and cleanly.
+- **Added:** `implementations/wazuh/DEPLOYMENT.md` section 4 —
+  back up dashboard saved objects before any restart/upgrade, and how to
+  verify/reimport afterward.
+- **Left in place (intentionally, for verification):** the 3 example
+  documents (evidence, finding, assessment) re-indexed into
+  `pdp-evidence-000001`, `pdp-findings-000001`, `pdp-assessment-000001`
+  so the dashboard/index patterns have visible sample data.
+
+Full evidence: `release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md`
+(Finding 3).

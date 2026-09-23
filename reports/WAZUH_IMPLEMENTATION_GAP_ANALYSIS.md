@@ -227,6 +227,24 @@ the mapping accepts real content, not just empty validation indices.
 `dynamic: strict` was re-confirmed to still reject a genuinely unknown
 field after the fix.
 
+**Operational risk found (not a repository defect, no fix possible from
+this side):** the imported dashboard/index-pattern objects were confirmed
+present at 17:12 WIB, then found completely gone (`dashboard` count 0, no
+`pdp-*` index patterns) after a `wazuh-dashboard` service restart at 17:38
+WIB — following a `wazuh-dashboard` package upgrade (`4.14.5-1 ->
+4.14.7-1`) earlier the same day. The `.kibana_1` index itself was not
+recreated (same UUID before/after), so this was a saved-objects-level
+loss, most likely tied to how OpenSearch Dashboards' migration step
+(which runs on every process start) handles objects stamped with an older
+app version's `migrationVersion`. Re-importing the same NDJSON restored
+everything cleanly, twice. **Conclusion: custom Wazuh Dashboard saved
+objects are not guaranteed to survive a dashboard restart/upgrade in this
+environment** — anyone deploying the PDP dashboard shell (or building the
+full eight-panel dashboard on top of it) needs a backup/reimport step as
+part of routine Wazuh maintenance. See
+`implementations/wazuh/DEPLOYMENT.md` section 4 for the guidance added as
+a result.
+
 ## 6. Other operational gaps for a real deployment
 
 - ~~Credential provisioning is undocumented.~~ **RESOLVED** 2026-09-22:

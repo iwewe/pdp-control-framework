@@ -155,3 +155,49 @@ own `ossec.conf`). See section 2 above: the same policy distributed via an
 agent **group's** `agent.conf` does not currently produce usable results at
 all, because its checks rely on `c:` commands that Wazuh blocks by default
 for centrally-pushed SCA policies.
+
+## 4. Back up dashboard saved objects before restarting/upgrading Wazuh Dashboard
+
+Confirmed on real Wazuh 4.14.7, 2026-09-23 (see
+`release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md`,
+Finding 3): the imported PDP dashboard shell and its 3 index patterns were
+silently lost after a `wazuh-dashboard` service restart that followed a
+`wazuh-dashboard` package upgrade (`4.14.5-1 -> 4.14.7-1`) earlier the same
+day. The underlying `.kibana_1` index was not recreated (same index UUID
+before and after) — this was a saved-objects-level loss, most likely tied
+to how OpenSearch Dashboards' migration step (which runs on every process
+start) handled objects stamped with an older app version's
+`migrationVersion`. Re-importing the same NDJSON immediately and cleanly
+restored everything both times this was tested, so the repository content
+itself is not at fault — but nothing guarantees custom saved objects
+survive the next restart, especially the first one after a package
+upgrade.
+
+**Before restarting or upgrading `wazuh-dashboard`,** export the current
+saved objects as a backup:
+
+```bash
+curl -sk -u admin:<password> \
+  -H "osd-xsrf: true" \
+  "https://<dashboard-host>/api/saved_objects/_export" \
+  -H "Content-Type: application/json" \
+  -d '{"type": ["index-pattern", "dashboard", "visualization", "search"]}' \
+  -o dashboard-backup-$(date +%Y%m%d).ndjson
+```
+
+**After the restart/upgrade completes,** verify the PDP objects are still
+present (`GET /api/saved_objects/_find?type=dashboard&search=PDP&search_fields=title`),
+and if not, re-import them:
+
+```bash
+python3 release/runtime-validation/dashboard/validate_real_import.py
+# or, to restore from your own backup instead of the repo's shell NDJSON:
+curl -sk -u admin:<password> -H "osd-xsrf: true" \
+  -F "file=@dashboard-backup-YYYYMMDD.ndjson;type=application/ndjson" \
+  "https://<dashboard-host>/api/saved_objects/_import?overwrite=true"
+```
+
+If you build out the full eight-panel dashboard
+(`implementations/wazuh/dashboard/DASHBOARD_SPEC.yml`) or add your own
+visualizations, back them up the same way — do not assume they survive a
+future Wazuh upgrade unattended.

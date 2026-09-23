@@ -41,7 +41,23 @@ bugs_found_and_fixed_in_this_lab_pass:
 - component: implementations/wazuh/indexer/templates/pdp-findings-template.json
   finding: Missing notes field.
   fix: Added notes (text).
+operational_risks_confirmed:
+- risk: >-
+    Imported dashboard saved objects (index patterns, dashboard) do not
+    reliably survive a wazuh-dashboard service restart, especially the
+    first restart after a wazuh-dashboard package upgrade. Observed
+    directly in this lab: objects present and discoverable at 17:12 WIB,
+    gone (dashboard count 0, no pdp-* index patterns) after a dashboard
+    restart at 17:38 WIB. The .kibana_1 index itself was not recreated
+    (same UUID before/after) -- this was a saved-objects-level loss, not
+    an index rebuild. Re-importing the same NDJSON restored everything
+    cleanly both times tested.
+  mitigation: >-
+    Back up saved objects before any wazuh-dashboard restart/upgrade, and
+    verify + reimport afterward. See implementations/wazuh/DEPLOYMENT.md
+    section 4.
 not_yet_covered:
 - The complete eight-panel dashboard (DASHBOARD_SPEC.yml) -- only the empty shell was imported.
 - Role-based access control (this lab used the admin superuser throughout).
 - Behavior with opensearch_security.multitenancy.enabled: true.
+- Whether saved objects survive a wazuh-dashboard restart when NOT preceded by a package upgrade (not isolated/tested separately).
