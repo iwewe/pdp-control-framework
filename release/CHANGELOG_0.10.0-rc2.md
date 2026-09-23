@@ -158,3 +158,45 @@ Full evidence: `release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026
 
 Still open: telemetry-health fixtures, the `sca.remote_commands` issue
 above, and Wazuh Indexer/Dashboard import.
+
+## 2026-09-23 (same day) — real Wazuh Indexer/Dashboard import
+
+The final untested phase: real import against Wazuh Indexer 4.14.7 and
+Wazuh Dashboard 4.14.7 on the same lab host.
+
+- **Fixed:** all three OpenSearch index templates
+  (`implementations/wazuh/indexer/templates/pdp-*-template.json`) were
+  missing schema-required fields. Indexing the unmodified, CI-validated
+  `examples/evidence.example.json` failed under `dynamic: strict` because
+  `observed_at` — a **required** field in
+  `framework/schemas/evidence.schema.json` — was never mapped. A full
+  schema-vs-mapping diff found `pdp-evidence-template.json` was also
+  missing `collected_at`, `event.raw_reference`, `review.reviewer`,
+  `review.notes`, and the entire `payload` object; `pdp-assessment-` and
+  `pdp-findings-template.json` were each missing `notes`. This meant *no*
+  genuinely schema-valid document from any of the three layers could ever
+  be indexed, despite CI's JSON Schema validation passing throughout.
+  Fixed by adding the missing fields (`payload` mapped as
+  `{"type":"object","enabled":false}`, since its schema intentionally
+  allows arbitrary sub-fields per evidence-producing engine).
+- **Fixed:** `release/runtime-validation/dashboard/validate_real_import.py`
+  unconditionally sent a `securitytenant: global` header, which fails
+  every dashboard request — even as the `admin`/`all_access` superuser —
+  when `opensearch_security.multitenancy.enabled: false` (Wazuh's own
+  default). Added `PDP_MULTITENANCY_ENABLED` (default `false`) to only
+  send that header when actually needed.
+- **Added:** `examples/control-assessment.example.json` plus a CI
+  validation step, closing a previously-open gap (no example exercised
+  `control-assessment.schema.json`).
+- **Confirmed:** after both fixes, the full import script reports
+  `"overall": "PASS"`; real evidence/assessment/finding example documents
+  were indexed directly; `dynamic: strict` still correctly rejects a
+  genuinely unknown field.
+
+Full evidence: `release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md`.
+
+This closes every phase originally listed as open in
+`reports/WAZUH_IMPLEMENTATION_GAP_ANALYSIS.md` except: telemetry-health
+fixtures, the unresolved `sca.remote_commands` centralized-SCA blocker,
+the complete eight-panel dashboard (only the empty shell was imported),
+and a dashboard role-based access control model.

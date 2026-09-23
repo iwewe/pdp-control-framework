@@ -11,8 +11,19 @@ Environment:
   PDP_DASHBOARD_PASSWORD=...
   PDP_VERIFY_TLS=false
   PDP_SECURITY_TENANT=global
+  PDP_MULTITENANCY_ENABLED=false
 
 This script performs actual API calls and writes RESULT.json.
+
+Note on PDP_MULTITENANCY_ENABLED: check
+opensearch_security.multitenancy.enabled in the target's
+opensearch_dashboards.yml. When multitenancy is disabled (the default for
+a fresh Wazuh install; confirmed on a real Wazuh 4.14.7 lab, 2026-09-23),
+sending a `securitytenant` header at all causes every saved-objects
+request to fail with "no permissions for [indices:data/write/bulk[s]] ...
+requestedTenant=global" even for the admin user, because the security
+plugin does not expect that header when multitenancy is off. Leave this
+unset/false unless the target explicitly has multitenancy enabled.
 """
 from pathlib import Path
 from datetime import datetime, timezone
@@ -38,6 +49,7 @@ DUSER=os.getenv("PDP_DASHBOARD_USER")
 DPASS=os.getenv("PDP_DASHBOARD_PASSWORD")
 VERIFY=os.getenv("PDP_VERIFY_TLS","false").lower()=="true"
 TENANT=os.getenv("PDP_SECURITY_TENANT","global")
+MULTITENANCY=os.getenv("PDP_MULTITENANCY_ENABLED","false").lower()=="true"
 
 required=[IUSER,IPASS,DUSER,DPASS]
 if not all(required):
@@ -66,7 +78,9 @@ isess.auth=(IUSER,IPASS)
 dsess=requests.Session()
 dsess.verify=VERIFY
 dsess.auth=(DUSER,DPASS)
-dheaders={"osd-xsrf":"true","securitytenant":TENANT}
+dheaders={"osd-xsrf":"true"}
+if MULTITENANCY:
+    dheaders["securitytenant"]=TENANT
 
 # 1. Indexer reachable
 resp=isess.get(INDEXER+"/",timeout=20)
@@ -116,7 +130,7 @@ for typ,title in [
 ]:
     rr=dsess.get(
         DASH+"/api/saved_objects/_find",
-        headers={"securitytenant":TENANT},
+        headers=({"securitytenant":TENANT} if MULTITENANCY else {}),
         params={"type":typ,"search":title,"search_fields":"title"},
         timeout=20
     )

@@ -1,16 +1,47 @@
 framework_version: 0.10.0-rc2
 target: Wazuh Dashboard 4.14.7 / OpenSearch Dashboards saved-object API
-validation_date: '2026-09-22'
+validation_date: '2026-09-23'
 static_ndjson_validation: PASS
 index_template_json_validation: PASS
-runtime_index_import: NOT_RUN
-runtime_saved_object_import: NOT_RUN
-status: BLOCKED_NO_WAZUH_INDEXER_DASHBOARD_RUNTIME_IN_CURRENT_ENVIRONMENT
-required_for_promotion:
-- three index templates accepted
-- temporary PDP indices created
-- sample evidence/assessment/finding documents indexed
-- saved-object NDJSON import reports success=true
-- three index patterns discoverable
-- dashboard saved object discoverable
-- cleanup succeeds
+runtime_index_import: PASS
+runtime_saved_object_import: PASS
+status: LAB_VALIDATED
+evidence: release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md
+promotion_checklist:
+- three index templates accepted: DONE
+- temporary PDP indices created: DONE
+- sample evidence/assessment/finding documents indexed: DONE (real examples.json documents, not just empty indices)
+- saved-object NDJSON import reports success=true: DONE
+- three index patterns discoverable: DONE
+- dashboard saved object discoverable: DONE
+- cleanup succeeds: DONE
+bugs_found_and_fixed_in_this_lab_pass:
+- component: release/runtime-validation/dashboard/validate_real_import.py
+  finding: >-
+    Unconditionally sent a securitytenant: global header, which breaks
+    every dashboard saved-objects request (even as admin/all_access) when
+    opensearch_security.multitenancy.enabled is false (Wazuh's own
+    default). Confirmed via raw curl before/after.
+  fix: Added PDP_MULTITENANCY_ENABLED env var (default false); only sends the header when explicitly true.
+- component: implementations/wazuh/indexer/templates/pdp-evidence-template.json
+  finding: >-
+    Missing observed_at (schema-required), collected_at, event.raw_reference,
+    review.reviewer, review.notes, and the entire payload object. Under
+    dynamic:strict this rejected every genuinely schema-valid evidence
+    document, including the committed examples/evidence.example.json.
+  fix: >-
+    Added the missing scalar fields; mapped payload as
+    {"type":"object","enabled":false} since
+    framework/schemas/evidence.schema.json intentionally marks it
+    additionalProperties:true (its shape varies per evidence-producing
+    engine).
+- component: implementations/wazuh/indexer/templates/pdp-assessment-template.json
+  finding: Missing notes field.
+  fix: Added notes (text).
+- component: implementations/wazuh/indexer/templates/pdp-findings-template.json
+  finding: Missing notes field.
+  fix: Added notes (text).
+not_yet_covered:
+- The complete eight-panel dashboard (DASHBOARD_SPEC.yml) -- only the empty shell was imported.
+- Role-based access control (this lab used the admin superuser throughout).
+- Behavior with opensearch_security.multitenancy.enabled: true.

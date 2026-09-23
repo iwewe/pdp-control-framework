@@ -15,18 +15,21 @@ associated release-readiness status files.
 ## Summary
 
 **Update 2026-09-23:** a real Wazuh 4.14.7 + PostgreSQL 17.11 + pgAudit 17.1
-lab (Ubuntu 24.04.4 LTS) is now up, and authentication, PostgreSQL,
-privileged access, FIM, SCA, and centralized `agent.conf` distribution to a
-genuinely separate enrolled agent have all been exercised against it — see
-Sections 2-4 below and `release/runtime-validation/wazuh-4.14.7/`. This
-found and fixed four real defects that static validation could not catch
-(the pgAudit decoder, two in the FIM rules, and an invalid `<syscollector>`
-element that silently broke an entire `agent.conf`), plus one non-blocking
-design limitation in the privileged-access rule. One defect remains
-**unresolved**: the SCA policy produces zero usable results when
-distributed via a centralized agent group (only as a local per-endpoint
-policy, which does work). Only Wazuh Indexer/Dashboard import remains
-completely untested.
+lab (Ubuntu 24.04.4 LTS) is now up, and every remaining phase — authentication,
+PostgreSQL, privileged access, FIM, SCA, centralized `agent.conf`
+distribution to a genuinely separate enrolled agent, and real Wazuh
+Indexer/Dashboard import — has now been exercised against it. See Sections
+2-5 below and `release/runtime-validation/`. This found and fixed six real
+defects that static validation and CI schema validation could not catch
+(the pgAudit decoder; two in the FIM rules; an invalid `<syscollector>`
+element that silently broke an entire `agent.conf`; six schema-required
+fields missing across all three OpenSearch index templates, which meant no
+genuinely valid evidence/assessment/finding document could ever be
+indexed; and a `securitytenant` header bug in the dashboard-import
+script), plus one non-blocking design limitation in the privileged-access
+rule. One defect remains **unresolved**: the SCA policy produces zero
+usable results when distributed via a centralized agent group (only as a
+local per-endpoint policy, which does work).
 
 The Wazuh implementation profile is architecturally complete (rules, SCA
 checks, decoders, agent configuration, index templates, dashboard shell all
@@ -184,7 +187,47 @@ by finding the correct mechanism to enable `sca.remote_commands` for a
 managed fleet, or by redesigning the checks to avoid `c:` commands where a
 file-content check can substitute).
 
-## 5. Other operational gaps for a real deployment
+## 5. Indexer/Dashboard import bugs found and fixed (2026-09-23)
+
+Full evidence:
+`release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md`.
+Real Wazuh Indexer 4.14.7 + Wazuh Dashboard 4.14.7 on the same lab host.
+
+**Fixed — three index templates were missing schema-required fields.**
+Indexing the unmodified, CI-schema-valid `examples/evidence.example.json`
+into `pdp-evidence-*` failed with
+`strict_dynamic_mapping_exception: ... dynamic introduction of
+[observed_at] ... is not allowed` — `observed_at` is a **required** field
+in `framework/schemas/evidence.schema.json`, yet the OpenSearch mapping
+never defined it. A systematic schema-vs-mapping diff found the same
+pattern across all three templates: `pdp-evidence-template.json` was
+missing `observed_at`, `collected_at`, `event.raw_reference`,
+`review.reviewer`, `review.notes`, and the entire `payload` object;
+`pdp-assessment-template.json` and `pdp-findings-template.json` were each
+missing `notes`. Under `dynamic: strict`, this meant **no genuinely
+schema-valid document from any of the three layers could ever be indexed**
+before this fix, despite CI's JSON Schema validation passing the whole
+time — the schema and the index mapping had silently drifted apart.
+**Fixed** by adding the missing fields, and mapping `payload` as
+`{"type":"object","enabled":false}` (stored, not indexed) since its schema
+intentionally allows arbitrary sub-fields per evidence-producing engine.
+
+**Fixed — the dashboard-import script sent an inappropriate tenant header.**
+`release/runtime-validation/dashboard/validate_real_import.py` always sent
+`securitytenant: global`, which fails every request — even as the
+`admin`/`all_access` superuser — for the very common case where
+`opensearch_security.multitenancy.enabled: false` (Wazuh's own default).
+**Fixed** by adding `PDP_MULTITENANCY_ENABLED` (default `false`) to only
+send that header when the target actually has multitenancy enabled.
+
+After both fixes, the full script reports `"overall": "PASS"`, and real
+schema-conformant documents (evidence, finding, and a newly added
+`examples/control-assessment.example.json`) were indexed directly to prove
+the mapping accepts real content, not just empty validation indices.
+`dynamic: strict` was re-confirmed to still reject a genuinely unknown
+field after the fix.
+
+## 6. Other operational gaps for a real deployment
 
 - ~~Credential provisioning is undocumented.~~ **RESOLVED** 2026-09-22:
   see `.env.example` and `implementations/wazuh/DEPLOYMENT.md` section 1.
@@ -206,7 +249,7 @@ file-content check can substitute).
   evidence from 2026-09-23 — see that file for current state. None of the
   remaining unchecked items should be assumed complete until verified.
 
-## 6. Suggested priority order
+## 7. Suggested priority order
 
 1. ~~Stand up a Wazuh 4.14.7 + Wazuh Indexer/Dashboard + PostgreSQL 17 +
    pgAudit lab~~ **DONE 2026-09-23** (native install on Ubuntu 24.04.4 LTS,
@@ -233,13 +276,22 @@ file-content check can substitute).
    (Section 4 above) — **found the policy does not work at all via
    centralized/group distribution** (`sca.remote_commands`), which
    remains unresolved.
-5. Import the three index templates and the dashboard saved-objects NDJSON
-   into a real Wazuh Indexer/Dashboard instance. **Still open** (the lab's
-   indexer/dashboard are running but have not yet been used for this).
-6. Update `release/runtime-validation/*/STATUS.yml`,
+5. ~~Import the three index templates and the dashboard saved-objects
+   NDJSON into a real Wazuh Indexer/Dashboard instance.~~ **DONE
+   2026-09-23** — see
+   `release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md`.
+   Found and fixed 6 missing schema-required fields across the three
+   templates and a `securitytenant` header bug in the import script
+   (Section 5 above).
+6. ~~Update `release/runtime-validation/*/STATUS.yml`,
    `release/compatibility/COMPATIBILITY_MATRIX.yml`, and
-   `release/PRE_1_0_CHECKLIST.md` to reflect what was actually validated —
-   do not mark items complete without reproducible lab evidence, per the
-   project's own promotion rule (`release/compatibility/COMPATIBILITY_MATRIX.yml`:
-   *"No platform is marked SUPPORTED before reproducible lab evidence
-   exists."*).
+   `release/PRE_1_0_CHECKLIST.md` to reflect what was actually validated~~
+   **DONE, ongoing** — updated after every phase in this pass (2026-09-22
+   through 2026-09-23); continue this discipline for any future validation
+   work, per the project's own promotion rule
+   (`release/compatibility/COMPATIBILITY_MATRIX.yml`: *"No platform is
+   marked SUPPORTED before reproducible lab evidence exists."*).
+7. Remaining after this pass: telemetry-health fixtures, the unresolved
+   `sca.remote_commands` centralized-SCA blocker (Section 4), the complete
+   eight-panel dashboard, and a role-based access control model for the
+   dashboard.

@@ -46,6 +46,17 @@ jobs:
           print('finding example OK')
           PY
 
+      - name: Validate control-assessment example
+        run: |
+          python - <<'PY'
+          import json
+          from jsonschema import Draft202012Validator, FormatChecker
+          schema=json.load(open('framework/schemas/control-assessment.schema.json'))
+          doc=json.load(open('examples/control-assessment.example.json'))
+          Draft202012Validator(schema, format_checker=FormatChecker()).validate(doc)
+          print('control-assessment example OK')
+          PY
+
       - name: Validate index templates
         run: |
           python - <<'PY'

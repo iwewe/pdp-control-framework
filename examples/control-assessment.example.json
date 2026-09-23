@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.8",
+  "assessment_id": "ASM-example-001",
+  "control_id": "PDP-LOG-001",
+  "scope": {
+    "processing_activity_id": "PA-LAB-001",
+    "asset_ids": ["ASSET-DB-LAB-001"]
+  },
+  "result": "PASS",
+  "evidence": ["EV-example-pg-role-001"],
+  "method": "AUTOMATED",
+  "coverage": {
+    "required_tests": 1,
+    "passed_tests": 1,
+    "failed_tests": 0,
+    "error_tests": 0,
+    "review_tests": 0,
+    "coverage_percent": 100.0
+  },
+  "notes": "Synthetic example for schema/indexer-template validation. Not a real assessment result."
+}

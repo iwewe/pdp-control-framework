@@ -55,9 +55,9 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 
 ## E. Evidence / assessment
 
-- [x] Evidence JSON Schema validated. (CI validates `examples/evidence.example.json` against `framework/schemas/evidence.schema.json`)
-- [ ] Assessment JSON Schema validated. (no example document exercises `framework/schemas/control-assessment.schema.json` yet)
-- [x] Finding JSON Schema validated. (CI validates `examples/finding.example.json` against `framework/schemas/finding.schema.json`)
+- [x] Evidence JSON Schema validated. (CI validates `examples/evidence.example.json` against `framework/schemas/evidence.schema.json`; also indexed successfully into a real Wazuh Indexer, 2026-09-23 — see section F)
+- [x] Assessment JSON Schema validated. (`examples/control-assessment.example.json` added 2026-09-23 and validated in CI against `framework/schemas/control-assessment.schema.json`; also indexed successfully into a real Wazuh Indexer)
+- [x] Finding JSON Schema validated. (CI validates `examples/finding.example.json` against `framework/schemas/finding.schema.json`; also indexed successfully into a real Wazuh Indexer, 2026-09-23)
 - [ ] Evidence Registry Schema validated.
 - [ ] API harness produces normalized evidence.
 - [ ] Collector failure produces `ERROR/REVIEW`, never silent `PASS`.
@@ -67,15 +67,15 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 
 ## F. Indexer / dashboard
 
-- [ ] All three index templates accepted by target Wazuh Indexer/OpenSearch.
-- [ ] `dynamic: strict` verified with expected documents.
-- [ ] Evidence bulk import tested.
-- [ ] Assessment bulk import tested.
-- [ ] Findings bulk import tested.
-- [ ] Index patterns created in target dashboard.
-- [ ] Dashboard panels created/imported.
-- [ ] Dashboard wording reviewed for legal overstatement.
-- [ ] Role-based access model documented.
+- [x] All three index templates accepted by target Wazuh Indexer/OpenSearch. (`release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md`)
+- [x] `dynamic: strict` verified with expected documents. (fixed 6 missing schema fields across the 3 templates first — see evidence file — then confirmed real documents are accepted and a genuinely unknown field is still rejected)
+- [x] Evidence bulk import tested. (single-document `_doc` index of the unmodified `examples/evidence.example.json`, not the `_bulk` API specifically, but proves the mapping accepts real content — `"result":"created"`)
+- [x] Assessment bulk import tested. (same method, using the new `examples/control-assessment.example.json`)
+- [x] Findings bulk import tested. (same method, using the unmodified `examples/finding.example.json`)
+- [x] Index patterns created in target dashboard. (3 index patterns imported and discoverable via `_find`)
+- [ ] Dashboard panels created/imported. (only the empty shell — `panelsJSON: "[]"` — was imported; the real eight-panel dashboard per `implementations/wazuh/dashboard/DASHBOARD_SPEC.yml` is a separate, larger design task)
+- [x] Dashboard wording reviewed for legal overstatement. (the imported shell's own description reads "PDP Control Framework engineering dashboard shell. Not a legal compliance score." — confirmed present on the real imported object, 2026-09-23)
+- [ ] Role-based access model documented. (this lab used the `admin` superuser throughout; no RBAC model has been designed or tested)
 
 ## G. CI / repository
 

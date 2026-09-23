@@ -21,6 +21,12 @@
         "evidence_id": {
           "type": "keyword"
         },
+        "observed_at": {
+          "type": "date"
+        },
+        "collected_at": {
+          "type": "date"
+        },
         "source.type": {
           "type": "keyword"
         },
@@ -90,6 +96,9 @@
         "event.confidence": {
           "type": "keyword"
         },
+        "event.raw_reference": {
+          "type": "keyword"
+        },
         "quality.level": {
           "type": "keyword"
         },
@@ -104,6 +113,16 @@
         },
         "review.state": {
           "type": "keyword"
+        },
+        "review.reviewer": {
+          "type": "keyword"
+        },
+        "review.notes": {
+          "type": "text"
+        },
+        "payload": {
+          "type": "object",
+          "enabled": false
         }
       }
     }
@@ -111,6 +130,7 @@
   "priority": 200,
   "_meta": {
     "framework": "PDP Control Framework",
-    "version": "0.9.0-draft"
+    "version": "0.10.0-rc2",
+    "notes": "payload is intentionally schema-free (framework/schemas/evidence.schema.json marks it additionalProperties:true) and is stored but not indexed (enabled:false), since its shape varies by evidence-producing engine."
   }
 }
