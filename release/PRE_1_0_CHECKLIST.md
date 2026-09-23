@@ -58,12 +58,12 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 - [x] Evidence JSON Schema validated. (CI validates `examples/evidence.example.json` against `framework/schemas/evidence.schema.json`; also indexed successfully into a real Wazuh Indexer, 2026-09-23 — see section F)
 - [x] Assessment JSON Schema validated. (`examples/control-assessment.example.json` added 2026-09-23 and validated in CI against `framework/schemas/control-assessment.schema.json`; also indexed successfully into a real Wazuh Indexer)
 - [x] Finding JSON Schema validated. (CI validates `examples/finding.example.json` against `framework/schemas/finding.schema.json`; also indexed successfully into a real Wazuh Indexer, 2026-09-23)
-- [ ] Evidence Registry Schema validated.
+- [x] Evidence Registry Schema validated. (`reports/TOOLS_PIPELINE_VALIDATION_2026-09-23.md` — `tools/evidence/register_evidence.py` run against 8 synthetic evidence documents; all 8 generated registry entries validated against `framework/schemas/evidence-registry.schema.json`)
 - [x] API harness produces normalized evidence. (`release/runtime-validation/wazuh-4.14.7/API_HARNESS_EVIDENCE_2026-09-23.md` — `run_api_logtest.py` run against the real Wazuh Server API for all 13 `HARNESS.yml` cases; found and fixed a bug where `test.decoder` was passed as an object instead of a string, then re-validated all 13 generated evidence documents against `evidence.schema.json` individually)
-- [ ] Collector failure produces `ERROR/REVIEW`, never silent `PASS`.
-- [ ] Assessment aggregator tested against PASS/FAIL/ERROR/REVIEW cases.
-- [ ] Finding generator tested.
-- [ ] Retest workflow documented.
+- [x] Collector failure produces `ERROR/REVIEW`, never silent `PASS`. (`reports/TOOLS_PIPELINE_VALIDATION_2026-09-23.md` — a synthetic `PASS` result with `source.collector_health: DEGRADED` produced assessment result `REVIEW`, confirming `tools/assessment/assess_controls.py`'s precedence logic holds)
+- [x] Assessment aggregator tested against PASS/FAIL/ERROR/REVIEW cases. (same report — all 5 precedence branches, including the collector-health override, produced the correct result and validated against `control-assessment.schema.json`)
+- [x] Finding generator tested. (same report — `tools/findings/generate_findings.py` created exactly one finding, only for the `FAIL` control, validated against `finding.schema.json`)
+- [x] Retest workflow documented. (`docs/architecture/retest-workflow.md` — new document, cross-referenced from `framework/models/FINDING_EXCEPTION_REMEDIATION_MODEL.md` section 5; grounded in the verified tool behavior above, including the explicit design decision that findings are never auto-closed)
 
 ## F. Indexer / dashboard
 

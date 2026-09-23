@@ -124,3 +124,7 @@ Test
           v
        Retest
 ```
+
+See `docs/architecture/retest-workflow.md` for the operational retest
+procedure (how to re-run a test, re-run the assessment aggregator, and
+when a finding may be manually closed).

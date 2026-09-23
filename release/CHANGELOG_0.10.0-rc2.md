@@ -303,6 +303,32 @@ the `api_username: wazuh` credential from `wazuh-install-files.tar`.
 Full evidence: `release/runtime-validation/wazuh-4.14.7/API_HARNESS_EVIDENCE_2026-09-23.md`.
 
 This closes the API-harness item from `release/PRE_1_0_CHECKLIST.md`
-section E. Remaining in that section: Evidence Registry Schema, collector
-failure -> ERROR/REVIEW, assessment aggregator, finding generator, and
-retest workflow documentation.
+section E.
+
+## 2026-09-23 (same day) — assessment/findings/registry tooling validated, section E complete
+
+Ran `tools/assessment/assess_controls.py`, `tools/findings/generate_findings.py`,
+and `tools/evidence/register_evidence.py` for the first time against 8
+hand-built, schema-valid synthetic evidence documents covering every
+precedence branch (`PASS`, `FAIL`, `ERROR`, `REVIEW`, and — the critical
+case — a `PASS` result with `source.collector_health: DEGRADED`).
+
+- **Confirmed:** the collector-health case correctly produces `REVIEW`,
+  never a silent `PASS` — closing "Collector failure produces
+  `ERROR/REVIEW`, never silent `PASS`" and "Assessment aggregator tested
+  against PASS/FAIL/ERROR/REVIEW cases".
+- **Confirmed:** the finding generator created exactly one finding, only
+  for the `FAIL` control, closing "Finding generator tested".
+- **Confirmed:** all 5 assessments, the 1 finding, and all 8 registry
+  entries validated against their respective schemas, closing "Evidence
+  Registry Schema validated".
+- **No bugs found** in any of the three tools.
+- **Added:** `docs/architecture/retest-workflow.md` — the operational
+  retest procedure was previously only a diagram label; now documented,
+  grounded in the verified tool behavior, including the explicit design
+  decision that findings are never auto-closed even on a later `PASS`.
+
+Full evidence: `reports/TOOLS_PIPELINE_VALIDATION_2026-09-23.md`.
+
+This completes every item in `release/PRE_1_0_CHECKLIST.md` section E
+(Evidence / assessment).
