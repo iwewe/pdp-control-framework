@@ -15,14 +15,18 @@ associated release-readiness status files.
 ## Summary
 
 **Update 2026-09-23:** a real Wazuh 4.14.7 + PostgreSQL 17.11 + pgAudit 17.1
-lab (Ubuntu 24.04.4 LTS) is now up, and authentication, PostgreSQL, privileged
-access, FIM, and SCA have all been exercised against it — see Sections 2 and
-3 below and `release/runtime-validation/wazuh-4.14.7/`. This found and fixed
-three real defects that static validation could not catch (one in the
-pgAudit decoder, two in the FIM rules), plus one non-blocking design
-limitation in the privileged-access rule; the SCA policy needed no fixes.
-Centralized `agent.conf` distribution to a separately enrolled agent and
-Indexer/Dashboard import remain untested.
+lab (Ubuntu 24.04.4 LTS) is now up, and authentication, PostgreSQL,
+privileged access, FIM, SCA, and centralized `agent.conf` distribution to a
+genuinely separate enrolled agent have all been exercised against it — see
+Sections 2-4 below and `release/runtime-validation/wazuh-4.14.7/`. This
+found and fixed four real defects that static validation could not catch
+(the pgAudit decoder, two in the FIM rules, and an invalid `<syscollector>`
+element that silently broke an entire `agent.conf`), plus one non-blocking
+design limitation in the privileged-access rule. One defect remains
+**unresolved**: the SCA policy produces zero usable results when
+distributed via a centralized agent group (only as a local per-endpoint
+policy, which does work). Only Wazuh Indexer/Dashboard import remains
+completely untested.
 
 The Wazuh implementation profile is architecturally complete (rules, SCA
 checks, decoders, agent configuration, index templates, dashboard shell all
@@ -139,7 +143,48 @@ Only PAM session-open events (`su`, `sshd` login, etc.) reach it. See
 `release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`
 for the corresponding fixtures and result.
 
-## 4. Other operational gaps for a real deployment
+## 4. Agent-group deployment bugs (2026-09-23) — one fixed, one unresolved
+
+A separate Wazuh 4.14.7 agent (Docker container, not the manager's own
+local agent `000` used in Sections 2-3) was enrolled to test centralized
+`agent.conf` distribution. Full evidence:
+`release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md`.
+
+**Fixed:** `implementations/wazuh/shared/pdp-linux-baseline/agent.conf`
+contained a `<syscollector>` block. Wazuh 4.14.7 rejects `<syscollector>`
+inside a centralized/shared `agent.conf`, and — critically — that single
+invalid element invalidated the **entire** file: `<labels>`, `<syscheck>`,
+and `<sca>` in the same file all silently stopped applying too, not just
+syscollector. Removed the block; syscollector runs from each agent's local
+default configuration regardless.
+
+**Unresolved (severity: high for this specific deployment path):** once
+the above was fixed, `implementations/wazuh/sca/pdp_linux_baseline.yml`
+loaded correctly via the group but produced **zero usable results** — all
+6 checks evaluated to `not applicable`. Every check uses a `c:<command>`
+rule, and Wazuh disables remote command execution by default
+(`sca.remote_commands=0`) for any SCA policy delivered via centralized
+configuration, as a guardrail against a compromised manager pushing
+arbitrary commands to agents. Setting `sca.remote_commands=1` in
+`local_internal_options.conf` — tried on both the agent and the manager,
+each with a full daemon stop+start confirmed via a fresh non-zombie
+process — did not change the outcome across 4 separate restart cycles,
+verified against the authoritative `sca_check` table in the manager's
+per-agent database (not just log messages, which stopped showing the
+"disabled" warning without the underlying behavior actually changing —
+likely Wazuh's own repeated-message log suppression).
+
+**Practical effect:** `pdp_linux_baseline.yml` currently only produces
+real results as a **local** policy in each endpoint's own `ossec.conf`
+(as validated in Section "SCA_EVIDENCE" below / `SCA_EVIDENCE_2026-09-23.md`).
+It cannot currently be distributed via an agent group and evaluate
+anything. `implementations/wazuh/DEPLOYMENT.md` has been corrected to stop
+recommending group-based SCA distribution until this is resolved (either
+by finding the correct mechanism to enable `sca.remote_commands` for a
+managed fleet, or by redesigning the checks to avoid `c:` commands where a
+file-content check can substitute).
+
+## 5. Other operational gaps for a real deployment
 
 - ~~Credential provisioning is undocumented.~~ **RESOLVED** 2026-09-22:
   see `.env.example` and `implementations/wazuh/DEPLOYMENT.md` section 1.
@@ -161,7 +206,7 @@ for the corresponding fixtures and result.
   evidence from 2026-09-23 — see that file for current state. None of the
   remaining unchecked items should be assumed complete until verified.
 
-## 5. Suggested priority order
+## 6. Suggested priority order
 
 1. ~~Stand up a Wazuh 4.14.7 + Wazuh Indexer/Dashboard + PostgreSQL 17 +
    pgAudit lab~~ **DONE 2026-09-23** (native install on Ubuntu 24.04.4 LTS,
@@ -181,12 +226,13 @@ for the corresponding fixtures and result.
    `/logtest` harness (`run_api_logtest.py`) itself has not been run yet
    either (CLI was used directly instead).
 4. ~~Execute the SCA policy on a real Ubuntu 24.04 agent and confirm ID
-   uniqueness and check results.~~ **DONE 2026-09-23** — see
+   uniqueness and check results.~~ **DONE 2026-09-23** (local policy) — see
    `release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`.
    All 6 checks ran correctly with no ID collision against the vendor
-   policy; not yet tested against a genuinely separate enrolled agent
-   (only the manager's own local agent `000`) or against other
-   third-party SCA content.
+   policy. Also now tested against a genuinely separate enrolled agent
+   (Section 4 above) — **found the policy does not work at all via
+   centralized/group distribution** (`sca.remote_commands`), which
+   remains unresolved.
 5. Import the three index templates and the dashboard saved-objects NDJSON
    into a real Wazuh Indexer/Dashboard instance. **Still open** (the lab's
    indexer/dashboard are running but have not yet been used for this).

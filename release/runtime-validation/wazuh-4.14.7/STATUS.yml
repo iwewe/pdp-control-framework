@@ -9,10 +9,12 @@ lab_environment:
   os: Ubuntu 24.04.4 LTS
   postgresql: '17.11'
   pgaudit: '17.1'
+  separate_agent: Docker container (ubuntu:24.04) running wazuh-agent 4.14.7-1, enrolled via agent-auth
 evidence:
 - release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md
 - release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md
 - release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md
+- release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md
 promotion_checklist:
   manager_reports_version_v4.14.7: DONE
   custom_decoder_loads: DONE
@@ -20,8 +22,8 @@ promotion_checklist:
   fixture_logtest_matches_expected_rules: DONE
   correlation_fixtures_pass_in_same_session: DONE
   fim_add_modify_delete_validated: DONE
-  sca_policy_executes_on_ubuntu_24.04_test_agent: DONE
-  agent_conf_validation_passes: NOT_RUN
+  sca_policy_executes_on_ubuntu_24.04_test_agent: DONE (local policy deployment only; see known_issues)
+  agent_conf_validation_passes: DONE (after fixing the syscollector bug below)
 bugs_found_and_fixed_in_this_lab_pass:
 - rule: 110101/110102 (pdp_privileged_access.xml)
   finding: >-
@@ -41,13 +43,36 @@ bugs_found_and_fixed_in_this_lab_pass:
     Checked field name "type", which does not exist on the decoded alert
     (confirmed via a live delete event's full JSON); the rule never fired.
   fix: Changed to decoded_as "syscheck_deleted", matching how the built-in rule 553 identifies deletions.
+- file: implementations/wazuh/shared/pdp-linux-baseline/agent.conf
+  finding: >-
+    Contained a <syscollector> block, which Wazuh 4.14.7 rejects inside a
+    centralized/shared agent.conf ("Invalid element in the configuration:
+    'syscollector'"). This single invalid element invalidated the ENTIRE
+    agent.conf for the group -- labels, syscheck, and sca all silently
+    stopped applying too, not just syscollector.
+  fix: Removed the <syscollector> block (must be configured locally per agent instead).
+known_issues_not_fixed:
+- issue: >-
+    pdp_linux_baseline.yml SCA policy produces zero usable results when
+    distributed via a centralized agent group. All 6 checks use c:<command>
+    rules, and Wazuh disables remote command execution by default
+    (sca.remote_commands=0) for SCA policies delivered via centralized
+    config, as a security guardrail. Confirmed via the authoritative
+    sca_check table (all 6 checks: result=not applicable).
+  attempted_fix: >-
+    Set sca.remote_commands=1 in local_internal_options.conf on both the
+    agent and the manager, with full daemon stop+start (confirmed fresh,
+    non-zombie processes). Did not change the outcome across 4 separate
+    restart cycles.
+  status: UNRESOLVED
+  workaround: >-
+    Deploy pdp_linux_baseline.yml as a LOCAL policy in each endpoint's own
+    ossec.conf <sca><policies> block instead of via an agent group -- this
+    was validated successfully (SCA_EVIDENCE_2026-09-23.md).
+  evidence: release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md
 not_yet_covered:
 - No fixtures exist yet for pdp_telemetry_health.xml (110301), so that
   rule family was not exercised.
-- No agent enrolled in this lab yet, so centralized agent.conf
-  distribution has not been tested end to end (SCA/FIM/rules above were
-  all validated against the manager's own local agent 000, not a
-  separately enrolled endpoint).
 - SCA check-ID collision against a different real installation's other
   policies (only the vendor cis_ubuntu24-04.yml policy coexisted in this
   lab; no collision observed, but not exhaustively tested).

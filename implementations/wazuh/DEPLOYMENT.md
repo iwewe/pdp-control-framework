@@ -67,6 +67,13 @@ cp implementations/wazuh/shared/pdp-linux-baseline/agent.conf \
 cp implementations/wazuh/shared/pdp-database/agent.conf \
    /var/ossec/etc/shared/pdp-database/agent.conf
 
+# pdp-linux-baseline/agent.conf references an SCA policy by an agent-side
+# path (/var/ossec/etc/shared/pdp_linux_baseline.yml). That file must be
+# pushed to the agent through the same shared-files mechanism, so it also
+# needs to live in the group's directory on the manager:
+cp implementations/wazuh/sca/pdp_linux_baseline.yml \
+   /var/ossec/etc/shared/pdp-linux-baseline/pdp_linux_baseline.yml
+
 # 3. Assign an agent to a group
 /var/ossec/bin/agent_groups -a -i <agent_id> -g pdp-linux-baseline
 # a database host is typically in both groups (baseline + database overlay):
@@ -76,6 +83,32 @@ cp implementations/wazuh/shared/pdp-database/agent.conf \
 #    interval, or immediately by restarting the agent:
 systemctl restart wazuh-agent
 ```
+
+> **Do not include a `<syscollector>` block in a group's `agent.conf`.**
+> Confirmed on real Wazuh 4.14.7, 2026-09-23: Wazuh rejects `<syscollector>`
+> inside a centralized/shared `agent.conf` ("Invalid element in the
+> configuration: 'syscollector'"), and that single invalid element
+> invalidates the **entire** `agent.conf` for that agent -- labels,
+> syscheck, and SCA all silently stop applying too, not just syscollector.
+> `implementations/wazuh/shared/pdp-linux-baseline/agent.conf` no longer
+> includes it, for this reason. Configure syscollector locally in each
+> agent's own `ossec.conf` instead.
+
+> **The SCA policy does not currently work when distributed this way.**
+> Confirmed on real Wazuh 4.14.7, 2026-09-23 (see
+> `release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md`):
+> every check in `pdp_linux_baseline.yml` uses a `c:<command>` rule, and
+> Wazuh disables command execution by default (`sca.remote_commands=0`)
+> for any SCA policy delivered via centralized/shared configuration, as a
+> guardrail against a compromised manager pushing arbitrary commands to
+> agents. Setting `sca.remote_commands=1` in `local_internal_options.conf`
+> (tried on both the agent and the manager, with full daemon restarts) did
+> **not** resolve this in this lab -- the policy's checks stayed
+> `not applicable`. Until this is resolved, deploy `pdp_linux_baseline.yml`
+> as a **local** policy in each endpoint's own `ossec.conf`
+> `<sca><policies>` block instead (as validated in
+> `release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`),
+> not via an agent group.
 
 Before deploying, replace the placeholder label values in
 `implementations/wazuh/shared/pdp-linux-baseline/agent.conf`
@@ -116,3 +149,9 @@ alone does not make Wazuh load it. Confirmed on real Wazuh 4.14.7,
 no collision was observed against the bundled `cis_ubuntu24-04.yml` policy,
 and all 6 checks executed and produced correct results once the
 `<policies>` entry was added.
+
+That test was against a **local** `<sca><policies>` entry (the manager's
+own `ossec.conf`). See section 2 above: the same policy distributed via an
+agent **group's** `agent.conf` does not currently produce usable results at
+all, because its checks rely on `c:` commands that Wazuh blocks by default
+for centrally-pushed SCA policies.

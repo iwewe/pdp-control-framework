@@ -43,14 +43,15 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 - [x] Target Wazuh version pinned in compatibility matrix. (4.14.7, `release/compatibility/COMPATIBILITY_MATRIX.yml`)
 - [x] Manager/indexer/dashboard version compatibility verified. (all three report `4.14.7-1` on the same host, 2026-09-23)
 - [x] All custom rule IDs unique and within project-reserved range. (14 rule IDs, all within 100000-120000, enforced by `tools/validation/validate_structure.py`)
-- [x] SCA YAML executes successfully. (`release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md` — all 6 checks in `pdp_linux_baseline.yml` executed on real Wazuh 4.14.7 + Ubuntu 24.04.4; every result independently reproduced with direct shell commands. No bug found.)
+- [x] SCA YAML executes successfully. (`release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md` — all 6 checks in `pdp_linux_baseline.yml` executed on real Wazuh 4.14.7 + Ubuntu 24.04.4; every result independently reproduced with direct shell commands. No bug found. **Caveat:** this was as a *local* policy; see the unchecked item below for centralized/group deployment.)
+- [ ] SCA policy produces real results when deployed via a centralized agent group (not just as a local policy). **Confirmed NOT working** (`release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md`): all 6 checks use `c:<command>` rules, which Wazuh disables by default for centrally-pushed SCA policies (`sca.remote_commands=0`); setting `sca.remote_commands=1` on both agent and manager did not resolve it. Workaround documented in `implementations/wazuh/DEPLOYMENT.md`.
 - [x] Authentication fixtures validated with real `wazuh-logtest`. (`release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`: both `ssh_failed_once.log` -> 110001 and the `ssh_failed_8.log` correlation -> 110002 matched exactly; `su_session_opened.log` -> 110101 and the repeated-3 correlation -> 110102 also matched)
 - [x] FIM fixtures validated on Ubuntu 24.04. (`release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md` — live create/modify/delete against a realtime-monitored path, not a static fixture; found and fixed two rule bugs in the process, see that file and `implementations/wazuh/rules/pdp_fim.xml`)
 - [ ] Telemetry-health rules adapted to actual Wazuh events.
 - [x] pgAudit decoder validated against real PostgreSQL 17 + pgAudit output. (`release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`: all 5 non-correlation fixtures matched their expected rule id on real Wazuh 4.14.7 + PostgreSQL 17.11 + pgAudit 17.1)
 - [x] PostgreSQL correlation rule tested in one logtest session. (`pgaudit_repeated_read_20.log`, single `wazuh-logtest` session, escalated to rule 110406 as expected)
-- [ ] Centralized `agent.conf` accepted by Wazuh. (no agent enrolled in the lab yet)
-- [ ] No implementation test remains incorrectly marked as validated.
+- [x] Centralized `agent.conf` accepted by Wazuh. (`release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md` — a separate Docker-based agent was enrolled and both `pdp-linux-baseline` and `pdp-database` agent.conf overlays were distributed successfully after fixing a real bug: `<syscollector>` is not valid in a centralized `agent.conf` and was invalidating the whole file)
+- [ ] No implementation test remains incorrectly marked as validated. (ongoing discipline item, not a one-time check; the SCA-via-group finding above is exactly the kind of thing this guards against)
 
 ## E. Evidence / assessment
 

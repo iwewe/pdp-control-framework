@@ -126,3 +126,35 @@ import.
 
 Still open: telemetry-health fixtures, centralized `agent.conf`
 distribution to a separately enrolled agent, and Indexer/Dashboard import.
+
+## 2026-09-23 (same day) — separate-agent enrollment and agent.conf distribution
+
+A genuinely separate Wazuh 4.14.7 agent was enrolled (a Docker container
+running `wazuh-agent`, not the manager's own local agent `000` used in
+every prior test) to validate centralized configuration distribution:
+
+- **Fixed:** `implementations/wazuh/shared/pdp-linux-baseline/agent.conf`
+  contained a `<syscollector>` block. Wazuh 4.14.7 rejects `<syscollector>`
+  inside a centralized/shared `agent.conf`, and critically, that single
+  invalid element invalidated the *entire* file — `<labels>`,
+  `<syscheck>`, and `<sca>` in the same file all silently stopped applying
+  too. Removed the block (syscollector must be configured locally per
+  agent instead).
+- **Confirmed working after the fix:** both `pdp-linux-baseline/agent.conf`
+  and `pdp-database/agent.conf` distribute cleanly via agent groups, with
+  `syscheck` correctly monitoring the labeled directories on the agent.
+- **Found, unresolved:** `pdp_linux_baseline.yml` produces zero usable
+  results when distributed via a centralized agent group — every check
+  uses a `c:<command>` rule, and Wazuh disables remote command execution
+  by default (`sca.remote_commands=0`) for centrally-pushed SCA policies.
+  Setting `sca.remote_commands=1` on both the agent and the manager (with
+  full daemon restarts, verified via fresh non-zombie processes) did not
+  resolve it, confirmed against the manager's authoritative `sca_check`
+  database table across 4 restart cycles. `implementations/wazuh/DEPLOYMENT.md`
+  now documents this and recommends local policy deployment instead until
+  resolved.
+
+Full evidence: `release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md`.
+
+Still open: telemetry-health fixtures, the `sca.remote_commands` issue
+above, and Wazuh Indexer/Dashboard import.
