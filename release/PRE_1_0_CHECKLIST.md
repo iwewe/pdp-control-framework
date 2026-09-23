@@ -73,7 +73,7 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 - [x] Assessment bulk import tested. (same method, using the new `examples/control-assessment.example.json`)
 - [x] Findings bulk import tested. (same method, using the unmodified `examples/finding.example.json`)
 - [x] Index patterns created in target dashboard. (3 index patterns imported and discoverable via `_find`)
-- [ ] Dashboard panels created/imported. (only the empty shell — `panelsJSON: "[]"` — was imported; the real eight-panel dashboard per `implementations/wazuh/dashboard/DASHBOARD_SPEC.yml` is a separate, larger design task)
+- [x] Dashboard panels created/imported. (`release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md` — all 8 panels from `implementations/wazuh/dashboard/DASHBOARD_SPEC.yml` generated via `implementations/wazuh/dashboard/generate_dashboard_ndjson.py`, imported into the real Wazuh Dashboard, and every panel's aggregation confirmed to execute against the real index mappings without error. Rendering was not confirmed in an actual browser session.)
 - [x] Dashboard wording reviewed for legal overstatement. (the imported shell's own description reads "PDP Control Framework engineering dashboard shell. Not a legal compliance score." — confirmed present on the real imported object, 2026-09-23)
 - [ ] Role-based access model documented. (this lab used the `admin` superuser throughout; no RBAC model has been designed or tested)
 

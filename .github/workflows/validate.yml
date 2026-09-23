@@ -66,6 +66,37 @@ jobs:
               print(path, 'OK')
           PY
 
+      - name: Validate dashboard NDJSON is reproducible from DASHBOARD_SPEC.yml
+        run: |
+          python implementations/wazuh/dashboard/generate_dashboard_ndjson.py
+          git diff --exit-code implementations/wazuh/dashboard/saved-objects/ || {
+            echo "::error::pdp-dashboard-shell.ndjson is stale relative to DASHBOARD_SPEC.yml. Run implementations/wazuh/dashboard/generate_dashboard_ndjson.py and commit the result." >&2
+            exit 1
+          }
+
+      - name: Validate dashboard NDJSON structure and references
+        run: |
+          python - <<'PY'
+          import json
+          path = 'implementations/wazuh/dashboard/saved-objects/pdp-dashboard-shell.ndjson'
+          objects = [json.loads(l) for l in open(path) if l.strip()]
+          ids = {o['id'] for o in objects}
+          errors = []
+          for o in objects:
+              for ref in o.get('references', []):
+                  if ref['id'] not in ids:
+                      errors.append(f"{o['type']}:{o['id']} references unknown {ref['type']}:{ref['id']}")
+              if o['type'] == 'dashboard':
+                  panels = json.loads(o['attributes']['panelsJSON'])
+                  ref_names = {r['name'] for r in o.get('references', [])}
+                  for p in panels:
+                      if p.get('panelRefName') and p['panelRefName'] not in ref_names:
+                          errors.append(f"dashboard panel {p['panelIndex']} refName {p['panelRefName']!r} has no matching reference")
+          if errors:
+              raise SystemExit("\n".join(errors))
+          print(f"{path}: {len(objects)} objects, all references resolve")
+          PY
+
       - name: Validate release metadata consistency
         run: python tools/validation/validate_release_consistency.py
 

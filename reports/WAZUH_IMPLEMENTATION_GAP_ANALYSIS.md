@@ -309,7 +309,12 @@ a result.
    work, per the project's own promotion rule
    (`release/compatibility/COMPATIBILITY_MATRIX.yml`: *"No platform is
    marked SUPPORTED before reproducible lab evidence exists."*).
-7. Remaining after this pass: telemetry-health fixtures, the unresolved
-   `sca.remote_commands` centralized-SCA blocker (Section 4), the complete
-   eight-panel dashboard, and a role-based access control model for the
-   dashboard.
+7. ~~Build and import the complete eight-panel dashboard.~~ **DONE
+   2026-09-23** — see
+   `release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md`
+   and the new `implementations/wazuh/dashboard/generate_dashboard_ndjson.py`.
+   All 8 panels' aggregations confirmed to execute against the real index
+   mappings; not confirmed in an actual browser rendering session.
+8. Remaining after this pass: telemetry-health fixtures, the unresolved
+   `sca.remote_commands` centralized-SCA blocker (Section 4), and a
+   role-based access control model for the dashboard.

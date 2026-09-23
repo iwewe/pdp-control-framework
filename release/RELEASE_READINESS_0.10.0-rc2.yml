@@ -31,14 +31,18 @@ workstreams:
     index_template_static_validation: PASS
     real_indexer_import: PASS
     real_dashboard_import: PASS
-    evidence: release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md
+    evidence:
+    - release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md
+    - release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md
     completed:
     - all three index templates accepted after fixing 6 missing schema-required fields
     - real schema-conformant evidence/assessment/finding documents indexed successfully
     - dynamic:strict re-confirmed to still reject genuinely unknown fields
-    - dashboard saved-objects shell (3 index patterns + empty dashboard) imported and discoverable
+    - dashboard saved-objects (3 index patterns + full 8-panel dashboard) imported and discoverable
+    - all 8 panel aggregations confirmed to execute against real index mappings without error
+    - identified and documented an operational risk: saved objects did not survive a dashboard restart following a package upgrade; backup/reimport guidance added to implementations/wazuh/DEPLOYMENT.md
     remaining:
-    - the complete eight-panel dashboard (only the empty shell was imported)
+    - actual browser rendering of the 8 panels (verified via API, not a browser session)
     - role-based access control model
     status: OPEN
 coverage:

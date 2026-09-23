@@ -225,3 +225,34 @@ version's `migrationVersion`.
 
 Full evidence: `release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md`
 (Finding 3).
+
+## 2026-09-23 (same day) — full eight-panel dashboard built and imported
+
+- **Added:** `implementations/wazuh/dashboard/generate_dashboard_ndjson.py`
+  — a committed, spec-driven generator (not a one-off script) that reads
+  `implementations/wazuh/dashboard/DASHBOARD_SPEC.yml` and produces
+  `implementations/wazuh/dashboard/saved-objects/pdp-dashboard-shell.ndjson`:
+  3 index patterns, 8 classic OpenSearch Dashboards visualizations (one
+  per `PDP-DASH-00N` panel — `histogram`/`pie`/`table`/`line` depending on
+  the panel's `type`), and a dashboard wiring them into a 2-column,
+  4-row grid.
+- **Confirmed on real Wazuh 4.14.7 Dashboard:** import reports
+  `successCount: 12`; the live dashboard object's 8 panels all resolve to
+  their visualization via `references`; every panel's underlying
+  aggregation was run directly against the real
+  `pdp-evidence-*`/`pdp-assessment-*`/`pdp-findings-*` indices and none
+  errored. Full evidence:
+  `release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md`.
+- **Added CI enforcement:** a new workflow step regenerates the NDJSON
+  from the spec on every push and fails if it has drifted, plus a
+  reference-integrity check (every `panelRefName` and saved-object
+  `references` entry must resolve).
+- Note: rendering was verified via the saved-objects/search APIs, not an
+  actual browser session; the persistence risk documented in the prior
+  entry (Finding 3) applies equally to this fuller dashboard — back it up
+  before any `wazuh-dashboard` restart/upgrade.
+
+This closes the last item from
+`reports/WAZUH_IMPLEMENTATION_GAP_ANALYSIS.md`'s original priority list
+except the unresolved `sca.remote_commands` centralized-SCA blocker and a
+dashboard role-based access control model.

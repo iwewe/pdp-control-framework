@@ -22,6 +22,10 @@ export PDP_DASHBOARD_PASSWORD='...'
 
 export PDP_VERIFY_TLS=false
 export PDP_SECURITY_TENANT=global
+# Only set to true if the target's opensearch_dashboards.yml has
+# opensearch_security.multitenancy.enabled: true (Wazuh's default is
+# false -- see implementations/wazuh/DEPLOYMENT.md section 4).
+export PDP_MULTITENANCY_ENABLED=false
 
 python3 release/runtime-validation/dashboard/validate_real_import.py
 ```
@@ -31,19 +35,24 @@ The script:
 1. connects to the real indexer,
 2. installs the three PDP index templates,
 3. creates temporary matching indices,
-4. imports the dashboard shell NDJSON,
+4. imports the dashboard NDJSON,
 5. verifies the saved index patterns and dashboard are discoverable,
 6. deletes validation indices,
 7. writes `RESULT.json`.
 
-## Dashboard shell versus final dashboard
+## Dashboard content
 
-`pdp-dashboard-shell.ndjson` validates saved-object compatibility and index-pattern import.
+`pdp-dashboard-shell.ndjson` (filename kept for compatibility with
+`validate_real_import.py`'s path constant) now contains the full
+eight-panel dashboard built from
+`implementations/wazuh/dashboard/DASHBOARD_SPEC.yml`: 3 index patterns, 8
+classic (vislib/table) visualizations — one per `PDP-DASH-00N` entry in
+the spec — and the dashboard itself wiring them into a 2-column, 4-row
+layout. Built and import-tested against a real Wazuh 4.14.7 Dashboard,
+2026-09-23 — see
+`release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md`.
 
-The full eight-panel design is still defined by:
-
-```text
-implementations/wazuh/dashboard/DASHBOARD_SPEC.yml
-```
-
-For 1.0, build the eight panels on the target 4.14.7 dashboard, export them with related objects, commit the resulting NDJSON, and run this import gate against that export.
+If the spec in `DASHBOARD_SPEC.yml` changes, regenerate the NDJSON to
+match (there is no automated generator committed yet; the current file
+was built with a one-off script during that validation pass) and re-run
+this import gate against the target.
