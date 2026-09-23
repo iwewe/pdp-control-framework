@@ -1,7 +1,8 @@
 # Wazuh Implementation Gap Analysis
 
 **Framework version reviewed:** 0.10.0-rc2
-**Review date:** 2026-09-22
+**Review date:** 2026-09-22 (original), updated 2026-09-23 with real lab
+evidence
 **Scope:** `implementations/wazuh/` content (rules, decoders, SCA policy, agent
 configuration, PostgreSQL audit profile, indexer/dashboard artifacts) and the
 associated release-readiness status files.
@@ -13,14 +14,22 @@ associated release-readiness status files.
 
 ## Summary
 
+**Update 2026-09-23:** a real Wazuh 4.14.7 + PostgreSQL 17.11 + pgAudit 17.1
+lab (Ubuntu 24.04.4 LTS) is now up, and authentication, PostgreSQL, privileged
+access, and FIM rule families have all been exercised against it — see
+Sections 2 and 3 below and `release/runtime-validation/wazuh-4.14.7/`. This
+found and fixed three real defects that static validation could not catch
+(one in the pgAudit decoder, two in the FIM rules), plus one non-blocking
+design limitation in the privileged-access rule. SCA execution, centralized
+`agent.conf` distribution, and Indexer/Dashboard import remain untested.
+
 The Wazuh implementation profile is architecturally complete (rules, SCA
 checks, decoders, agent configuration, index templates, dashboard shell all
-exist and are internally consistent and traceable to controls/requirements),
-but **none of it has been executed against a real Wazuh runtime**. Static
-validation (YAML/XML/JSON well-formedness, ID uniqueness, schema conformance)
-passes in CI; behavioral validation against a live manager, indexer, and
-PostgreSQL instance has never run. One concrete defect was found during this
-review that static validation cannot catch.
+exist and are internally consistent and traceable to controls/requirements).
+Static validation (YAML/XML/JSON well-formedness, ID uniqueness, schema
+conformance) passes in CI. The remainder of this document was originally
+written when no real-runtime evidence existed at all; it is kept largely
+as-is for historical record, with resolution notes added inline.
 
 ## 1. Gaps already acknowledged by the project
 
@@ -99,33 +108,56 @@ start, and fixtures were rewritten with a realistic `log_line_prefix`.
    include a realistic prefix so `validate_fixtures.py` actually exercises
    this path.
 
-## 3. Other operational gaps for a real deployment
+## 3. FIM rule bugs found and fixed on real Wazuh (2026-09-23)
 
-- **Credential provisioning is undocumented.** `run_api_logtest.py` and
-  `validate_real_import.py` correctly read `WAZUH_API_USER`,
-  `WAZUH_API_PASSWORD`, `PDP_INDEXER_PASSWORD`, `PDP_DASHBOARD_PASSWORD` from
-  the environment (no hardcoded secrets), but there is no `.env.example` or
-  CI/CD secrets-setup guidance describing how these should be provisioned in
-  a real lab or pipeline.
-- **`agent.conf` distribution is not documented.** The repo defines
-  `implementations/wazuh/shared/pdp-linux-baseline/agent.conf` and
-  `pdp-database/agent.conf`, and `docs`/`README` recommend agent groups
-  (`pdp-linux-baseline`, `pdp-database`, `pdp-high-criticality`, etc.), but
-  there is no script or instructions for pushing these into
-  `/var/ossec/etc/shared/<group>/agent.conf` on a real manager.
+**Status: RESOLVED.** Live create/modify/delete testing against a real
+Wazuh 4.14.7 manager (see
+`release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md`)
+found and fixed two real defects in `implementations/wazuh/rules/pdp_fim.xml`:
+
+- **`110201` false-positived on scan housekeeping messages.** It used
+  `<if_group>syscheck</if_group>`, but Wazuh's built-in rule `515`
+  ("Ignoring scan messages", level 0) tags rootcheck/OpenSCAP/CIS-CAT/
+  Azure-logs scan start/end messages with the `syscheck` group too (so they
+  can be suppressed) — our rule re-alerted every one of them at level 7 with
+  an empty file path. **Fixed** by anchoring on `<if_group>syscheck_file</if_group>`
+  instead, which only the three real per-file event rules (`550`/`553`/`554`)
+  carry.
+- **`110202` never fired.** It checked `<field name="type">deleted</field>`,
+  but the decoded alert has no `type` field at all — the real value is
+  `syscheck.event` in the JSON output, and even the dotted-path field
+  reference did not match in practice. **Fixed** by switching to
+  `<decoded_as>syscheck_deleted</decoded_as>`, mirroring exactly how the
+  built-in rule `553` itself identifies deletions.
+
+A secondary, non-blocking finding was also confirmed for
+`pdp_privileged_access.xml`: rule `110101`'s "sudo" regex keyword is
+unreachable with Wazuh's default ruleset, because `sudo` command-execution
+events never carry the `authentication_success` group the rule requires.
+Only PAM session-open events (`su`, `sshd` login, etc.) reach it. See
+`release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`
+for the corresponding fixtures and result.
+
+## 4. Other operational gaps for a real deployment
+
+- ~~Credential provisioning is undocumented.~~ **RESOLVED** 2026-09-22:
+  see `.env.example` and `implementations/wazuh/DEPLOYMENT.md` section 1.
+- ~~`agent.conf` distribution is not documented.~~ **RESOLVED** 2026-09-22:
+  see `implementations/wazuh/DEPLOYMENT.md` section 2.
 - **SCA check-ID collision has not been checked against a real installation.**
   `implementations/wazuh/sca/pdp_linux_baseline.yml` uses IDs starting at
   `910001`; whether this collides with Wazuh's bundled SCA policies or other
   policies already present in a target environment has not been verified
-  against an actual manager/agent.
-- **No LICENSE file** in the repository — not a Wazuh-specific blocker, but
-  relevant if this profile is meant to be reused or contributed to by others.
-- **`release/PRE_1_0_CHECKLIST.md` sections D–G** (Wazuh implementation,
-  evidence/assessment, indexer/dashboard, CI/repository) remain fully
-  unchecked; none of their items should be assumed complete until explicitly
-  verified.
+  against an actual manager/agent. Still open (SCA has not been run against
+  the current lab yet).
+- ~~No LICENSE file~~ **RESOLVED** 2026-09-22: `LICENSE` (Apache 2.0) added.
+- **`release/PRE_1_0_CHECKLIST.md` sections E–G** (evidence/assessment,
+  indexer/dashboard, CI/repository) remain mostly unchecked; section D
+  (Wazuh implementation) is now partially checked based on real lab
+  evidence from 2026-09-23 — see that file for current state. None of the
+  remaining unchecked items should be assumed complete until verified.
 
-## 4. Suggested priority order
+## 5. Suggested priority order
 
 1. ~~Stand up a Wazuh 4.14.7 + Wazuh Indexer/Dashboard + PostgreSQL 17 +
    pgAudit lab~~ **DONE 2026-09-23** (native install on Ubuntu 24.04.4 LTS,
@@ -133,11 +165,15 @@ start, and fixtures were rewritten with a realistic `log_line_prefix`.
 2. ~~Fix the pgAudit decoder/log-format mismatch described in Section 2~~
    **DONE 2026-09-22, lab-confirmed 2026-09-23.**
 3. Run `wazuh-logtest` / the API `/logtest` harness against all rule
-   groups. **Partially done:** authentication (110001-110002) and
-   PostgreSQL (110401-110406) fixtures confirmed via `wazuh-logtest` CLI —
-   see `release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`.
-   **Still open:** privileged access, FIM, and telemetry-health rule
-   families have no fixtures yet, so they remain unexercised; the API
+   groups. **Mostly done:** authentication (110001-110002), PostgreSQL
+   (110401-110406), and privileged access (110101-110102) fixtures
+   confirmed via `wazuh-logtest` CLI — see
+   `release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`.
+   FIM (110201-110202) confirmed via a live create/modify/delete test
+   instead (fixtures don't apply to FIM — see
+   `release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md`),
+   which also found and fixed two real rule bugs (Section 3 above).
+   **Still open:** telemetry-health (110301) has no fixture yet; the API
    `/logtest` harness (`run_api_logtest.py`) itself has not been run yet
    either (CLI was used directly instead).
 4. Execute the SCA policy on a real Ubuntu 24.04 agent and confirm ID

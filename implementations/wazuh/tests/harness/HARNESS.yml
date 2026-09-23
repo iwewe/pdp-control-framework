@@ -76,3 +76,19 @@ cases:
     decoder: null
     fields: {}
   session_required: true
+- id: CASE-008
+  fixture: privileged_access/su_session_opened.log
+  test_id: WZ-RUL-AUTH-002
+  expected:
+    rule_id: 110101
+    decoder: null
+    fields: {}
+  session_required: false
+- id: CASE-009
+  fixture: privileged_access/su_session_repeated_3.log
+  test_id: WZ-RUL-PRIV-001
+  expected:
+    rule_id: 110102
+    decoder: null
+    fields: {}
+  session_required: true

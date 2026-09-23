@@ -1,15 +1,28 @@
 <group name="pdp,syscheck,">
-  <!-- FIM wrapper rules. These rules classify existing syscheck events into PDP engineering taxonomy. -->
+  <!-- FIM wrapper rules. These rules classify existing syscheck events into PDP engineering taxonomy.
+
+       Uses if_group syscheck_file (not the broader "syscheck" group): the built-in
+       rule 515 ("Ignoring scan messages", level 0) tags rootcheck/OpenSCAP/CIS-CAT/
+       Azure-logs scan start/end housekeeping messages with group "syscheck" too, so
+       anchoring on "syscheck" directly re-alerts that noise. Only rules 550/553/554
+       (the actual per-file added/modified/deleted events) carry "syscheck_file".
+       110202 uses decoded_as syscheck_deleted (not a field check on "type":
+       that field does not exist on the decoded alert, and even the correct
+       dotted path "syscheck.event" did not match in practice; decoded_as
+       mirrors exactly how the built-in rule 553 identifies deletions).
+
+       Confirmed on real Wazuh 4.14.7, 2026-09-23; see
+       release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md. -->
 
   <rule id="110201" level="7">
-    <if_group>syscheck</if_group>
+    <if_group>syscheck_file</if_group>
     <description>PDP context candidate: integrity event on monitored path - $(file).</description>
     <group>pdp_event,pdp_integrity,pdp_evt_int_001,pdp_req_int_001,pdp_control_sec_003,</group>
   </rule>
 
   <rule id="110202" level="10">
     <if_sid>110201</if_sid>
-    <field name="type">deleted</field>
+    <decoded_as>syscheck_deleted</decoded_as>
     <description>PDP context candidate: deletion detected on monitored path - $(file).</description>
     <group>pdp_event,pdp_deletion,pdp_evt_del_001,pdp_req_ret_002,pdp_control_ret_002,</group>
   </rule>

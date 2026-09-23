@@ -41,3 +41,17 @@ fixtures:
   expected_rule_id: 110002
   session_required: true
   notes: Correlation test; all lines must be fed into the same wazuh-logtest session.
+- file: privileged_access/su_session_opened.log
+  expected_rule_id: 110101
+  notes: >-
+    Depends on Wazuh built-in PAM rule 5501 ("session opened for user"),
+    which carries the authentication_success group. Confirmed on real
+    Wazuh 4.14.7, 2026-09-23: a sudo command-execution log line (built-in
+    rules 5400-5407) does NOT carry authentication_success and therefore
+    never fires 110101, even though "sudo" is one of the regex keywords in
+    the PDP rule -- only PAM session-open events (su, sshd login, etc.)
+    reach it in practice.
+- file: privileged_access/su_session_repeated_3.log
+  expected_rule_id: 110102
+  session_required: true
+  notes: Correlation test (frequency=3, timeframe=300); all lines must be fed into the same wazuh-logtest session.

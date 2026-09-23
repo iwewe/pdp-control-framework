@@ -9,19 +9,42 @@ lab_environment:
   os: Ubuntu 24.04.4 LTS
   postgresql: '17.11'
   pgaudit: '17.1'
-evidence: release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md
+evidence:
+- release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md
+- release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md
 promotion_checklist:
   manager_reports_version_v4.14.7: DONE
   custom_decoder_loads: DONE
   custom_rules_load: DONE
   fixture_logtest_matches_expected_rules: DONE
   correlation_fixtures_pass_in_same_session: DONE
+  fim_add_modify_delete_validated: DONE
   agent_conf_validation_passes: NOT_RUN
   sca_policy_executes_on_ubuntu_24.04_test_agent: NOT_RUN
+bugs_found_and_fixed_in_this_lab_pass:
+- rule: 110101/110102 (pdp_privileged_access.xml)
+  finding: >-
+    No code change needed, but confirmed that the "sudo" keyword in
+    110101's regex is unreachable with Wazuh's default ruleset: sudo
+    command-execution events (rules 5400-5407) never carry the
+    authentication_success group that 110101 requires. Only PAM
+    session-open events (su, sshd login, etc.) reach it.
+- rule: 110201 (pdp_fim.xml)
+  finding: >-
+    Used if_group "syscheck", which the built-in rule 515 also applies to
+    rootcheck/OpenSCAP/CIS-CAT/Azure-logs scan start/end housekeeping
+    messages, causing false-positive alerts on every scan cycle.
+  fix: Changed to if_group "syscheck_file" (only real per-file add/modify/delete events).
+- rule: 110202 (pdp_fim.xml)
+  finding: >-
+    Checked field name "type", which does not exist on the decoded alert
+    (confirmed via a live delete event's full JSON); the rule never fired.
+  fix: Changed to decoded_as "syscheck_deleted", matching how the built-in rule 553 identifies deletions.
 not_yet_covered:
-- No fixtures exist yet for pdp_privileged_access.xml (110101-110102),
-  pdp_fim.xml (110201-110202), or pdp_telemetry_health.xml (110301), so
-  those rule families were not exercised by wazuh-logtest.
+- No fixtures exist yet for pdp_telemetry_health.xml (110301), so that
+  rule family was not exercised.
 - No agent enrolled in this lab yet, so centralized agent.conf
   distribution has not been tested end to end.
+- SCA policy execution on a real agent.
+- Wazuh Indexer/Dashboard import.
 promotion_target: LAB_VALIDATED

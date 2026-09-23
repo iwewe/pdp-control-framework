@@ -78,3 +78,37 @@ and `pdp-check.txt`) were addressed without cutting a new version:
 - **Regenerated:** `release/SHA256SUMS.txt` via the new
   `release/generate_sha256sums.sh`, documented as a release/tag-time
   artifact rather than a continuously current-tree checksum.
+
+## 2026-09-23 real Wazuh lab validation (still 0.10.0-rc2)
+
+A real Wazuh 4.14.7 + PostgreSQL 17.11 + pgAudit 17.1 lab (Ubuntu 24.04.4
+LTS) was stood up and used to validate the rule/decoder work above against
+actual runtime behavior, not just static checks:
+
+- **Confirmed:** the 2026-09-22 pgAudit decoder fix works against a real
+  PostgreSQL log pipeline — all 5 non-correlation PostgreSQL fixtures and
+  the 20-event correlation fixture matched their expected rule IDs. See
+  `release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`.
+- **Added and confirmed:** two new fixtures for `pdp_privileged_access.xml`
+  (`110101`/`110102`), both matching as expected, including the
+  correlation case.
+- **Found and fixed (`pdp_fim.xml`):**
+  - `110201` used `if_group syscheck`, which the built-in rule `515` also
+    applies to rootcheck/OpenSCAP/CIS-CAT/Azure-logs scan start/end
+    housekeeping messages — a real false-positive source. Fixed to
+    `if_group syscheck_file` (only genuine per-file add/modify/delete
+    events).
+  - `110202` checked a nonexistent `type` field and never fired. Fixed to
+    `decoded_as syscheck_deleted`, matching how the built-in rule `553`
+    itself identifies deletions.
+  - Confirmed via a live create/modify/delete test (FIM cannot be fixtured
+    through `wazuh-logtest` the way text-log rules can). See
+    `release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md`.
+- **Confirmed (non-blocking finding):** `110101`'s "sudo" regex keyword is
+  unreachable with Wazuh's default ruleset — sudo command-execution events
+  never carry the `authentication_success` group the rule requires; only
+  PAM session-open events (`su`, `sshd` login, etc.) do.
+
+Still open: telemetry-health fixtures, SCA policy execution, centralized
+`agent.conf` distribution (no agent enrolled yet), and Indexer/Dashboard
+import.

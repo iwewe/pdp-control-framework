@@ -44,8 +44,8 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 - [x] Manager/indexer/dashboard version compatibility verified. (all three report `4.14.7-1` on the same host, 2026-09-23)
 - [x] All custom rule IDs unique and within project-reserved range. (14 rule IDs, all within 100000-120000, enforced by `tools/validation/validate_structure.py`)
 - [ ] SCA YAML executes successfully.
-- [x] Authentication fixtures validated with real `wazuh-logtest`. (`release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`: both `ssh_failed_once.log` -> 110001 and the `ssh_failed_8.log` correlation -> 110002 matched exactly)
-- [ ] FIM fixtures validated on Ubuntu 24.04.
+- [x] Authentication fixtures validated with real `wazuh-logtest`. (`release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`: both `ssh_failed_once.log` -> 110001 and the `ssh_failed_8.log` correlation -> 110002 matched exactly; `su_session_opened.log` -> 110101 and the repeated-3 correlation -> 110102 also matched)
+- [x] FIM fixtures validated on Ubuntu 24.04. (`release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md` — live create/modify/delete against a realtime-monitored path, not a static fixture; found and fixed two rule bugs in the process, see that file and `implementations/wazuh/rules/pdp_fim.xml`)
 - [ ] Telemetry-health rules adapted to actual Wazuh events.
 - [x] pgAudit decoder validated against real PostgreSQL 17 + pgAudit output. (`release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`: all 5 non-correlation fixtures matched their expected rule id on real Wazuh 4.14.7 + PostgreSQL 17.11 + pgAudit 17.1)
 - [x] PostgreSQL correlation rule tested in one logtest session. (`pgaudit_repeated_read_20.log`, single `wazuh-logtest` session, escalated to rule 110406 as expected)

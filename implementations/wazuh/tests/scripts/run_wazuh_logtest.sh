@@ -30,3 +30,8 @@ echo "==> Authentication fixture"
 
 echo "==> Authentication correlation fixture"
 "$WAZUH_LOGTEST" -v < "$FIX/authentication/ssh_failed_8.log"
+
+run_single "privileged_access/su_session_opened.log" "rule 110101"
+
+echo "==> Privileged access correlation fixture"
+"$WAZUH_LOGTEST" -v < "$FIX/privileged_access/su_session_repeated_3.log"
