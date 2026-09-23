@@ -1,19 +1,27 @@
 framework_version: 0.10.0-rc2
 target: Wazuh 4.14.7
-validation_date: '2026-09-22'
-status: BLOCKED_NO_WAZUH_RUNTIME_IN_CURRENT_ENVIRONMENT
+validation_date: '2026-09-23'
+status: PARTIALLY_LAB_VALIDATED
 static_validation: PASS
-real_runtime_validation: NOT_RUN
-environment_observations:
-- Docker/Podman not present in current execution environment.
-- APT network update timed out.
-- Direct Wazuh package download could not be completed from current execution environment.
-required_for_promotion:
-- manager reports version v4.14.7
-- custom decoder loads
-- custom rules load
-- fixture logtest matches expected rules
-- correlation fixtures pass in same session
-- agent.conf validation passes
-- SCA policy executes on Ubuntu 24.04 test agent
+real_runtime_validation: PARTIAL
+lab_environment:
+  manager_version: v4.14.7 (rc1 build)
+  os: Ubuntu 24.04.4 LTS
+  postgresql: '17.11'
+  pgaudit: '17.1'
+evidence: release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md
+promotion_checklist:
+  manager_reports_version_v4.14.7: DONE
+  custom_decoder_loads: DONE
+  custom_rules_load: DONE
+  fixture_logtest_matches_expected_rules: DONE
+  correlation_fixtures_pass_in_same_session: DONE
+  agent_conf_validation_passes: NOT_RUN
+  sca_policy_executes_on_ubuntu_24.04_test_agent: NOT_RUN
+not_yet_covered:
+- No fixtures exist yet for pdp_privileged_access.xml (110101-110102),
+  pdp_fim.xml (110201-110202), or pdp_telemetry_health.xml (110301), so
+  those rule families were not exercised by wazuh-logtest.
+- No agent enrolled in this lab yet, so centralized agent.conf
+  distribution has not been tested end to end.
 promotion_target: LAB_VALIDATED

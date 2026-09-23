@@ -41,9 +41,18 @@ logtest matches expected rules, correlation fixtures pass in the same
 session, `agent.conf` validation passes, SCA policy executes on an Ubuntu
 24.04 test agent.
 
-## 2. New finding: pgAudit decoder will not match real PostgreSQL log lines
+## 2. pgAudit decoder mismatch — FIXED and lab-confirmed (2026-09-23)
 
-**Severity: high — blocks the entire PostgreSQL audit pipeline as configured.**
+**Original severity: high — blocked the entire PostgreSQL audit pipeline as configured.**
+
+**Status: RESOLVED.** The decoder was fixed on 2026-09-22 (Option 2 below)
+and confirmed against a real Wazuh 4.14.7 + PostgreSQL 17.11 + pgAudit 17.1
+lab on 2026-09-23: all 5 non-correlation PostgreSQL fixtures and the
+20-event correlation fixture matched their expected rule IDs exactly. See
+`release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`
+for the full evidence and `release/runtime-validation/wazuh-4.14.7/STATUS.yml`
+for current promotion status. The description below is kept as-is for
+historical/diagnostic record of the original defect.
 
 - `implementations/wazuh/postgresql/postgresql-pdp.conf.example` sets:
   ```
@@ -71,20 +80,24 @@ session, `agent.conf` validation passes, SCA policy executes on an Ubuntu
   parsing *contract*, not the actual decoder behavior against a realistic raw
   log line, so CI green does not indicate the decoder will work.
 
-**Likely result in a real lab:** the `pdp-pgaudit` decoder will fail to match
-any real log line, so rules `110401`–`110406` (all PostgreSQL audit/DDL/role/
-read-anomaly detections, supporting LR-031/LR-035/LR-047/LR-052 per
-`framework/legal/LEGAL_MAPPING.yml`) will never fire.
+**Predicted result (before the fix):** the `pdp-pgaudit` decoder would fail
+to match any real log line, so rules `110401`–`110406` (all PostgreSQL
+audit/DDL/role/read-anomaly detections, supporting LR-031/LR-035/LR-047/
+LR-052 per `framework/legal/LEGAL_MAPPING.yml`) would never fire. This was
+confirmed *not* to happen after the fix — see the lab evidence linked above.
 
-**Suggested fixes (pick one, needs lab validation either way):**
-1. Change `postgresql-pdp.conf.example` to route through real syslog
-   (`log_destination = 'syslog'`) so Wazuh's syslog parser strips the
+**Fix applied:** Option 2 below — the decoder's prematch/regex were changed
+to search for `AUDIT:` anywhere in the line rather than anchoring at the
+start, and fixtures were rewritten with a realistic `log_line_prefix`.
+
+1. (not chosen) Change `postgresql-pdp.conf.example` to route through real
+   syslog (`log_destination = 'syslog'`) so Wazuh's syslog parser strips the
    envelope before the decoder runs, or
-2. Rewrite `pdp-pgaudit`'s prematch/regex to tolerate the configured
-   `log_line_prefix` (e.g. match `AUDIT:` anywhere in the line rather than
-   anchored at the start, or add a parent decoder that first strips the
-   PostgreSQL prefix), and update the fixtures to include a realistic prefix
-   so `validate_fixtures.py` actually exercises this path.
+2. **(chosen, lab-confirmed)** Rewrite `pdp-pgaudit`'s prematch/regex to
+   tolerate the configured `log_line_prefix` (match `AUDIT:` anywhere in the
+   line rather than anchored at the start), and update the fixtures to
+   include a realistic prefix so `validate_fixtures.py` actually exercises
+   this path.
 
 ## 3. Other operational gaps for a real deployment
 
@@ -114,20 +127,24 @@ read-anomaly detections, supporting LR-031/LR-035/LR-047/LR-052 per
 
 ## 4. Suggested priority order
 
-1. Stand up a Wazuh 4.14.7 + Wazuh Indexer/Dashboard + PostgreSQL 17 + pgAudit
-   lab (Docker/VM) — this unblocks every other item below.
-2. Fix the pgAudit decoder/log-format mismatch described in Section 2 before
-   running the lab, otherwise the first PostgreSQL test session will fail for
-   a reason unrelated to rule logic.
-3. Run `wazuh-logtest` / the API `/logtest` harness
-   (`implementations/wazuh/tests/harness/run_api_logtest.py`) against all
-   rule groups (authentication, privileged access, FIM, telemetry health,
-   PostgreSQL) using the existing fixtures, and correct any other prematch/
-   field-extraction mismatches found.
+1. ~~Stand up a Wazuh 4.14.7 + Wazuh Indexer/Dashboard + PostgreSQL 17 +
+   pgAudit lab~~ **DONE 2026-09-23** (native install on Ubuntu 24.04.4 LTS,
+   not Docker).
+2. ~~Fix the pgAudit decoder/log-format mismatch described in Section 2~~
+   **DONE 2026-09-22, lab-confirmed 2026-09-23.**
+3. Run `wazuh-logtest` / the API `/logtest` harness against all rule
+   groups. **Partially done:** authentication (110001-110002) and
+   PostgreSQL (110401-110406) fixtures confirmed via `wazuh-logtest` CLI —
+   see `release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`.
+   **Still open:** privileged access, FIM, and telemetry-health rule
+   families have no fixtures yet, so they remain unexercised; the API
+   `/logtest` harness (`run_api_logtest.py`) itself has not been run yet
+   either (CLI was used directly instead).
 4. Execute the SCA policy on a real Ubuntu 24.04 agent and confirm ID
-   uniqueness and check results.
+   uniqueness and check results. **Still open.**
 5. Import the three index templates and the dashboard saved-objects NDJSON
-   into a real Wazuh Indexer/Dashboard instance.
+   into a real Wazuh Indexer/Dashboard instance. **Still open** (the lab's
+   indexer/dashboard are running but have not yet been used for this).
 6. Update `release/runtime-validation/*/STATUS.yml`,
    `release/compatibility/COMPATIBILITY_MATRIX.yml`, and
    `release/PRE_1_0_CHECKLIST.md` to reflect what was actually validated —
