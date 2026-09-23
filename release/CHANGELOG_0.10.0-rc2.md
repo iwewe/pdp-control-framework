@@ -112,3 +112,17 @@ actual runtime behavior, not just static checks:
 Still open: telemetry-health fixtures, SCA policy execution, centralized
 `agent.conf` distribution (no agent enrolled yet), and Indexer/Dashboard
 import.
+
+## 2026-09-23 (same day) — SCA policy validation
+
+- **Confirmed:** `implementations/wazuh/sca/pdp_linux_baseline.yml` (checks
+  `910001`-`910006`) executes correctly on real Wazuh 4.14.7 + Ubuntu
+  24.04.4. The manager's local `<sca>` config had no `<policies>` entry
+  for it (only the vendor `cis_ubuntu24-04.yml` was running), so one was
+  added. All 6 checks produced a result, no ID collision with the vendor
+  policy, and every result was independently reproduced with direct shell
+  commands (`sshd -T`, `systemctl is-enabled ...`). No policy defects
+  found. See `release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`.
+
+Still open: telemetry-health fixtures, centralized `agent.conf`
+distribution to a separately enrolled agent, and Indexer/Dashboard import.

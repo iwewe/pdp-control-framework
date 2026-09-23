@@ -12,6 +12,7 @@ lab_environment:
 evidence:
 - release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md
 - release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md
+- release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md
 promotion_checklist:
   manager_reports_version_v4.14.7: DONE
   custom_decoder_loads: DONE
@@ -19,8 +20,8 @@ promotion_checklist:
   fixture_logtest_matches_expected_rules: DONE
   correlation_fixtures_pass_in_same_session: DONE
   fim_add_modify_delete_validated: DONE
+  sca_policy_executes_on_ubuntu_24.04_test_agent: DONE
   agent_conf_validation_passes: NOT_RUN
-  sca_policy_executes_on_ubuntu_24.04_test_agent: NOT_RUN
 bugs_found_and_fixed_in_this_lab_pass:
 - rule: 110101/110102 (pdp_privileged_access.xml)
   finding: >-
@@ -44,7 +45,11 @@ not_yet_covered:
 - No fixtures exist yet for pdp_telemetry_health.xml (110301), so that
   rule family was not exercised.
 - No agent enrolled in this lab yet, so centralized agent.conf
-  distribution has not been tested end to end.
-- SCA policy execution on a real agent.
+  distribution has not been tested end to end (SCA/FIM/rules above were
+  all validated against the manager's own local agent 000, not a
+  separately enrolled endpoint).
+- SCA check-ID collision against a different real installation's other
+  policies (only the vendor cis_ubuntu24-04.yml policy coexisted in this
+  lab; no collision observed, but not exhaustively tested).
 - Wazuh Indexer/Dashboard import.
 promotion_target: LAB_VALIDATED

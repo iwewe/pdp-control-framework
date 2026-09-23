@@ -108,3 +108,11 @@ content already deployed in the target environment (Wazuh does not enforce
 global uniqueness of SCA check IDs across policies the way it does for rule
 IDs). If a collision is found, renumber the PDP policy's checks rather than
 the vendor policy's.
+
+Also remember to reference the policy file explicitly under the target's
+`<sca><policies>` block — placing it in `/var/ossec/etc/shared/<group>/`
+alone does not make Wazuh load it. Confirmed on real Wazuh 4.14.7,
+2026-09-23 (see `release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`):
+no collision was observed against the bundled `cis_ubuntu24-04.yml` policy,
+and all 6 checks executed and produced correct results once the
+`<policies>` entry was added.

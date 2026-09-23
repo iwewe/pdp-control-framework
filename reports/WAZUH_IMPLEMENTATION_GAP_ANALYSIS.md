@@ -16,12 +16,13 @@ associated release-readiness status files.
 
 **Update 2026-09-23:** a real Wazuh 4.14.7 + PostgreSQL 17.11 + pgAudit 17.1
 lab (Ubuntu 24.04.4 LTS) is now up, and authentication, PostgreSQL, privileged
-access, and FIM rule families have all been exercised against it — see
-Sections 2 and 3 below and `release/runtime-validation/wazuh-4.14.7/`. This
-found and fixed three real defects that static validation could not catch
-(one in the pgAudit decoder, two in the FIM rules), plus one non-blocking
-design limitation in the privileged-access rule. SCA execution, centralized
-`agent.conf` distribution, and Indexer/Dashboard import remain untested.
+access, FIM, and SCA have all been exercised against it — see Sections 2 and
+3 below and `release/runtime-validation/wazuh-4.14.7/`. This found and fixed
+three real defects that static validation could not catch (one in the
+pgAudit decoder, two in the FIM rules), plus one non-blocking design
+limitation in the privileged-access rule; the SCA policy needed no fixes.
+Centralized `agent.conf` distribution to a separately enrolled agent and
+Indexer/Dashboard import remain untested.
 
 The Wazuh implementation profile is architecturally complete (rules, SCA
 checks, decoders, agent configuration, index templates, dashboard shell all
@@ -144,12 +145,15 @@ for the corresponding fixtures and result.
   see `.env.example` and `implementations/wazuh/DEPLOYMENT.md` section 1.
 - ~~`agent.conf` distribution is not documented.~~ **RESOLVED** 2026-09-22:
   see `implementations/wazuh/DEPLOYMENT.md` section 2.
-- **SCA check-ID collision has not been checked against a real installation.**
-  `implementations/wazuh/sca/pdp_linux_baseline.yml` uses IDs starting at
-  `910001`; whether this collides with Wazuh's bundled SCA policies or other
-  policies already present in a target environment has not been verified
-  against an actual manager/agent. Still open (SCA has not been run against
-  the current lab yet).
+- **SCA policy executed successfully, no collision observed (partially resolved 2026-09-23).**
+  `implementations/wazuh/sca/pdp_linux_baseline.yml` (IDs `910001`-`910006`)
+  ran alongside Wazuh's bundled `cis_ubuntu24-04.yml` policy on the real
+  lab with no ID collision, and all 6 checks produced correct results
+  (independently verified against actual system state) — see
+  `release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`.
+  Still open: this has only been checked against one other policy (the
+  vendor default); collision against other custom/third-party SCA content
+  in a different target environment remains unverified.
 - ~~No LICENSE file~~ **RESOLVED** 2026-09-22: `LICENSE` (Apache 2.0) added.
 - **`release/PRE_1_0_CHECKLIST.md` sections E–G** (evidence/assessment,
   indexer/dashboard, CI/repository) remain mostly unchecked; section D
@@ -176,8 +180,13 @@ for the corresponding fixtures and result.
    **Still open:** telemetry-health (110301) has no fixture yet; the API
    `/logtest` harness (`run_api_logtest.py`) itself has not been run yet
    either (CLI was used directly instead).
-4. Execute the SCA policy on a real Ubuntu 24.04 agent and confirm ID
-   uniqueness and check results. **Still open.**
+4. ~~Execute the SCA policy on a real Ubuntu 24.04 agent and confirm ID
+   uniqueness and check results.~~ **DONE 2026-09-23** — see
+   `release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`.
+   All 6 checks ran correctly with no ID collision against the vendor
+   policy; not yet tested against a genuinely separate enrolled agent
+   (only the manager's own local agent `000`) or against other
+   third-party SCA content.
 5. Import the three index templates and the dashboard saved-objects NDJSON
    into a real Wazuh Indexer/Dashboard instance. **Still open** (the lab's
    indexer/dashboard are running but have not yet been used for this).
