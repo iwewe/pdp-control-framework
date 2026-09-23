@@ -277,3 +277,32 @@ dashboard role-based access control model.
   into this rule.
 
 Full evidence: `release/runtime-validation/wazuh-4.14.7/TELEMETRY_HEALTH_EVIDENCE_2026-09-23.md`.
+
+## 2026-09-23 (same day) — Wazuh Server API harness
+
+First real run of `implementations/wazuh/tests/harness/run_api_logtest.py`
+(every prior phase used the `wazuh-logtest` CLI directly instead), using
+the `api_username: wazuh` credential from `wazuh-install-files.tar`.
+
+- **Fixed:** the harness passed the Wazuh API's `decoder` response
+  (an object, `{"name": "pdp-pgaudit", ...}`) straight into evidence
+  `test.decoder`, which `framework/schemas/evidence.schema.json` requires
+  to be a string or `null`. All 13 `HARNESS.yml` cases already reported
+  `PASS` for rule matching, but every generated evidence document failed
+  schema validation until this was fixed
+  (`(output.get("decoder") or {}).get("name")`).
+- **Fixed (latent, unrelated):**
+  `tools/assessment/WAZUH_EVIDENCE_MAPPING.yml`'s `WZ-RUL-PG-005` entry
+  had a legal-disclaimer sentence in `technical_priority` instead of a
+  priority level. Not consumed by any script yet, so not previously
+  active, but a real data-quality defect.
+- **Confirmed:** after both fixes, all 13 cases PASS and all 13 generated
+  evidence documents validate individually against
+  `evidence.schema.json`.
+
+Full evidence: `release/runtime-validation/wazuh-4.14.7/API_HARNESS_EVIDENCE_2026-09-23.md`.
+
+This closes the API-harness item from `release/PRE_1_0_CHECKLIST.md`
+section E. Remaining in that section: Evidence Registry Schema, collector
+failure -> ERROR/REVIEW, assessment aggregator, finding generator, and
+retest workflow documentation.

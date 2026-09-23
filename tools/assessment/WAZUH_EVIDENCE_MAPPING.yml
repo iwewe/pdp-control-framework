@@ -603,6 +603,8 @@ tests:
     - PDP-EVT-EXF-001
     default_event_context:
     - taxonomy_id: PDP-EVT-EXF-001
-      technical_priority: Potential exfiltration is not automatically a legally confirmed Personal Data breach.
+      technical_priority: HIGH
+      # Potential exfiltration is a technical priority signal only; it is
+      # not automatically a legally confirmed Personal Data breach.
       impact_dimensions:
       - CONFIDENTIALITY

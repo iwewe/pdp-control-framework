@@ -59,7 +59,7 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 - [x] Assessment JSON Schema validated. (`examples/control-assessment.example.json` added 2026-09-23 and validated in CI against `framework/schemas/control-assessment.schema.json`; also indexed successfully into a real Wazuh Indexer)
 - [x] Finding JSON Schema validated. (CI validates `examples/finding.example.json` against `framework/schemas/finding.schema.json`; also indexed successfully into a real Wazuh Indexer, 2026-09-23)
 - [ ] Evidence Registry Schema validated.
-- [ ] API harness produces normalized evidence.
+- [x] API harness produces normalized evidence. (`release/runtime-validation/wazuh-4.14.7/API_HARNESS_EVIDENCE_2026-09-23.md` — `run_api_logtest.py` run against the real Wazuh Server API for all 13 `HARNESS.yml` cases; found and fixed a bug where `test.decoder` was passed as an object instead of a string, then re-validated all 13 generated evidence documents against `evidence.schema.json` individually)
 - [ ] Collector failure produces `ERROR/REVIEW`, never silent `PASS`.
 - [ ] Assessment aggregator tested against PASS/FAIL/ERROR/REVIEW cases.
 - [ ] Finding generator tested.

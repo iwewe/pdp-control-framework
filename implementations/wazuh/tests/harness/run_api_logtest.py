@@ -134,7 +134,7 @@ for case in cfg["cases"]:
             "fixture":case["fixture"],
             "expected_rule_id":expected_rule,
             "observed_rule_id":observed_rule,
-            "decoder":output.get("decoder")
+            "decoder":(output.get("decoder") or {}).get("name")
         },
         "result":result,
         "traceability":m.get("traceability",{"requirements":[],"controls":[],"legal_requirements":[]}),

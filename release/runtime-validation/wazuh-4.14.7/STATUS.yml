@@ -16,6 +16,7 @@ evidence:
 - release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md
 - release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md
 - release/runtime-validation/wazuh-4.14.7/TELEMETRY_HEALTH_EVIDENCE_2026-09-23.md
+- release/runtime-validation/wazuh-4.14.7/API_HARNESS_EVIDENCE_2026-09-23.md
 promotion_checklist:
   manager_reports_version_v4.14.7: DONE
   custom_decoder_loads: DONE
@@ -26,6 +27,7 @@ promotion_checklist:
   sca_policy_executes_on_ubuntu_24.04_test_agent: DONE (local policy deployment only; see known_issues)
   agent_conf_validation_passes: DONE (after fixing the syscollector bug below)
   telemetry_health_rule_fires_on_all_regex_alternatives: DONE
+  api_harness_produces_schema_valid_evidence: DONE (after fixing a decoder-field bug below)
 bugs_found_and_fixed_in_this_lab_pass:
 - rule: 110101/110102 (pdp_privileged_access.xml)
   finding: >-
@@ -53,6 +55,21 @@ bugs_found_and_fixed_in_this_lab_pass:
     agent.conf for the group -- labels, syscheck, and sca all silently
     stopped applying too, not just syscollector.
   fix: Removed the <syscollector> block (must be configured locally per agent instead).
+- component: implementations/wazuh/tests/harness/run_api_logtest.py
+  finding: >-
+    Passed the Wazuh API's decoder object ({"name": "pdp-pgaudit", ...})
+    straight through into evidence test.decoder, which
+    framework/schemas/evidence.schema.json requires to be a string or
+    null. Confirmed via schema validation of the generated evidence
+    (rule-matching itself was already correct, all 13 cases PASS).
+  fix: 'Changed to (output.get("decoder") or {}).get("name").'
+- component: tools/assessment/WAZUH_EVIDENCE_MAPPING.yml
+  finding: >-
+    WZ-RUL-PG-005's default_event_context.technical_priority held a
+    legal-disclaimer sentence instead of a priority level (LOW/MEDIUM/
+    HIGH). Not currently consumed by any script, so latent rather than
+    active, but a real data-quality defect.
+  fix: 'Set technical_priority: HIGH (matching sibling entries); moved the disclaimer text to a comment.'
 known_issues_not_fixed:
 - issue: >-
     pdp_linux_baseline.yml SCA policy produces zero usable results when
