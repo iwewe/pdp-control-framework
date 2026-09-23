@@ -64,7 +64,91 @@ condition logic is correct.
   custom/bundled policies (this lab only ever had the vendor
   `cis_ubuntu24-04.yml` policy alongside ours, and no ID overlap was
   observed between the two).
-- Execution on a genuinely separate managed *agent* (as opposed to the
-  manager's own local agent `000`) — centralized `agent.conf` distribution
-  to a real enrolled agent remains untested (see
-  `implementations/wazuh/DEPLOYMENT.md`).
+
+## Addendum — centralized (group-pushed) SCA on a separate managed agent
+
+The scenario above only validated the SCA policy as a *local* policy on
+the manager's own agent `000`. A second, previously-open item was whether
+`c:`-based checks in this policy also work when the policy is distributed
+to a **separate enrolled agent** via a centralized `agent.conf` group
+(`pdp-linux-baseline`), which is the actual production deployment model.
+
+### Investigation
+
+On first testing this against `pdp-agent-test` (agent `001`, enrolled in
+the `pdp-linux-baseline` group), all 6 checks returned
+`not applicable` / `"Invalid path or wrong permissions to run command '<cmd>'"`.
+This was initially suspected to be the documented `sca.remote_commands`
+internal option (default `0`), which restricts `c:` command execution for
+policies pushed from a manager group.
+
+Setting `sca.remote_commands=1` in the agent's
+`/var/ossec/etc/local_internal_options.conf` did **not**, by itself,
+change the result — which is what had this item marked as an open
+blocker.
+
+**Root cause, confirmed by direct inspection:** `pdp-agent-test` is a
+minimal Docker container (PID 1 is `sleep`, no init system) that never
+had `sshd` or `systemctl` installed at all — `which systemctl sshd`
+returned nothing, and neither binary existed anywhere on disk. This is
+**not** an `sca.remote_commands` restriction: Wazuh's own vendor-shipped
+`cis_ubuntu24-04.yml` policy, already running on the same agent, failed
+with the *identical* `"Invalid path or wrong permissions"` message on
+the equivalent `c:sshd -T` / `c:systemctl is-enabled ...` checks. A
+restriction gate would produce a distinct "disabled by policy"-style
+message, not a generic exec failure — this is a missing-binary problem,
+confirmed independently of anything specific to our policy.
+
+**Fix:** installed `openssh-server` in the container
+(`apt-get install -y openssh-server`, then started `sshd` manually, since
+the container has no init system to manage it as a service). This
+transitively pulled in `systemd`/`libpam-systemd`, which also provided a
+`systemctl` binary. After a clean agent restart (no debug flags, `sca.remote_commands=1`
+retained in `local_internal_options.conf`), all 6 checks in
+`pdp_linux_baseline.yml` returned genuine results with no
+`not applicable`/exec errors:
+
+```
+('PDP: Direct SSH root login is disabled', 'failed', '')
+('PDP: SSH empty-password authentication is disabled', 'passed', '')
+('PDP: System audit service is enabled', 'failed', '')
+('PDP: Time synchronization service is active', 'passed', '')
+('PDP: A supported host firewall is enabled', 'failed', '')
+('PDP: Wazuh agent service is enabled', 'failed', '')
+```
+
+(Verified via `sudo python3 -c "sqlite3 ...SELECT title, result, reason FROM sca_check WHERE policy_id = 'pdp_linux_baseline_v01'"` against `/var/ossec/queue/db/001.db` on the manager.)
+
+Debug logging (`sca.debug=2`) captured the exact command executions and
+results during the diagnosis, e.g.:
+
+```
+DEBUG: Executing command 'sshd -T', and testing output with pattern 'r:^\s*permitrootlogin\s+no$'
+DEBUG: Command 'sshd -T' returned code 0
+DEBUG: Result for rule 'c:sshd -T -> r:^\s*permitrootlogin\s+no$': 0
+```
+
+confirming the centralized/group-pushed policy's `c:` checks execute
+correctly end-to-end (manager → shared group config → agent →
+`sca.remote_commands=1` → command execution → pattern match → result
+persisted to the agent's local SCA database) once the target binaries
+actually exist on the agent host.
+
+### Conclusion
+
+- **`sca.remote_commands` was never the actual blocker.** It was already
+  correctly set to `1` before this investigation and worked as documented
+  once the underlying commands had something to execute.
+- The real cause was specific to this lab's minimal test container, which
+  lacked `sshd`/`systemctl` entirely — a test-environment gap, not a
+  defect in `pdp_linux_baseline.yml` or in the framework's SCA design.
+- **Recommendation for production deployment**: on any target host,
+  confirm `openssh-server` and a service manager (`systemd` or
+  distribution equivalent providing `systemctl`) are present before
+  relying on this policy's `c:`-based checks; on a normal (non-minimal,
+  non-container) Ubuntu 24.04 server these are present by default. No
+  policy redesign to file-based (`f:`) checks is warranted — Wazuh's own
+  vendor `cis_ubuntu24-04.yml` uses the identical `c:` command-based
+  pattern for the same class of checks, so a file-based rewrite would
+  make this policy *less* consistent with upstream Wazuh SCA conventions,
+  not more robust.

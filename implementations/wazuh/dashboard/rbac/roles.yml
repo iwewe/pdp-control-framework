@@ -1,0 +1,54 @@
+# PDP Control Framework -- OpenSearch Security role definitions for the
+# compliance dashboard.
+#
+# These are additive snippets, not a full roles.yml. Append them to the
+# target Wazuh Indexer's existing
+# /etc/wazuh-indexer/opensearch-security/roles.yml (do not replace the
+# file -- it already defines Wazuh's own required reserved roles).
+#
+# Design intent:
+# - Both roles are read-only on PDP data indices (pdp-evidence-*,
+#   pdp-assessment-*, pdp-findings-*, matched by "pdp-*"). Compliance
+#   evidence/assessments/findings are produced by the pipeline
+#   (tools/assessment/, tools/findings/) and must never be hand-edited
+#   from the dashboard by a viewer or an editor -- editing rights only
+#   ever extend to dashboard saved objects (visualizations, dashboards),
+#   never to the underlying data.
+# - This is a least-privilege model: a compliance stakeholder using this
+#   dashboard has no need for and gets no access to Wazuh's own SIEM
+#   indices (wazuh-alerts-*, wazuh-monitoring-*, etc.) or to any other
+#   tenant's data.
+
+# Read-only: can open the PDP dashboard and view its panels. Cannot save
+# changes to any dashboard/visualization, and cannot write to any index.
+pdp_dashboard_viewer:
+  reserved: false
+  cluster_permissions:
+  - "cluster_composite_ops_ro"
+  index_permissions:
+  - index_patterns:
+    - "pdp-*"
+    allowed_actions:
+    - "read"
+    - "indices:admin/mappings/get"
+  tenant_permissions: []
+
+# Editor: same read-only access to PDP data as the viewer, plus full CRUD
+# on saved objects (.kibana*) so dashboards/visualizations can be built
+# and maintained. Deliberately has NO write access to pdp-evidence-*,
+# pdp-assessment-*, or pdp-findings-* -- see design intent above.
+pdp_dashboard_editor:
+  reserved: false
+  cluster_permissions:
+  - "cluster_composite_ops_ro"
+  index_permissions:
+  - index_patterns:
+    - "pdp-*"
+    allowed_actions:
+    - "read"
+    - "indices:admin/mappings/get"
+  - index_patterns:
+    - ".kibana*"
+    allowed_actions:
+    - "crud"
+  tenant_permissions: []

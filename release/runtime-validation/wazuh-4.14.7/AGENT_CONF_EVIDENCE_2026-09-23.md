@@ -57,7 +57,7 @@ an agent restart, all errors stopped and `wazuh-syscheckd` correctly
 started monitoring `/etc/ssh`, `/etc/audit`, `/etc/systemd`, `/etc/cron.d`
 with `whodata` as configured.
 
-## Finding 2 (blocking, unresolved) — the SCA policy cannot run at all via centralized distribution
+## Finding 2 (resolved — see addendum) — SCA policy required `sca.remote_commands=1` to run via centralized distribution
 
 Once Finding 1 was fixed, `pdp_linux_baseline.yml` loaded via the group
 (the policy file itself was also added to the group's shared directory, at
@@ -108,28 +108,43 @@ reason string after every attempt. This was tested exhaustively (4
 separate restart cycles, both scopes) before concluding it does not take
 effect through this mechanism in this installation.
 
-### Practical impact
+### Addendum — resolved in a later lab pass (same day)
 
-`implementations/wazuh/sca/pdp_linux_baseline.yml` can currently only
-produce real results when configured as a **local** policy directly in an
-endpoint's own `ossec.conf` (exactly how it was validated in
-`release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`,
-against the manager's own local agent `000`). It cannot currently be
-distributed centrally via agent groups and actually evaluate anything.
+The "did not work" conclusion above turned out to be premature, not
+final. In a later pass on the same day, after clearing a stale
+multigroup merge cache on the manager
+(`/var/ossec/var/multigroups/<hash>/merged.mg`) that had been silently
+holding an unrelated stray file reference for this agent, and re-testing
+`sca.remote_commands=1` on a **freshly re-enrolled** agent, the
+`"disabled"` message stopped appearing entirely — replaced by a
+different exec-level error, `"Invalid path or wrong permissions to run
+command '<cmd>'"`. That pointed away from `sca.remote_commands` (which
+was now genuinely taking effect) and toward the commands themselves
+failing to execute.
 
-### Recommended follow-up (not applied in this pass)
+Direct inspection confirmed the real cause: the test agent
+(`pdp-agent-test`, a minimal Docker container with no init system, PID 1
+= `sleep`) never had `sshd` or `systemctl` installed on it at all — not a
+Wazuh restriction. Wazuh's own vendor `cis_ubuntu24-04.yml` policy,
+already loaded on the same agent, failed with the identical error on the
+equivalent commands, which is what confirmed this was an environment gap
+rather than anything specific to `sca.remote_commands` or to this policy.
 
-1. Document this limitation prominently (done, in
-   `implementations/wazuh/DEPLOYMENT.md`) and stop recommending
-   group-based SCA distribution until one of the below is resolved.
-2. Investigate the correct, supported way to enable `sca.remote_commands`
-   for centrally-managed fleets (may require Wazuh vendor documentation/
-   support beyond what this lab could determine).
-3. Consider redesigning the policy's checks to avoid `c:` commands where
-   a `f:`/`r:` (file-content) check can substitute -- e.g., checking
-   `sshd_config` directives directly instead of `sshd -T`'s *effective*
-   configuration output, accepting the tradeoff that file-based checks
-   don't reflect config-include resolution the way `sshd -T` does.
+After installing `openssh-server` (which transitively provided
+`systemctl` via `systemd`/`libpam-systemd`) and starting `sshd`, a clean
+agent restart produced genuine PASS/FAIL results for all 6 checks via the
+centralized group-pushed policy — full detail and the exact result set in
+`release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`
+(addendum section).
+
+**Practical impact, corrected:** `pdp_linux_baseline.yml` works via
+centralized/group distribution once `sca.remote_commands=1` is set on the
+receiving agent — no policy redesign is needed. The earlier recommendation
+to avoid group-based SCA distribution, and the idea of rewriting the
+policy's checks to `f:`/`r:` file-content checks, are both withdrawn:
+Wazuh's own vendor CIS Ubuntu policy relies on the identical `c:`-based
+pattern for the same class of checks, so this policy is already
+consistent with upstream SCA conventions.
 
 ## Finding 3 — `pdp-database/agent.conf` has no equivalent problem
 
@@ -147,4 +162,4 @@ second group (`pdp-database`) assigned to the same agent, alongside
 | Agent enrollment via `agent-auth` | PASS |
 | `pdp-linux-baseline/agent.conf` distribution (after fix) | PASS |
 | `pdp-database/agent.conf` distribution | PASS |
-| SCA policy execution via centralized distribution | **FAIL** (all checks `not applicable`; local-only policy deployment works, see `SCA_EVIDENCE_2026-09-23.md`) |
+| SCA policy execution via centralized distribution | **PASS** (after setting `sca.remote_commands=1` and confirming target binaries are present; see addendum above and `SCA_EVIDENCE_2026-09-23.md`) |

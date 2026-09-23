@@ -1,0 +1,38 @@
+# PDP Control Framework -- OpenSearch Security role-mapping snippets for
+# the compliance dashboard roles defined in roles.yml (same directory).
+#
+# Additive: append to the target Wazuh Indexer's existing
+# /etc/wazuh-indexer/opensearch-security/roles_mapping.yml.
+#
+# Maps the backend roles "pdp_viewer" / "pdp_editor" (assign these to real
+# users via internal_users.yml's backend_roles field, or via an external
+# identity provider's group claim if one is configured) to the dashboard
+# roles. Also maps pdp_viewer to the built-in kibana_read_only role, which
+# additionally prevents that user from saving any change to a
+# visualization or dashboard even if a UI bug in some future version were
+# to let them try -- defense in depth on top of the index-level
+# permissions already denying it.
+
+kibana_read_only:
+  reserved: true
+  backend_roles:
+  - "pdp_viewer"
+  users: []
+  and_backend_roles: []
+  description: "PDP dashboard viewers get the built-in read-only Dashboards restriction too"
+
+pdp_dashboard_viewer:
+  reserved: false
+  backend_roles:
+  - "pdp_viewer"
+  users: []
+  and_backend_roles: []
+  description: "Maps the pdp_viewer backend role to the pdp_dashboard_viewer role"
+
+pdp_dashboard_editor:
+  reserved: false
+  backend_roles:
+  - "pdp_editor"
+  users: []
+  and_backend_roles: []
+  description: "Maps the pdp_editor backend role to the pdp_dashboard_editor role"

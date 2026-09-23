@@ -1,9 +1,9 @@
 framework_version: 0.10.0-rc2
 target: Wazuh 4.14.7
 validation_date: '2026-09-23'
-status: PARTIALLY_LAB_VALIDATED
+status: LAB_VALIDATED
 static_validation: PASS
-real_runtime_validation: PARTIAL
+real_runtime_validation: PASS
 lab_environment:
   manager_version: v4.14.7 (rc1 build)
   os: Ubuntu 24.04.4 LTS
@@ -24,7 +24,7 @@ promotion_checklist:
   fixture_logtest_matches_expected_rules: DONE
   correlation_fixtures_pass_in_same_session: DONE
   fim_add_modify_delete_validated: DONE
-  sca_policy_executes_on_ubuntu_24.04_test_agent: DONE (local policy deployment only; see known_issues)
+  sca_policy_executes_on_ubuntu_24.04_test_agent: DONE (both local policy AND centralized group-pushed deployment; see bugs_found_and_fixed_in_this_lab_pass)
   agent_conf_validation_passes: DONE (after fixing the syscollector bug below)
   telemetry_health_rule_fires_on_all_regex_alternatives: DONE
   api_harness_produces_schema_valid_evidence: DONE (after fixing a decoder-field bug below)
@@ -70,25 +70,27 @@ bugs_found_and_fixed_in_this_lab_pass:
     HIGH). Not currently consumed by any script, so latent rather than
     active, but a real data-quality defect.
   fix: 'Set technical_priority: HIGH (matching sibling entries); moved the disclaimer text to a comment.'
-known_issues_not_fixed:
 - issue: >-
-    pdp_linux_baseline.yml SCA policy produces zero usable results when
-    distributed via a centralized agent group. All 6 checks use c:<command>
-    rules, and Wazuh disables remote command execution by default
-    (sca.remote_commands=0) for SCA policies delivered via centralized
-    config, as a security guardrail. Confirmed via the authoritative
-    sca_check table (all 6 checks: result=not applicable).
-  attempted_fix: >-
-    Set sca.remote_commands=1 in local_internal_options.conf on both the
-    agent and the manager, with full daemon stop+start (confirmed fresh,
-    non-zombie processes). Did not change the outcome across 4 separate
-    restart cycles.
-  status: UNRESOLVED
-  workaround: >-
-    Deploy pdp_linux_baseline.yml as a LOCAL policy in each endpoint's own
-    ossec.conf <sca><policies> block instead of via an agent group -- this
-    was validated successfully (SCA_EVIDENCE_2026-09-23.md).
-  evidence: release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md
+    pdp_linux_baseline.yml SCA policy previously produced zero usable
+    results (result=not applicable on all 6 checks) when distributed via
+    a centralized agent group. Initially misdiagnosed as
+    sca.remote_commands=0 blocking c:<command> execution for
+    group-pushed policies.
+  root_cause: >-
+    Not a remote_commands restriction. The test agent (pdp-agent-test, a
+    minimal Docker container with no init system) never had sshd or
+    systemctl installed at all. Confirmed by direct inspection (neither
+    binary existed on disk) and by observing that Wazuh's own vendor
+    cis_ubuntu24-04.yml policy failed with the identical error on the
+    same commands on the same agent. sca.remote_commands=1 was already
+    set correctly and was never the actual blocker.
+  fix: >-
+    Installed openssh-server (which transitively provided systemctl via
+    systemd/libpam-systemd) and started sshd in the test container. After
+    a clean agent restart, all 6 checks returned genuine PASS/FAIL
+    results via the centralized group-pushed policy.
+  status: RESOLVED
+  evidence: release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md (addendum section)
 not_yet_covered:
 - SCA check-ID collision against a different real installation's other
   policies (only the vendor cis_ubuntu24-04.yml policy coexisted in this

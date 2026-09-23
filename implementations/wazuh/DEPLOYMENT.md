@@ -94,21 +94,22 @@ systemctl restart wazuh-agent
 > includes it, for this reason. Configure syscollector locally in each
 > agent's own `ossec.conf` instead.
 
-> **The SCA policy does not currently work when distributed this way.**
-> Confirmed on real Wazuh 4.14.7, 2026-09-23 (see
-> `release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md`):
-> every check in `pdp_linux_baseline.yml` uses a `c:<command>` rule, and
-> Wazuh disables command execution by default (`sca.remote_commands=0`)
-> for any SCA policy delivered via centralized/shared configuration, as a
-> guardrail against a compromised manager pushing arbitrary commands to
-> agents. Setting `sca.remote_commands=1` in `local_internal_options.conf`
-> (tried on both the agent and the manager, with full daemon restarts) did
-> **not** resolve this in this lab -- the policy's checks stayed
-> `not applicable`. Until this is resolved, deploy `pdp_linux_baseline.yml`
-> as a **local** policy in each endpoint's own `ossec.conf`
-> `<sca><policies>` block instead (as validated in
-> `release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`),
-> not via an agent group.
+> **Set `sca.remote_commands=1` for this SCA policy to work when
+> distributed via an agent group.** Every check in `pdp_linux_baseline.yml`
+> uses a `c:<command>` rule, and Wazuh disables command execution by
+> default (`sca.remote_commands=0`) for any SCA policy delivered via
+> centralized/shared configuration, as a guardrail against a compromised
+> manager pushing arbitrary commands to agents. Add
+> `sca.remote_commands=1` to the agent's `local_internal_options.conf`
+> and restart it. Confirmed working end-to-end on real Wazuh 4.14.7,
+> 2026-09-23 (see `release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`,
+> addendum section) — an earlier lab run misdiagnosed a persistent
+> `not applicable` result as this setting not working, when the actual
+> cause was that the test agent's container image was missing `sshd`/
+> `systemctl` entirely. Confirm the checked commands' underlying binaries
+> (`sshd`, and a service manager providing `systemctl`) are actually
+> present on the target host — true by default on a normal Ubuntu 24.04
+> server, but not guaranteed on a minimal/stripped-down container image.
 
 Before deploying, replace the placeholder label values in
 `implementations/wazuh/shared/pdp-linux-baseline/agent.conf`
@@ -151,10 +152,10 @@ and all 6 checks executed and produced correct results once the
 `<policies>` entry was added.
 
 That test was against a **local** `<sca><policies>` entry (the manager's
-own `ossec.conf`). See section 2 above: the same policy distributed via an
-agent **group's** `agent.conf` does not currently produce usable results at
-all, because its checks rely on `c:` commands that Wazuh blocks by default
-for centrally-pushed SCA policies.
+own `ossec.conf`). See section 2 above for distributing the same policy
+via an agent **group's** `agent.conf` — this also works, but requires
+`sca.remote_commands=1` on the receiving agent since its checks rely on
+`c:` commands.
 
 ## 4. Back up dashboard saved objects before restarting/upgrading Wazuh Dashboard
 
