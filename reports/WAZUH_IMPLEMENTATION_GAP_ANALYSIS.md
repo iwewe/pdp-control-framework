@@ -283,9 +283,14 @@ a result.
    instead (fixtures don't apply to FIM — see
    `release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md`),
    which also found and fixed two real rule bugs (Section 3 above).
-   **Still open:** telemetry-health (110301) has no fixture yet; the API
-   `/logtest` harness (`run_api_logtest.py`) itself has not been run yet
-   either (CLI was used directly instead).
+   ~~telemetry-health (110301) has no fixture yet~~ **DONE 2026-09-23** —
+   see `release/runtime-validation/wazuh-4.14.7/TELEMETRY_HEALTH_EVIDENCE_2026-09-23.md`.
+   All 4 regex alternatives confirmed via `wazuh-logtest`; found that the
+   rule has no `if_group`/`if_sid` scoping, so it can be silently
+   preempted by any other rule matching the same log line first (not a
+   bug in the rule, but a real deployment consideration). **Still open:**
+   the API `/logtest` harness (`run_api_logtest.py`) itself has not been
+   run yet (CLI was used directly instead).
 4. ~~Execute the SCA policy on a real Ubuntu 24.04 agent and confirm ID
    uniqueness and check results.~~ **DONE 2026-09-23** (local policy) — see
    `release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`.
@@ -315,6 +320,7 @@ a result.
    and the new `implementations/wazuh/dashboard/generate_dashboard_ndjson.py`.
    All 8 panels' aggregations confirmed to execute against the real index
    mappings; not confirmed in an actual browser rendering session.
-8. Remaining after this pass: telemetry-health fixtures, the unresolved
-   `sca.remote_commands` centralized-SCA blocker (Section 4), and a
+8. Remaining after this pass: the API `/logtest` harness has not been
+   run, the unresolved `sca.remote_commands` centralized-SCA blocker
+   (Section 4), and a
    role-based access control model for the dashboard.

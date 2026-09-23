@@ -55,3 +55,21 @@ fixtures:
   expected_rule_id: 110102
   session_required: true
   notes: Correlation test (frequency=3, timeframe=300); all lines must be fed into the same wazuh-logtest session.
+- file: telemetry_health/agent_disconnected.log
+  expected_rule_id: 110301
+  notes: >-
+    Generic <match> rule with no if_group/if_sid/decoded_as precondition,
+    so it can be preempted by ANY other rule that claims the log first.
+    Confirmed on real Wazuh 4.14.7, 2026-09-23: a line using "audit:" as
+    the syslog program tag was instead claimed by built-in rule 6100
+    ("Solaris BSM Auditing messages grouped", decoded_as solaris_bsm) at
+    level 0, and 110301 was never even attempted -- not a bug in this
+    rule, but a reminder that its coverage depends on no other decoder/
+    rule matching first. Use a program tag that does not collide with any
+    built-in decoder.
+- file: telemetry_health/agent_inactive.log
+  expected_rule_id: 110301
+- file: telemetry_health/collector_stopped.log
+  expected_rule_id: 110301
+- file: telemetry_health/logging_stopped.log
+  expected_rule_id: 110301

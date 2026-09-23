@@ -256,3 +256,24 @@ This closes the last item from
 `reports/WAZUH_IMPLEMENTATION_GAP_ANALYSIS.md`'s original priority list
 except the unresolved `sca.remote_commands` centralized-SCA blocker and a
 dashboard role-based access control model.
+
+## 2026-09-23 (same day) — telemetry-health fixtures
+
+- **Added:** 4 fixtures under
+  `implementations/wazuh/tests/fixtures/telemetry_health/`, one per
+  regex alternative in rule `110301`
+  (`agent...disconnected`/`agent...inactive`/`collector...stopped`/
+  `logging...stopped`). Confirmed via real `wazuh-logtest`.
+- **Confirmed there is no naturally-occurring Wazuh-internal event for
+  this rule** — agent connectivity is tracked internally in `wazuh-db`,
+  not emitted as a decodable log line — so the fixtures are necessarily
+  synthetic (this rule is a generic safety net for third-party collector
+  logs, not a specific Wazuh event).
+- **Found (not a bug):** the rule has no `if_group`/`if_sid`/`decoded_as`
+  scoping. A first test attempt using an `audit:` syslog program tag was
+  claimed instead by an unrelated built-in rule (`6100`, Solaris BSM,
+  level 0) before `110301` was ever attempted. Documented as a real
+  deployment consideration for anyone wiring third-party collector logs
+  into this rule.
+
+Full evidence: `release/runtime-validation/wazuh-4.14.7/TELEMETRY_HEALTH_EVIDENCE_2026-09-23.md`.

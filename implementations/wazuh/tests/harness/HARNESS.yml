@@ -92,3 +92,35 @@ cases:
     decoder: null
     fields: {}
   session_required: true
+- id: CASE-010
+  fixture: telemetry_health/agent_disconnected.log
+  test_id: WZ-HLT-EVD-001
+  expected:
+    rule_id: 110301
+    decoder: null
+    fields: {}
+  session_required: false
+- id: CASE-011
+  fixture: telemetry_health/agent_inactive.log
+  test_id: WZ-HLT-EVD-001
+  expected:
+    rule_id: 110301
+    decoder: null
+    fields: {}
+  session_required: false
+- id: CASE-012
+  fixture: telemetry_health/collector_stopped.log
+  test_id: WZ-HLT-EVD-001
+  expected:
+    rule_id: 110301
+    decoder: null
+    fields: {}
+  session_required: false
+- id: CASE-013
+  fixture: telemetry_health/logging_stopped.log
+  test_id: WZ-HLT-EVD-001
+  expected:
+    rule_id: 110301
+    decoder: null
+    fields: {}
+  session_required: false

@@ -35,3 +35,8 @@ run_single "privileged_access/su_session_opened.log" "rule 110101"
 
 echo "==> Privileged access correlation fixture"
 "$WAZUH_LOGTEST" -v < "$FIX/privileged_access/su_session_repeated_3.log"
+
+run_single "telemetry_health/agent_disconnected.log" "rule 110301"
+run_single "telemetry_health/agent_inactive.log" "rule 110301"
+run_single "telemetry_health/collector_stopped.log" "rule 110301"
+run_single "telemetry_health/logging_stopped.log" "rule 110301"
