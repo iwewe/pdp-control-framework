@@ -1,5 +1,6 @@
 metadata:
-  version: 0.8.0-draft
+  version: 0.10.0-rc2
+  introduced_in_draft: '0.8.0'
 tests:
   WZ-SCA-IAM-001:
     engine: sca

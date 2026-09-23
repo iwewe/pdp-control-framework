@@ -1,5 +1,6 @@
 metadata:
-  version: 0.9.0-draft
+  version: 0.10.0-rc2
+  introduced_in_draft: '0.9.0'
   title: PDP Continuous Control Dashboard
   indices:
   - pdp-evidence-*

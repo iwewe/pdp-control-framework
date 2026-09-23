@@ -1,4 +1,5 @@
-version: 0.2.0-draft
+version: 0.10.0-rc2
+introduced_in_draft: '0.2.0'
 evidence_classes:
   documentary:
     description: Approved or maintained documents that describe legal, governance, policy, contractual, or procedural

@@ -1,6 +1,6 @@
 framework:
   name: PDP Control Framework
-  version: 0.1.0-draft
+  version: 0.10.0-rc2
   jurisdiction: Indonesia
   primary_legal_source: UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi
   assessment_methods:
@@ -12,6 +12,13 @@ framework:
   - FAIL
   - REVIEW
   - NOT_APPLICABLE
+  objective_disclaimer: >-
+    Every control's objective (id/en) is the framework's own interpretation
+    of what the cited legal_basis requires an organization to achieve for
+    engineering purposes. It is not a verbatim restatement of the statute
+    and does not itself certify legal compliance -- see
+    framework/legal/LEGAL_MAPPING.yml for the underlying legal_requirement
+    text and its own disclaimer, and README.md's Disclaimer section.
 controls:
 - id: PDP-LAW-001
   title:

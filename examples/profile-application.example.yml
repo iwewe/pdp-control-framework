@@ -1,32 +1,127 @@
-processing_activity_id: PA-001
+metadata:
+  purpose: >-
+    Three realistic profile-composition examples, each showing the
+    correct union of required_requirements across the profiles applied
+    to one asset. effective_requirements is computed as the union of
+    every applied profile's required_requirements (not
+    conditional_requirements) per framework/profiles/CONTROL_PROFILES.yml.
+  note: >-
+    Corrected 2026-09-23: the original single example's
+    effective_requirements omitted REQ-GOV-001/REQ-INV-001/REQ-INV-002/
+    REQ-RET-001/REQ-RET-002, which the union of PDP-PROFILE-BASELINE +
+    PDP-PROFILE-HIGH-RISK + PDP-PROFILE-DATABASE actually requires. See
+    docs/architecture/applicability-model.md for the applicability model
+    this composes with.
 assets:
-- asset_id: ASSET-DB-001
+- processing_activity_id: PA-001
+  asset_id: ASSET-DB-001
+  asset_type: database_server
+  scenario: High-risk HR database, on-premises, controller-operated
   profiles:
   - PDP-PROFILE-BASELINE
   - PDP-PROFILE-HIGH-RISK
   - PDP-PROFILE-DATABASE
   effective_requirements:
+  - REQ-AVL-001
+  - REQ-AVL-002
+  - REQ-CFG-001
+  - REQ-CFG-002
+  - REQ-CRY-001
+  - REQ-CRY-002
+  - REQ-EVD-001
+  - REQ-EVD-002
+  - REQ-GOV-001
   - REQ-IAM-001
   - REQ-IAM-002
   - REQ-IAM-003
-  - REQ-CFG-001
-  - REQ-CFG-002
-  - REQ-VUL-001
-  - REQ-VUL-002
+  - REQ-INC-001
+  - REQ-INC-002
+  - REQ-INC-003
+  - REQ-INT-001
+  - REQ-INV-001
+  - REQ-INV-002
   - REQ-LOG-001
   - REQ-LOG-002
   - REQ-LOG-003
   - REQ-MON-001
   - REQ-MON-002
   - REQ-MON-003
-  - REQ-INT-001
-  - REQ-CRY-001
-  - REQ-CRY-002
   - REQ-NET-001
-  - REQ-AVL-001
-  - REQ-AVL-002
-  - REQ-INC-001
-  - REQ-INC-002
-  - REQ-INC-003
+  - REQ-RET-001
+  - REQ-RET-002
+  - REQ-VUL-001
+  - REQ-VUL-002
+- processing_activity_id: PA-002
+  asset_id: ASSET-PAYROLL-GATEWAY-001
+  asset_type: integration
+  scenario: Payroll data forwarded to an external payroll processor's API gateway
+  profiles:
+  - PDP-PROFILE-BASELINE
+  - PDP-PROFILE-PROCESSOR
+  effective_requirements:
+  - REQ-CFG-001
+  - REQ-CFG-002
   - REQ-EVD-001
   - REQ-EVD-002
+  - REQ-GOV-001
+  - REQ-IAM-001
+  - REQ-IAM-002
+  - REQ-IAM-003
+  - REQ-INC-001
+  - REQ-INC-002
+  - REQ-INT-001
+  - REQ-INV-001
+  - REQ-INV-002
+  - REQ-LOG-001
+  - REQ-LOG-002
+  - REQ-LOG-003
+  - REQ-MON-001
+  - REQ-MON-002
+  - REQ-MON-003
+  - REQ-NET-001
+  - REQ-PRC-001
+  - REQ-VUL-001
+  - REQ-VUL-002
+- processing_activity_id: PA-SEC-MONITORING-001
+  asset_id: ASSET-WAZUH-MANAGER-001
+  asset_type: security_device
+  scenario: >-
+    Dogfooding example: the Wazuh manager/indexer/dashboard used to
+    implement this framework's own controls is itself an asset that
+    processes user, endpoint, and activity metadata, and is therefore
+    in scope of its own framework.
+  profiles:
+  - PDP-PROFILE-BASELINE
+  - PDP-PROFILE-SECURITY-MONITORING
+  effective_requirements:
+  - REQ-AVL-001
+  - REQ-AVL-002
+  - REQ-CFG-001
+  - REQ-CFG-002
+  - REQ-CRY-001
+  - REQ-CRY-002
+  - REQ-EVD-001
+  - REQ-EVD-002
+  - REQ-GOV-001
+  - REQ-IAM-001
+  - REQ-IAM-002
+  - REQ-IAM-003
+  - REQ-INC-001
+  - REQ-INC-002
+  - REQ-INT-001
+  - REQ-INV-001
+  - REQ-INV-002
+  - REQ-LOG-001
+  - REQ-LOG-002
+  - REQ-LOG-003
+  - REQ-MON-001
+  - REQ-MON-002
+  - REQ-MON-003
+  - REQ-NET-001
+  - REQ-VUL-001
+  - REQ-VUL-002
+  notes: >-
+    See implementations/wazuh/README.md section "Privacy of Monitoring"
+    for the corresponding guidance (data minimization in logs,
+    redaction, access restriction to security logs, retention rules,
+    monitoring of administrator access to Wazuh).

@@ -1,5 +1,6 @@
 metadata:
-  framework_version: 0.7.0-draft
+  framework_version: 0.10.0-rc2
+  introduced_in_draft: '0.7.0'
   implementation_profile: wazuh
   status: LAB_VALIDATION_REQUIRED
   purpose: Trace implementation artifacts to Wazuh tests, generic requirements, PDP controls, and legal requirements.

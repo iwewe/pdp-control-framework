@@ -332,3 +332,46 @@ Full evidence: `reports/TOOLS_PIPELINE_VALIDATION_2026-09-23.md`.
 
 This completes every item in `release/PRE_1_0_CHECKLIST.md` section E
 (Evidence / assessment).
+
+## 2026-09-23 (same day) — legal/control/model review, sections A/B/C complete
+
+A documentation and consistency review (no Wazuh lab required) covering
+the remaining items in `release/PRE_1_0_CHECKLIST.md` sections A
+(Legal layer), B (Control architecture), and C (Processing /
+applicability).
+
+- **Fixed:** `framework/schemas/control-assessment.schema.json` did not
+  enforce `docs/architecture/assessment-methodology.md`'s documented rule
+  that `NOT_APPLICABLE` requires a justification — `notes: null` was
+  previously accepted. Added a conditional schema rule requiring a
+  non-empty `notes` when `result` is `NOT_APPLICABLE`.
+- **Fixed:** `examples/processing-activity.example.yml` was missing 2 of
+  `framework/models/PROCESSING_ACTIVITY_MODEL.md`'s own "Minimum Required
+  Fields" (`processing_operations`, `retention`).
+- **Fixed:** `examples/profile-application.example.yml`'s
+  `effective_requirements` did not match the mathematically correct union
+  of its applied profiles' `required_requirements` (5 requirements were
+  missing). Rewrote it with 3 distinct, programmatically-verified-correct
+  scenarios, the third of which also serves as the "security monitoring
+  platform dogfooding example" (the Wazuh manager/indexer/dashboard
+  itself modeled as an in-scope asset).
+- **Added:** explicit interpretation disclaimers to
+  `framework/legal/LEGAL_MAPPING.yml` (`requirement_summary_disclaimer`)
+  and `framework/controls/CONTROL_CATALOGUE.yml`
+  (`objective_disclaimer`), and an explicit open item in
+  `framework/legal/review/LEGAL_REVIEW_STATUS.yml` tracking that
+  UU 27/2022 implementing regulations have not been confirmed/reviewed
+  (documented as open, not assumed resolved).
+- **Reviewed, no changes needed:** control-text overclaiming (none
+  found), assessment method/result semantic consistency across all
+  layers, the Asset model, and the High-Risk Processing profile.
+- **Also fixed:** 12 framework/implementation `.yml` files carried stale
+  `version: 0.X.0-draft` markers from when they were first introduced,
+  the same class of drift already fixed in `.md` files during the
+  2026-09-22 hardening pass. Bumped to `0.10.0-rc2`, preserving the
+  original marker as `introduced_in_draft`.
+
+Full evidence: `reports/MODEL_REVIEW_2026-09-23.md`. This completes every
+item in sections A, B, and C except `external_legal_counsel_review`
+(governance decision, out of engineering scope) and the implementing-
+regulations gap (explicitly tracked as open, not resolved).

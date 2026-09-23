@@ -13,9 +13,9 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 - [x] UU 27/2022 legal mapping reviewed against authoritative text. (`framework/legal/review/LEGAL_SOURCE_REVIEW_0.10.0-rc2.md`, `SOURCE_VERIFIED`)
 - [x] Article/paragraph references independently checked against the official statutory text. (same review; corrected Article 35 letter-based citation, added 18 previously-implicit LR entries)
 - [x] Constitutional Court Decision 151/PUU-XXII/2024 note reviewed. (incorporated into Article 53(1) interpretation; source archived in `docs/legal-sources/MK_151_PUU_XXII_2024_SOURCE.md`)
-- [ ] No control text claims more than the legal source supports.
-- [ ] Legal summaries are clearly identified as framework interpretations.
-- [ ] Any implementing regulations/guidance required for 1.0 scope are documented.
+- [x] No control text claims more than the legal source supports. (`reports/MODEL_REVIEW_2026-09-23.md` — systematic keyword review of `framework/controls/CONTROL_CATALOGUE.yml` for overclaiming language; the handful of hits found were either accurately describing a legal trigger condition or accurately restating a legally-defined role's own duties, not overclaiming)
+- [x] Legal summaries are clearly identified as framework interpretations. (added explicit `requirement_summary_disclaimer` to `framework/legal/LEGAL_MAPPING.yml` and `objective_disclaimer` to `framework/controls/CONTROL_CATALOGUE.yml`, 2026-09-23)
+- [x] Any implementing regulations/guidance required for 1.0 scope are documented. (documented as an explicit **open** item in `framework/legal/review/LEGAL_REVIEW_STATUS.yml` — this framework has not confirmed whether any UU 27/2022 implementing regulation (Peraturan Pemerintah) has been enacted; "documented" here means the gap is tracked, not resolved)
 
 > Note: the above is authoritative-**text** review, not independent external
 > legal counsel review. `external_legal_counsel_review` remains
@@ -26,17 +26,17 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 - [x] Every `PDP-*` control has at least one legal requirement mapping. (verified: 0 of 39 controls missing `legal_basis`; enforced going forward by `tools/validation/validate_release_consistency.py`)
 - [x] Every `REQ-*` requirement maps to at least one PDP control. (verified: 0 of 31 requirements missing `supports_controls`)
 - [x] Control IDs are stable and unique. (0 duplicate `PDP-*`/`REQ-*`/`LR-*`/test IDs; enforced in CI)
-- [ ] Assessment method/result semantics are consistent.
-- [ ] `NOT_APPLICABLE` requires justification.
+- [x] Assessment method/result semantics are consistent. (`reports/MODEL_REVIEW_2026-09-23.md` — cross-checked `assessment_method` values in `CONTROL_CATALOGUE.yml` (MANUAL/PARTIAL only), `assessment` values in `WAZUH_TEST_CATALOGUE.yml` (AUTOMATED only), and the `result` vocabularies in `evidence.schema.json` (5 values, includes ERROR) vs. `control-assessment.schema.json` (4 values, no ERROR — by design, since `assess_controls.py` folds evidence-level ERROR into assessment-level REVIEW, confirmed in `reports/TOOLS_PIPELINE_VALIDATION_2026-09-23.md`); all consistent)
+- [x] `NOT_APPLICABLE` requires justification. (found the rule was documented in `docs/architecture/assessment-methodology.md` but **not enforced**: `framework/schemas/control-assessment.schema.json` accepted `result: NOT_APPLICABLE` with `notes: null`. Fixed 2026-09-23 by adding a conditional schema rule requiring a non-empty `notes` when `result` is `NOT_APPLICABLE`; verified it now rejects the unjustified case and accepts the justified one.)
 - [x] No engineering score is described as a legal compliance score. (consistently disclaimed across README, coverage report, release readiness, and `implementations/wazuh/WAZUH_PROFILE.yml` boundary statement)
 
 ## C. Processing / applicability
 
-- [ ] Processing Activity model reviewed.
-- [ ] Asset model reviewed.
-- [ ] Control Profile composition tested with at least three realistic examples.
-- [ ] High-risk processing profile reviewed.
-- [ ] Security monitoring platform dogfooding example completed.
+- [x] Processing Activity model reviewed. (`reports/MODEL_REVIEW_2026-09-23.md` — `framework/models/PROCESSING_ACTIVITY_MODEL.md` reviewed for internal consistency; found `examples/processing-activity.example.yml` was missing 2 of the model's own "Minimum Required Fields" (`processing_operations`, `retention`) — fixed)
+- [x] Asset model reviewed. (`framework/models/ASSET_MODEL.md` reviewed; internally consistent. Note: no dedicated committed asset example exists yet, unlike the other models — not required by this checklist item's wording, but worth adding later)
+- [x] Control Profile composition tested with at least three realistic examples. (`reports/MODEL_REVIEW_2026-09-23.md` — found and fixed a real bug: the sole existing example's `effective_requirements` did not match the mathematically correct union of its 3 applied profiles' `required_requirements` (missing 5 requirements). Rewrote `examples/profile-application.example.yml` with 3 distinct realistic scenarios, each programmatically verified to equal the exact union)
+- [x] High-risk processing profile reviewed. (`framework/profiles/CONTROL_PROFILES.yml`'s `PDP-PROFILE-HIGH-RISK` reviewed; confirmed no `REQ-*` maps to the DPIA controls `PDP-DPIA-001`/`PDP-DPIA-002` — correct, since DPIA is a documentary/organizational control with no generic technical requirement layer, consistent with `CONTROL_CATALOGUE.yml`)
+- [x] Security monitoring platform dogfooding example completed. (the third scenario in the rewritten `examples/profile-application.example.yml` — `ASSET-WAZUH-MANAGER-001` under `PDP-PROFILE-SECURITY-MONITORING` — models the Wazuh manager/indexer/dashboard used to implement this very framework as an in-scope asset of its own framework)
 
 ## D. Wazuh implementation
 

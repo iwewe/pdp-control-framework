@@ -1,6 +1,7 @@
 metadata:
   profile: wazuh
-  version: 0.7.0-draft
+  version: 0.10.0-rc2
+  introduced_in_draft: '0.7.0'
   status: engineering-baseline
   description: Expanded draft Wazuh test catalogue. Test designs require platform validation before normative release.
   custom_rule_id_guidance: Reserve Wazuh custom rule IDs in the documented custom-rule range; assign exact IDs during implementation

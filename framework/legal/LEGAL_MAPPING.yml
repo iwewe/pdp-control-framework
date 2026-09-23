@@ -7,6 +7,14 @@ metadata:
   review_type: authoritative-text source review
   review_date: '2026-09-22'
   legal_counsel_review: NOT_PERFORMED
+  requirement_summary_disclaimer: >-
+    Every requirement_summary below is the framework's own condensed
+    paraphrase for engineering traceability purposes. It is not verbatim
+    statutory text and is not a substitute for the authoritative source.
+    Read the cited article/paragraph at authoritative_source (or each
+    entry's legal_source.source_url / pdf_page) for the exact statutory
+    wording before relying on a requirement_summary for a legal
+    conclusion.
   interpretation_notes:
   - instrument: Putusan MK 151/PUU-XXII/2024
     decision_date: '2025-07-30'

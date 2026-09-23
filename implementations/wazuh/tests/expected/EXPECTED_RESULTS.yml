@@ -1,5 +1,6 @@
 metadata:
-  version: 0.7.0-draft
+  version: 0.10.0-rc2
+  introduced_in_draft: '0.7.0'
   purpose: Expected lab outcomes. Exact decoder/rule behavior must be confirmed on real Wazuh.
 fixtures:
 - file: postgresql/pgaudit_role_create.log

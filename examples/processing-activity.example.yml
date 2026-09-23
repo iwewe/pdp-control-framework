@@ -31,6 +31,14 @@ processing_activity:
     - health_information
   cross_border_transfer:
     enabled: false
+  retention:
+    policy_id: RET-HR-001
+  processing_operations:
+  - collection
+  - storage
+  - retrieval
+  - use
+  - deletion
   risk:
     classification: high
     dpia_required: REVIEW_REQUIRED

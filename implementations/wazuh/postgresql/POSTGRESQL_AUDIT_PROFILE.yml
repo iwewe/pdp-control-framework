@@ -1,6 +1,7 @@
 profile:
   id: wazuh-postgresql-pgaudit
-  version: 0.7.0-draft
+  version: 0.10.0-rc2
+  introduced_in_draft: '0.7.0'
   status: LAB_VALIDATION_REQUIRED
   supported_target:
     postgresql:

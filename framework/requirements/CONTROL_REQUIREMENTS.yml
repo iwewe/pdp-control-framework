@@ -1,6 +1,7 @@
 metadata:
   framework: PDP Control Framework
-  version: 0.4.0-draft
+  version: 0.10.0-rc2
+  introduced_in_draft: '0.4.0'
   purpose: Technology-neutral implementation requirements derived from PDP controls.
   rule: Controls map to generic requirements; implementation profiles map requirements to product-specific tests.
 requirement_families:

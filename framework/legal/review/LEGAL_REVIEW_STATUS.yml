@@ -5,6 +5,20 @@ authoritative_text_review: COMPLETE
 requirements_source_verified: 64
 external_legal_counsel_review: NOT_PERFORMED
 constitutional_court_interpretation_applied: true
+implementing_regulations:
+  status: NOT_REVIEWED
+  note: >-
+    UU No. 27 Tahun 2022 itself mandates implementing government
+    regulations (Peraturan Pemerintah) within its transitional period.
+    As of this review (2026-09-22), this framework has not confirmed
+    whether any such implementing regulation has been enacted, and none
+    is incorporated into framework/legal/LEGAL_MAPPING.yml. This is an
+    explicit open item, not an assumption of "none exists" -- whoever
+    next reviews the legal mapping should check the authoritative source
+    (jdih.komdigi.go.id or peraturan.bpk.go.id) for any enacted
+    implementing regulation before treating LEGAL_MAPPING.yml as
+    complete for a 1.0 release.
 release_gate:
   source_text_review: PASS
   independent_legal_review: OPEN
+  implementing_regulations_review: OPEN
