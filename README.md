@@ -85,6 +85,9 @@ python tools/reporting/generate_coverage_report.py
 This is the same sequence CI runs on every push/PR
 (`.github/workflows/validate.yml`).
 
+To deploy this framework onto a real Wazuh stack, see
+[`INSTALL.md`](INSTALL.md).
+
 ## Legal baseline
 
 Primary source:

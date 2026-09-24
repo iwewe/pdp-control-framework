@@ -54,9 +54,16 @@ pdp-control-framework/
 ├── implementations/
 │   └── wazuh/
 │       ├── dashboard/
+│       │   ├── rbac/
+│       │   │   ├── apply_rbac.sh
+│       │   │   ├── README.md
+│       │   │   ├── roles.yml
+│       │   │   └── roles_mapping.yml
 │       │   ├── saved-objects/
 │       │   │   └── pdp-dashboard-shell.ndjson
 │       │   ├── DASHBOARD_SPEC.yml
+│       │   ├── generate_dashboard_ndjson.py
+│       │   ├── install_indexer_dashboard.sh
 │       │   └── README.md
 │       ├── decoders/
 │       │   └── pdp_pgaudit.xml
@@ -85,6 +92,7 @@ pdp-control-framework/
 │       │   │   └── agent.conf
 │       │   └── pdp-linux-baseline/
 │       │       └── agent.conf
+│       ├── install.sh
 │       ├── tests/
 │       │   ├── expected/
 │       │   │   └── EXPECTED_RESULTS.yml
@@ -151,6 +159,7 @@ pdp-control-framework/
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── FRAMEWORK_MANIFEST.yml
+├── INSTALL.md
 ├── PDP_CONTROL_FRAMEWORK.md
 ├── README.md
 ├── requirements-dev.txt
