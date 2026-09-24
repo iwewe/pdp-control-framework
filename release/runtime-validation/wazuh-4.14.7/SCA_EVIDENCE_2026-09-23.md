@@ -152,3 +152,36 @@ actually exist on the agent host.
   pattern for the same class of checks, so a file-based rewrite would
   make this policy *less* consistent with upstream Wazuh SCA conventions,
   not more robust.
+
+## Addendum — SCA check-ID collision audit against all bundled Wazuh policies (2026-09-24)
+
+Earlier collision testing (main section above) only checked our policy
+(`910001`-`910006`) alongside the one other policy active in this lab,
+the vendor `cis_ubuntu24-04.yml`. This audits against **every** SCA
+policy Wazuh 4.14.7 ships, not just the one enabled by default.
+
+**Method:** `/var/ossec/ruleset/sca/` on this install ships ~70 vendor
+policies (most `.disabled` by default — covering every CIS benchmark
+Wazuh supports: RHEL/CentOS/Rocky/Alma/SLES/Debian/Ubuntu/Amazon Linux/
+Oracle Linux across versions, Windows, macOS, plus product-specific
+policies for Apache, nginx, IIS, MySQL, PostgreSQL, MongoDB, Oracle DB,
+SQL Server, and a generic `sca_distro_independent_linux.yml` and
+`web_vulnerabilities.yml`). Extracted every `id:` field across the entire
+set (`grep -oE 'id: [0-9]+'` over all files, enabled and disabled alike)
+and computed the overall minimum and maximum.
+
+**Result:** the full range across all bundled Wazuh SCA content is
+**1000-40165**. Spot-checked several individual policies for their own
+sub-ranges (`cis_postgre-sql-13`: 24000-24029; `cis_debian12`:
+33010-33301; `cis_rhel9_linux`: 28000-28158; `web_vulnerabilities`:
+14000-14015; `cis_ubuntu24-04`: 35500-35778;
+`sca_distro_independent_linux`: 36000-36189) — none come remotely close
+to our `910001`-`910006` range.
+
+**Conclusion:** `implementations/wazuh/sca/pdp_linux_baseline.yml`'s ID
+range does not collide with any Wazuh-bundled SCA policy, for any
+platform or product Wazuh currently ships content for — not just the one
+policy tested alongside it previously. Third-party/custom SCA content
+from outside the Wazuh vendor distribution remains untested (impossible
+to exhaustively rule out), but the practical collision risk from Wazuh's
+own content is effectively nil given this margin.

@@ -35,7 +35,7 @@ workstreams:
     - centralized agent.conf distribution validated on a separately enrolled agent (one bug found and fixed: invalid syscollector element)
     - Wazuh Server API /logtest harness run for real (one decoder-field bug found and fixed)
     remaining:
-    - SCA check-ID collision against a different real installation's other policies (only tested alongside the vendor cis_ubuntu24-04.yml)
+    - SCA check-ID collision against genuinely third-party/custom SCA content (audited against all ~70 Wazuh-bundled vendor policies 2026-09-24, no collision found; only non-Wazuh-authored content remains untested)
     status: PASS
   dashboard_import:
     saved_objects_static_validation: PASS
@@ -46,6 +46,7 @@ workstreams:
     - release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md
     - release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md
     - release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md
+    - release/runtime-validation/dashboard/ADDITIONAL_VALIDATION_2026-09-24.md
     completed:
     - all three index templates accepted after fixing 6 missing schema-required fields
     - real schema-conformant evidence/assessment/finding documents indexed successfully
@@ -53,12 +54,13 @@ workstreams:
     - dashboard saved-objects (3 index patterns + full 8-panel dashboard) imported and discoverable
     - all 8 panel aggregations confirmed to execute against real index mappings without error
     - identified and documented an operational risk: saved objects did not survive a dashboard restart following a package upgrade; backup/reimport guidance added to implementations/wazuh/DEPLOYMENT.md
+    - confirmed a plain restart (no upgrade) does NOT lose saved objects, narrowing the risk above to the upgrade path specifically
     - role-based access control (viewer + editor) live-tested successfully end to end, after fixing a missing tenant_permissions grant
+    - RBAC retested with opensearch_security.multitenancy.enabled true: all 6 checks passed unchanged, then reverted to the framework default (false)
+    - indexing/aggregation behavior confirmed correct and fast (<50ms) at 1,166 synthetic documents across the three indices
     remaining:
-    - actual browser rendering of the 8 panels (verified via API, not a browser session)
-    - RBAC behavior with opensearch_security.multitenancy.enabled true (tested only with it disabled, the framework default)
-    - saved-objects persistence across a plain dashboard restart not preceded by a package upgrade (isolated test not yet run)
-    - behavior at realistic document volume (tested with 1 doc per index)
+    - actual browser rendering of the 8 panels (verified via API, not a browser session; blocked in this pass by lab-host RAM headroom for a headless browser)
+    - SSO/external identity provider mapping to RBAC backend roles (deliberately deferred, see implementations/wazuh/dashboard/rbac/README.md)
     status: PASS
 coverage:
   legal_requirements_total: 64

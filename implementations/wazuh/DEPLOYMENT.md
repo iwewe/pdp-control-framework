@@ -174,6 +174,17 @@ itself is not at fault — but nothing guarantees custom saved objects
 survive the next restart, especially the first one after a package
 upgrade.
 
+**Scope confirmed 2026-09-24**
+(`release/runtime-validation/dashboard/ADDITIONAL_VALIDATION_2026-09-24.md`):
+a plain `wazuh-dashboard` restart with **no** package upgrade involved
+does **not** reproduce this loss (confirmed across 2 consecutive
+restarts). The risk is specifically tied to the upgrade path, not
+restarts in general — but since routine operational restarts are common
+and a package upgrade isn't always obviously "the same event" from an
+operator's point of view, the backup step below is still recommended
+before any `wazuh-dashboard` restart out of caution, and is **required**
+before an upgrade.
+
 **Before restarting or upgrading `wazuh-dashboard`,** export the current
 saved objects as a backup:
 

@@ -500,3 +500,50 @@ item in `release/PRE_1_0_CHECKLIST.md`** — only one item remains
 unchecked, and it is explicitly an ongoing discipline item ("no
 implementation test remains incorrectly marked as validated"), not a
 one-time task.
+
+## 2026-09-24 (same day) — remaining pre-1.0 gaps closed; legal review exception recorded
+
+Closed every remaining item identified as a gap toward 1.0, except two
+explicitly deferred by project-owner decision:
+
+- **Recorded a formal release exception** in
+  `release/PRE_1_0_CHECKLIST.md` section H,
+  `framework/legal/review/LEGAL_REVIEW_STATUS.yml`, and
+  `release/RELEASE_READINESS_0.10.0-rc2.yml`: proceeding toward 1.0
+  without independent external legal counsel review or an independent
+  implementing-regulations re-check, per explicit project-owner
+  direction. Scoped to this release; to be re-affirmed for any future
+  major release.
+- **SCA check-ID collision audited against all ~70 Wazuh-bundled vendor
+  policies** (not just the one tested alongside ours previously) — full
+  range 1000-40165, nowhere near our 910001-910006. See the
+  `SCA_EVIDENCE_2026-09-23.md` addendum.
+- **Saved-objects persistence on a plain restart** (no package upgrade)
+  confirmed safe across 2 restart cycles, narrowing the previously
+  documented data-loss risk to the upgrade path specifically.
+  `implementations/wazuh/DEPLOYMENT.md` section 4 updated accordingly.
+- **Indexing/aggregation behavior at realistic volume**: 1,166
+  schema-valid synthetic documents bulk-indexed across the three
+  indices; three dashboard-panel-style aggregations (result
+  distribution, filtered severity breakdown, quality-level distribution)
+  all produced correct bucket counts in under 50ms.
+- **RBAC v3 retested with `opensearch_security.multitenancy.enabled: true`**
+  (previously only tested with it disabled, the framework default): all
+  6 checks passed unchanged, including with no explicit tenant header at
+  all. Reverted to the framework default afterward.
+
+Full evidence for the four technical items:
+`release/runtime-validation/dashboard/ADDITIONAL_VALIDATION_2026-09-24.md`.
+
+**Deliberately left open, by explicit choice, not oversight:**
+
+- Actual browser rendering of the 8-panel dashboard — blocked in this
+  pass by lab-host RAM headroom (~184Mi free) for a headless browser,
+  and by the coordinating session's own sandbox lacking root/package-install
+  access. Recommended next step: the operator opens the dashboard
+  directly in their own browser, or this is retried from an environment
+  with more headroom.
+- SSO/external identity provider integration for the RBAC backend roles
+  — deliberately out of scope for this pass (see
+  `implementations/wazuh/dashboard/rbac/README.md` "Scope and
+  limitations").

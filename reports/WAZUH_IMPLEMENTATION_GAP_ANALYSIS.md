@@ -401,8 +401,26 @@ working, confirmed deliverable feature.
    (Section 6 above). Both roles confirmed working end to end after
    three iterations (v1 found the gap, v2 partially addressed it, v3
    fixed the actual root cause via log-based diagnosis).
-9. Remaining after this pass: confirming the 8-panel dashboard actually
-   renders in a real browser session (only its API-level correctness was
-   confirmed), and testing RBAC with
-   `opensearch_security.multitenancy.enabled: true` (this pass tested
-   with it disabled, the framework default).
+9. ~~Test RBAC with `opensearch_security.multitenancy.enabled: true`~~,
+   ~~confirm indexing/aggregation behavior at realistic document volume~~,
+   and ~~isolate whether saved objects survive a plain restart (no
+   upgrade)~~. **All DONE 2026-09-24** — see
+   `release/runtime-validation/dashboard/ADDITIONAL_VALIDATION_2026-09-24.md`.
+   RBAC v3 unaffected by the multitenancy toggle either way; 1,166
+   synthetic documents indexed and aggregated correctly in under 50ms;
+   plain restarts (2 cycles, no upgrade) lost nothing, narrowing the
+   known persistence risk to the upgrade path specifically.
+10. Also audited SCA check-ID collision against all ~70 Wazuh-bundled
+    vendor policies (not just the one tested alongside ours previously) —
+    **DONE 2026-09-24**, see the `SCA_EVIDENCE_2026-09-23.md` addendum.
+    Full bundled range 1000-40165, nowhere near our 910001-910006.
+11. Remaining after this pass: confirming the 8-panel dashboard actually
+    renders in a real browser session (blocked in this pass — the lab
+    host has too little RAM headroom, ~184Mi free, to safely install a
+    headless browser, and the coordinating session's own sandbox lacks
+    root/package-install access; needs either the operator opening the
+    dashboard directly, or a dedicated environment with more headroom),
+    and SSO/external identity provider integration for the RBAC backend
+    roles (deliberately deferred, see
+    `implementations/wazuh/dashboard/rbac/README.md` "Scope and
+    limitations").

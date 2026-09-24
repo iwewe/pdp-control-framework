@@ -1,6 +1,6 @@
 framework_version: 0.10.0-rc2
 target: Wazuh 4.14.7
-validation_date: '2026-09-23'
+validation_date: '2026-09-24'
 status: LAB_VALIDATED
 static_validation: PASS
 real_runtime_validation: PASS
@@ -92,7 +92,9 @@ bugs_found_and_fixed_in_this_lab_pass:
   status: RESOLVED
   evidence: release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md (addendum section)
 not_yet_covered:
-- SCA check-ID collision against a different real installation's other
-  policies (only the vendor cis_ubuntu24-04.yml policy coexisted in this
-  lab; no collision observed, but not exhaustively tested).
+- SCA check-ID collision against genuinely third-party/custom SCA content
+  (audited against all ~70 Wazuh-bundled vendor policies 2026-09-24, full
+  range 1000-40165, nowhere near our 910001-910006 -- see the
+  SCA_EVIDENCE_2026-09-23.md addendum; only non-Wazuh-authored SCA
+  content remains untested, which is not exhaustively enumerable).
 promotion_target: LAB_VALIDATED
