@@ -19,52 +19,44 @@
 #   indices (wazuh-alerts-*, wazuh-monitoring-*, etc.) or to any other
 #   tenant's data.
 #
-# REVISED 2026-09-24 (not yet live-tested -- see "Revision 2" note below
-# and release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md):
-# a 2026-09-24 live test found both roles as originally written (v1)
-# could not use the Dashboards saved-objects application layer at all --
-# the viewer couldn't even open the dashboard, and the editor couldn't
-# read or write saved objects, despite having index-level permissions on
-# .kibana*. Root-caused by comparing against OpenSearch Security's own
-# authoritative reference role, "kibana_user"
-# (https://github.com/opensearch-project/security/blob/main/src/main/resources/static_config/static_roles.yml):
+# STATUS (2026-09-24): v3, live-tested successfully end to end. See
+# release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md for
+# the full v1 -> v2 -> v3 history. Summary of what v1/v2 got wrong and
+# why v3 fixes it:
 #
-#   kibana_user:
-#     cluster_permissions:
-#       - "cluster_composite_ops"          # NOTE: read-WRITE, not the _ro variant
-#     index_permissions:
-#       - index_patterns: [".kibana", ".kibana-6", ".kibana_*", ...]
-#         allowed_actions: ["delete", "index", "manage", "read", "indices_all"]
+# v1 used "cluster_composite_ops_ro" and plain "crud" on .kibana*, with
+# empty tenant_permissions on both roles. Neither role could use the
+# Dashboards saved-objects application layer at all (the viewer couldn't
+# even open the dashboard).
 #
-# v1 of this file used "cluster_composite_ops_ro" (read-only composite
-# ops) for both roles, and only granted "crud" (not "manage") on
-# .kibana*. Wazuh/OpenSearch Dashboards' saved-objects backend appears to
-# route requests through composite operations (_bulk/_msearch) even for
-# single-object reads/writes, which the _ro variant cannot satisfy for
-# writes -- explaining why a direct, non-Dashboards write straight to the
-# concrete .kibana_1 index (bypassing the Dashboards backend and its
-# composite-op usage entirely) succeeded in the 2026-09-24 test while the
-# same write through /api/saved_objects/... did not. It also explains why
-# the viewer -- which had no .kibana* grant at all in v1 -- could never
-# open the dashboard to begin with.
+# v2 fixed the cluster permission (-> "cluster_composite_ops", matching
+# OpenSearch Security's own reference "kibana_user" role:
+# https://github.com/opensearch-project/security/blob/main/src/main/resources/static_config/static_roles.yml)
+# and widened the editor's .kibana* actions to
+# ["delete","index","manage","read"], and gave the viewer a read-only
+# .kibana*/.kibana_* grant it was missing entirely in v1. This fixed nothing
+# by itself in live testing -- every saved-objects call still failed.
 #
-# Revision 2 (this version) narrows the gap to the reference role's
-# permission set rather than adopting it wholesale: cluster_permissions
-# changed to "cluster_composite_ops" for both roles (composite ops appear
-# needed just to render dashboard panels, not only to save them -- the
-# read/write distinction is enforced at the index_permissions level
-# instead), and the viewer now gets a read-only .kibana*/.kibana_* grant
-# so it can actually open the dashboard. The editor's .kibana*/.kibana_*
-# actions were widened from "crud" to the reference role's explicit
-# ["delete","index","manage","read"] (kept short of adopting the reference
-# role's very broad "indices_all" catch-all, to stay closer to least
-# privilege; add "indices_all" as a fallback only if this narrower set is
-# retested and still found insufficient).
+# v3 (this version) found the real root cause via OpenSearch Security
+# DEBUG logging (logger.org.opensearch.security=DEBUG, reverted after
+# diagnosis): the security plugin's Kibana-multitenancy interceptor
+# intercepts every request touching .kibana*-pattern indices REGARDLESS
+# of whether opensearch_dashboards.yml has multitenancy.enabled: true or
+# false, and logged exactly:
 #
-# This revision has NOT yet been live-tested. Do not treat the editor
-# role as validated until it is retested per
-# implementations/wazuh/dashboard/rbac/README.md and the result recorded
-# in a new dated RBAC_EVIDENCE file.
+#   WARN PrivilegesInterceptorImpl: Tenant global_tenant is not allowed
+#   for user <user>
+#
+# Neither role had any tenant_permissions at all. Reserved/static roles
+# like "kibana_user" apparently get the global tenant implicitly; custom
+# roles do not and must declare it explicitly. Adding an explicit
+# tenant_permissions grant for the "global_tenant" tenant pattern
+# (kibana_all_read for the viewer, kibana_all_write for the editor) fixed
+# every previously-failing check. Live-tested end to end 2026-09-24:
+# viewer can open the dashboard and cannot save changes; editor can open
+# the dashboard and can create/save a visualization; neither can write to
+# pdp-* data under any circumstance. All 8 test scenarios in README.md
+# passed.
 
 # Read-only: can open the PDP dashboard and view its panels. Cannot save
 # changes to any dashboard/visualization, and cannot write to any index.
@@ -84,7 +76,11 @@ pdp_dashboard_viewer:
     allowed_actions:
     - "read"
     - "indices:admin/mappings/get"
-  tenant_permissions: []
+  tenant_permissions:
+  - tenant_patterns:
+    - "global_tenant"
+    allowed_actions:
+    - "kibana_all_read"
 
 # Editor: same read-only access to PDP data as the viewer, plus CRUD +
 # index-management on saved objects (.kibana*) so dashboards/
@@ -109,4 +105,8 @@ pdp_dashboard_editor:
     - "index"
     - "manage"
     - "read"
-  tenant_permissions: []
+  tenant_permissions:
+  - tenant_patterns:
+    - "global_tenant"
+    allowed_actions:
+    - "kibana_all_write"

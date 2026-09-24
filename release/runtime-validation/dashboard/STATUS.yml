@@ -1,6 +1,6 @@
 framework_version: 0.10.0-rc2
 target: Wazuh Dashboard 4.14.7 / OpenSearch Dashboards saved-object API
-validation_date: '2026-09-23'
+validation_date: '2026-09-24'
 static_ndjson_validation: PASS
 index_template_json_validation: PASS
 runtime_index_import: PASS
@@ -18,6 +18,7 @@ promotion_checklist:
 - three index patterns discoverable: DONE
 - dashboard saved object discoverable: DONE
 - eight dashboard panels built and imported: DONE (generated from DASHBOARD_SPEC.yml via implementations/wazuh/dashboard/generate_dashboard_ndjson.py; all 8 aggregations confirmed to execute against the real index mappings without error)
+- role-based access control (viewer + editor): DONE (see rbac_v3 below)
 - cleanup succeeds: DONE
 bugs_found_and_fixed_in_this_lab_pass:
 - component: release/runtime-validation/dashboard/validate_real_import.py
@@ -45,36 +46,33 @@ bugs_found_and_fixed_in_this_lab_pass:
 - component: implementations/wazuh/indexer/templates/pdp-findings-template.json
   finding: Missing notes field.
   fix: Added notes (text).
-known_issues_not_fixed:
-- issue: >-
-    implementations/wazuh/dashboard/rbac/roles.yml's pdp_dashboard_editor
-    role's "crud" grant on .kibana/.kibana_1 does not grant working access
-    to the Dashboards saved-objects application layer (port 443
-    /api/saved_objects/...) -- neither read nor write succeeded for that
-    role via the real access path, though the raw index-level permission
-    was confirmed present (write succeeded when targeted directly at
-    port 9200's concrete .kibana_1 index, outside the Dashboards API).
-    Also found: pdp_dashboard_viewer had no .kibana* grant at all and
-    likely could never have opened the dashboard either (untested gap,
-    not a live-confirmed failure).
-  attempted_fix: >-
-    Live diagnostic attempt to temporarily widen the role's
-    allowed_actions to "*" to isolate the cause was correctly blocked by
-    the session's own safety guardrail before reaching the server (too
-    broad a grant for a live security role). Live config change was fully
-    rolled back and verified removed instead.
-  root_cause_research: >-
-    Compared against OpenSearch Security's own reference "kibana_user"
-    role (github.com/opensearch-project/security). Two likely gaps found:
-    (1) cluster_composite_ops_ro used instead of the write-capable
-    cluster_composite_ops -- Dashboards' saved-objects backend appears to
-    route even single-object writes through composite _bulk/_msearch
-    operations; (2) "crud" used instead of
-    ["delete","index","manage","read"] on .kibana*/.kibana_*. Both fixed
-    in a v2 design in roles.yml/README.md, plus adding the previously
-    missing viewer .kibana* read grant.
-  status: V2_DESIGNED_NOT_YET_LIVE_TESTED
-  workaround: None yet for the editor. pdp_dashboard_viewer's pdp-* data-protection behavior (read allowed, write denied) is unaffected and confirmed correct in v1.
+rbac_v3:
+  status: LIVE_TESTED_PASS
+  history: >-
+    v1 (pdp_dashboard_editor could not access saved objects at all) ->
+    v2 (fixed cluster_composite_ops and .kibana* actions per OpenSearch
+    Security's reference kibana_user role; still failed live, including
+    reads, for both roles) -> v3 (root cause found via OpenSearch
+    Security DEBUG logging: the Kibana-multitenancy interceptor requires
+    an explicit tenant_permissions grant for the "global_tenant" tenant
+    regardless of the Dashboards-side multitenancy.enabled flag; neither
+    v1 nor v2 declared any tenant_permissions).
+  fix: >-
+    Added tenant_permissions (tenant_patterns: ["global_tenant"],
+    allowed_actions: ["kibana_all_read"] for the viewer /
+    ["kibana_all_write"] for the editor) to both roles.
+  result: >-
+    All 8 test scenarios passed: viewer/editor read pdp-* (200), write
+    pdp-* denied (403), viewer/editor can open the dashboard via the real
+    /api/saved_objects/_find API (200, all 8 panels visible), viewer
+    cannot save a visualization (403), editor can save a visualization
+    (200/201, then deleted as test cleanup).
+  cleanup: >-
+    Test users (pdp_viewer_test, pdp_editor_test), test index
+    (pdp-evidence-rbactest), and the test visualization were removed
+    after verification. The pdp_dashboard_viewer/pdp_dashboard_editor
+    roles and pdp_viewer/pdp_editor role mappings were deliberately left
+    live as the actual deliverable feature.
   evidence: release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md
 operational_risks_confirmed:
 - risk: >-
@@ -94,6 +92,6 @@ operational_risks_confirmed:
 not_yet_covered:
 - Actual browser rendering of the 8 panels (verified via saved-objects/search APIs, not a real browser session).
 - Behavior once each index holds a realistic document volume (tested with 1 doc per index).
-- pdp_dashboard_editor RBAC role (see known_issues_not_fixed above) -- pdp_dashboard_viewer is covered.
-- Behavior with opensearch_security.multitenancy.enabled: true.
+- Behavior with opensearch_security.multitenancy.enabled: true (RBAC v3 was tested with it disabled, the framework default).
 - Whether saved objects survive a wazuh-dashboard restart when NOT preceded by a package upgrade (not isolated/tested separately).
+- SSO/external identity provider mapping to the RBAC backend roles (out of scope for this pass; see roles.yml README "Scope and limitations").

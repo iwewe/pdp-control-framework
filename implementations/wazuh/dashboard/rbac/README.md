@@ -1,10 +1,13 @@
 # Role-based access model for the PDP compliance dashboard
 
-Status: **v1 live-tested 2026-09-24, editor gap found, rolled back. v2
-(this version) revised based on research, not yet live-tested.** See
-`release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md` for the
-v1 test and root-cause research; re-test v2 per the procedure below
-before marking this validated in `release/PRE_1_0_CHECKLIST.md`.
+Status: **v3 (this version) live-tested successfully end to end,
+2026-09-24.** Deployed live to the lab indexer/dashboard: all 8 test
+scenarios below pass (viewer can open the dashboard and cannot save
+changes; editor can open the dashboard and can create/save a
+visualization; neither can write `pdp-*` data under any circumstance).
+See `release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`
+for the full v1 → v2 → v3 history, including the DEBUG-log root-cause
+diagnosis for v3's fix.
 
 ## What v1 got wrong, and why (root cause)
 
@@ -48,23 +51,50 @@ Two likely gaps in v1, in order of suspected impact:
    saved-objects operations (e.g. checking/updating the `.kibana` index's
    own mapping).
 
-v2 (this version) narrows toward the reference role rather than adopting
-it wholesale, to stay closer to least privilege:
+v2 narrowed toward the reference role rather than adopting it wholesale,
+to stay closer to least privilege:
 
-- Both roles now use `cluster_composite_ops` (not `_ro`).
-- `pdp_dashboard_viewer` now has a **read-only** grant on
+- Both roles use `cluster_composite_ops` (not `_ro`).
+- `pdp_dashboard_viewer` gets a **read-only** grant on
   `.kibana`/`.kibana_*` (`["read", "indices:admin/mappings/get"]`) so it
   can actually open the dashboard — this was simply missing in v1.
 - `pdp_dashboard_editor`'s `.kibana`/`.kibana_*` actions widened from
   `"crud"` to the reference role's explicit
   `["delete","index","manage","read"]`. The reference role's very broad
-  `"indices_all"` catch-all was deliberately not adopted; add it as a
-  fallback only if this narrower set is retested and still found
-  insufficient.
+  `"indices_all"` catch-all was deliberately not adopted.
 
-**This has not been live-tested yet.** Treat it as an informed hypothesis
-grounded in the OpenSearch Security project's own reference
-implementation, not a confirmed fix, until retested.
+**v2 alone did not fix the problem when live-tested.** Every
+saved-objects call still failed. The actual root cause, found via
+OpenSearch Security `DEBUG` logging (`logger.org.opensearch.security=DEBUG`,
+enabled and reverted purely for diagnosis — no permission changes):
+
+```
+WARN PrivilegesInterceptorImpl: Tenant global_tenant is not allowed for user <user>
+```
+
+OpenSearch Security's Kibana-multitenancy interceptor intercepts **every**
+request touching a `.kibana*`-pattern index, regardless of whether
+`opensearch_dashboards.yml`'s `multitenancy.enabled` is `true` or `false` —
+that setting only controls the Dashboards UI's tenant switcher, not
+whether the security plugin enforces tenant permissions. Neither v1 nor
+v2 granted any `tenant_permissions` at all. Reserved/static roles like
+`kibana_user` apparently get the `global_tenant` implicitly; custom roles
+must declare it explicitly.
+
+**v3 (this version)** adds an explicit tenant grant to both roles:
+
+```yaml
+tenant_permissions:
+- tenant_patterns:
+  - "global_tenant"
+  allowed_actions:
+  - "kibana_all_read"   # kibana_all_write for the editor
+```
+
+This fixed every previously-failing check. **v3 has been live-tested
+successfully end to end** — see
+`release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md` for
+the full result set.
 
 ## Model
 
@@ -146,6 +176,11 @@ contain Wazuh's own required reserved roles.
    ```
 
 ## Test procedure
+
+**Confirmed passing end to end against the real lab, 2026-09-24** (v3
+role definitions). All 8 checks below returned the expected result; see
+`release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md` for
+the full transcript.
 
 Test through the **real access paths** — index-level checks against port
 9200 for the data-protection half (the more safety-critical property:

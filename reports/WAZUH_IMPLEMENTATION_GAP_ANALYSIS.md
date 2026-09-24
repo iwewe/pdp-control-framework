@@ -37,11 +37,14 @@ recorded as an unresolved SCA-via-agent-group blocker turned out to be a
 lab-environment gap (missing `sshd`/`systemctl` in a minimal test
 container), not a real defect — see Section 4.
 
-**One genuine defect remains unresolved:** the dashboard RBAC "editor"
-role's saved-objects access does not work as designed (Section 6) — its
-raw index-level permission on `.kibana*` does not translate into working
-Dashboards application access. The "viewer" (read-only) role is confirmed
-correct.
+**Every finding from this pass is now resolved.** The dashboard RBAC
+"editor" role initially could not access dashboard saved objects at all
+(Section 6); after two design iterations and a log-based root-cause
+diagnosis (missing `tenant_permissions` for the `global_tenant` tenant —
+required by OpenSearch Security's Kibana-multitenancy interceptor
+regardless of the Dashboards-side `multitenancy.enabled` flag), both the
+"viewer" and "editor" roles are now confirmed working end to end against
+the real lab.
 
 The Wazuh implementation profile is architecturally complete (rules, SCA
 checks, decoders, agent configuration, index templates, dashboard shell all
@@ -258,57 +261,58 @@ part of routine Wazuh maintenance. See
 `implementations/wazuh/DEPLOYMENT.md` section 4 for the guidance added as
 a result.
 
-## 6. Dashboard RBAC — partially validated, one role not yet working (2026-09-24)
+## 6. Dashboard RBAC — resolved after three iterations (2026-09-24)
 
 Full evidence: `release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`.
 
 The two-role model in `implementations/wazuh/dashboard/rbac/` (designed
-2026-09-23) was live-tested against the real indexer/dashboard for the
-first time. `pdp_dashboard_viewer` (read-only on `pdp-*` data) is
-**confirmed correct**: all 3 index-level tests passed.
+2026-09-23) was live-tested against the real indexer/dashboard. Three
+iterations were needed:
 
-**Unresolved:** `pdp_dashboard_editor`'s `crud` grant on
-`.kibana`/`.kibana_1` does not grant working access to the Dashboards
-saved-objects application layer — neither read nor write succeeded via
-the real `/api/saved_objects/...` path (port 443), despite the raw
-index-level permission being confirmed present (a write to the concrete
-`.kibana_1` index succeeded when targeted directly at port 9200, outside
-the Dashboards API, hitting only an unrelated mapping error). Ruled out:
-glob-pattern mistakes (retested with explicit non-wildcard `.kibana` and
-`.kibana_*` entries — same failure), and hardcoded system-index protection
-(`.kibana*` is not in `opensearch.yml`'s `plugins.security.system_indices.indices`
-list). Likely cause: Wazuh/OpenSearch Dashboards requires an additional,
-Dashboards-specific cluster permission or action group beyond raw index
-CRUD, which this design did not include. A diagnostic attempt to
-temporarily widen the role to isolate the exact missing action was
-correctly stopped before reaching the server by the session's own safety
-guardrail (too broad a grant for a live security role) — the design gap
-was documented instead of chased further via broader live permission
-grants.
+- **v1:** `pdp_dashboard_viewer` (read-only on `pdp-*` data) confirmed
+  correct (3/3 index-level tests passed), but `pdp_dashboard_editor`
+  could not read or write dashboard saved objects via the real
+  `/api/saved_objects/...` path at all, despite a raw index-level `crud`
+  grant on `.kibana`/`.kibana_1` (confirmed present via a successful
+  direct write to the concrete index outside the Dashboards API). Ruled
+  out glob-pattern mistakes and hardcoded system-index protection.
+- **v2 (research, no server changes):** compared against OpenSearch
+  Security's own reference `kibana_user` role
+  (github.com/opensearch-project/security), which uses the write-capable
+  `cluster_composite_ops` (not the `_ro` variant this design used) and
+  `["delete","index","manage","read","indices_all"]` on `.kibana*`. Fixed
+  both, narrower than the reference role's `indices_all`, plus a
+  previously-unnoticed gap: the viewer had no `.kibana*` grant at all.
+  **Deployed live and retested — still failed**, including now *read*
+  access for both roles, not just write.
+- **v3 (root cause found and fixed):** raised the OpenSearch Security
+  plugin's own log level to `DEBUG` (a logging-verbosity change via
+  `PUT _cluster/settings`, reverted immediately after diagnosis — not a
+  permission change) and replayed the failing request. The log showed
+  the actual cause directly: `WARN PrivilegesInterceptorImpl: Tenant
+  global_tenant is not allowed for user <user>`. OpenSearch Security's
+  Kibana-multitenancy interceptor intercepts *every* request touching a
+  `.kibana*`-pattern index regardless of `opensearch_dashboards.yml`'s
+  `multitenancy.enabled` flag (that flag only controls the Dashboards
+  UI's tenant switcher). Neither v1 nor v2 declared any
+  `tenant_permissions`; reserved/static roles like `kibana_user`
+  apparently get the `global_tenant` implicitly, but a custom role must
+  declare it explicitly. Added `tenant_permissions` (`kibana_all_read`
+  for the viewer, `kibana_all_write` for the editor) to both roles.
 
-All test users and config changes were rolled back and verified removed
-from the live indexer. **Do not re-apply this RBAC config to a live
-environment until the editor gap is resolved and retested.**
+**Result: all 8 test scenarios passed** (index-level read/write on
+`pdp-*` for both roles, plus dashboard-open and save-a-visualization
+checks via the real Dashboards API). A diagnostic attempt during the v1
+investigation to temporarily widen a role to `"*"` to isolate the cause
+was correctly blocked before reaching the server by the session's own
+safety guardrail (too broad a grant for a live security role) — the fix
+that actually worked came from log-based diagnosis instead, not broader
+permission grants.
 
-**Root cause researched (2026-09-24, same day, no further server
-changes):** compared against OpenSearch Security's own reference
-`kibana_user` role
-(github.com/opensearch-project/security/blob/main/src/main/resources/static_config/static_roles.yml),
-which uses `cluster_composite_ops` (read-write) rather than the
-`cluster_composite_ops_ro` this design used, and
-`["delete","index","manage","read","indices_all"]` on `.kibana*` rather
-than plain `"crud"`. Wazuh/OpenSearch Dashboards' saved-objects backend
-appears to route even single-object operations through composite
-`_bulk`/`_msearch` calls, which the read-only cluster permission cannot
-satisfy for writes — consistent with the direct (non-composite,
-non-Dashboards) write to the concrete `.kibana_1` index succeeding while
-the same write through the Dashboards API failed. A v2 design applying
-this fix (narrower than the reference role's `indices_all`, to stay
-closer to least privilege) has been written into
-`implementations/wazuh/dashboard/rbac/roles.yml`/`README.md`, along with
-fixing a previously-unnoticed gap: the viewer role had no `.kibana*`
-grant at all and likely could never have opened the dashboard either.
-**v2 has not been live-tested** — this remains open until it is.
+Test users, the test index, and the test visualization were deleted
+after verification. The `pdp_dashboard_viewer`/`pdp_dashboard_editor`
+roles and their backend-role mappings were deliberately left live as the
+working, confirmed deliverable feature.
 
 ## 7. Other operational gaps for a real deployment
 
@@ -391,12 +395,14 @@ grant at all and likely could never have opened the dashboard either.
    and the new `implementations/wazuh/dashboard/generate_dashboard_ndjson.py`.
    All 8 panels' aggregations confirmed to execute against the real index
    mappings; not confirmed in an actual browser rendering session.
-8. Design and live-test a role-based access control model for the
-   dashboard. **Partially done 2026-09-24** — see
+8. ~~Design and live-test a role-based access control model for the
+   dashboard.~~ **DONE 2026-09-24** — see
    `release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`
-   (Section 6 above). Read-only viewer role confirmed correct (v1); editor
-   role's saved-objects access did not work in v1. Root cause researched
-   the same day (v2 design fix written, not yet live-tested).
-9. Remaining after this pass: live-test the v2 RBAC design (Section 6),
-   and confirming the 8-panel dashboard actually renders in a real
-   browser session (only its API-level correctness was confirmed).
+   (Section 6 above). Both roles confirmed working end to end after
+   three iterations (v1 found the gap, v2 partially addressed it, v3
+   fixed the actual root cause via log-based diagnosis).
+9. Remaining after this pass: confirming the 8-panel dashboard actually
+   renders in a real browser session (only its API-level correctness was
+   confirmed), and testing RBAC with
+   `opensearch_security.multitenancy.enabled: true` (this pass tested
+   with it disabled, the framework default).

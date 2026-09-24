@@ -451,3 +451,52 @@ design time.
 next step is to repeat the live-test procedure against the real lab and
 record the result before checking off the RBAC item in
 `release/PRE_1_0_CHECKLIST.md` section F.
+
+## 2026-09-24 (same day) — RBAC editor gap resolved: v3 live-tested successfully
+
+Deployed v2 live and retested with the corrected procedure (real
+Dashboards saved-objects API on port 443, not raw port 9200): **every
+dashboard-application check still failed**, including read access for
+both roles this time, not just write for the editor.
+
+Root cause found by raising the OpenSearch Security plugin's own log
+level to `DEBUG` (`PUT _cluster/settings`, a logging-verbosity change,
+reverted immediately after diagnosis — not a permission change) and
+replaying the failing request:
+
+```
+WARN PrivilegesInterceptorImpl: Tenant global_tenant is not allowed for user <user>
+```
+
+OpenSearch Security's Kibana-multitenancy interceptor intercepts *every*
+request touching a `.kibana*`-pattern index, independent of
+`opensearch_dashboards.yml`'s `multitenancy.enabled` flag (that flag only
+controls the Dashboards UI's tenant switcher, not the security plugin's
+enforcement). Neither v1 nor v2 declared any `tenant_permissions`.
+Reserved/static roles like `kibana_user` apparently get the
+`global_tenant` implicitly; a custom role must declare it explicitly.
+
+**Fix (v3):** added `tenant_permissions` (`kibana_all_read` for the
+viewer, `kibana_all_write` for the editor, both scoped to the
+`global_tenant` tenant pattern) to both roles.
+
+**Result: all 8 test scenarios passed.** Viewer and editor both read
+`pdp-*` (200) and are denied writing it (403); both can open the
+dashboard via the real `/api/saved_objects/_find` API (200, all 8 panels
+visible); the viewer cannot save a visualization (403); the editor can
+(200/201).
+
+Test users, the test index, and the test visualization were removed
+after verification. The `pdp_dashboard_viewer`/`pdp_dashboard_editor`
+roles and their backend-role mappings were deliberately left live as the
+working, confirmed deliverable feature — provisioning real named accounts
+for actual people remains an operator decision.
+
+Full evidence appended to
+`release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`.
+`implementations/wazuh/dashboard/rbac/roles.yml`/`README.md` updated to
+the final v3 definitions. **This closes the last practically-checkable
+item in `release/PRE_1_0_CHECKLIST.md`** — only one item remains
+unchecked, and it is explicitly an ongoing discipline item ("no
+implementation test remains incorrectly marked as validated"), not a
+one-time task.

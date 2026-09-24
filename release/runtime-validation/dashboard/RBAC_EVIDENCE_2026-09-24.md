@@ -151,10 +151,116 @@ caught at design time. The revised procedure tests view/edit access
 through the actual Dashboards saved-objects API (port 443) instead,
 alongside the port-9200 index-level checks for the data-protection half.
 
-**This v2 design has not been live-tested.** The next step is to repeat
-the live-test procedure in `README.md` against the real lab and record
-the result in a new dated evidence file before checking off
-`release/PRE_1_0_CHECKLIST.md` section F's RBAC item.
+**v2 alone did not fix the problem — see the v3 test and root-cause
+diagnosis below, from the same day.**
 
-See `release/PRE_1_0_CHECKLIST.md` section F for how this is reflected in
+## v3 test and successful root-cause fix (2026-09-24, later same day)
+
+v2 was deployed live (fresh backups taken, roles/mappings appended, two
+new test users created, `securityadmin.sh` reload: `Done with success`)
+and retested with the corrected procedure (index-level checks on port
+9200, dashboard-application checks via the real `/api/saved_objects/...`
+API on port 443). Index-level checks (viewer/editor read `pdp-*` allowed,
+write denied) passed as before. **All four dashboard-application checks
+still failed** — including, now, **read** access for both roles (`_find?type=dashboard`
+returning 403), not just write:
+
+```
+{"statusCode":403,"error":"Forbidden","message":"no permissions for [indices:data/read/search] and User [name=pdp_viewer_test, backend_roles=[pdp_viewer], requestedTenant=null]: ..."}
+```
+
+### Diagnosis
+
+Ruled out (all read-only checks, no config changes):
+
+- The `read` action group's actual definition
+  (`github.com/opensearch-project/security` static action groups):
+  `indices:data/read*` — broad enough to cover `indices:data/read/search`,
+  so the index-level grant was not the issue in isolation.
+- The security plugin's own `config.yml` `kibana.multitenancy_enabled`
+  dynamic setting — commented out/default, not the cause.
+- Missing system indices (`.tasks`, `.opensearch_dashboards`) — `_cat/indices`
+  confirmed only `.opendistro_security` and `.kibana_1` exist on this
+  cluster; the `.kibana`/`.kibana_*` patterns already cover the real
+  index.
+- User-to-role mapping itself: `_plugins/_security/authinfo` (a read-only
+  diagnostic endpoint) confirmed `pdp_viewer_test` correctly resolved to
+  roles `[pdp_dashboard_viewer, own_index, kibana_read_only]` — the
+  mapping worked; the role's *permissions* were the gap.
+
+**Found the actual cause** by dynamically raising the security plugin's
+own log level to `DEBUG` (`PUT _cluster/settings` with
+`transient.logger.org.opensearch.security: DEBUG` — a logging-verbosity
+change, not a permission change, reverted immediately after diagnosis)
+and replaying the failing request:
+
+```
+[DEBUG][o.o.s.p.PrivilegesEvaluatorImpl] Security roles: [pdp_dashboard_viewer, own_index, kibana_read_only]
+[WARN ][o.o.s.c.PrivilegesInterceptorImpl] Tenant global_tenant is not allowed for user pdp_viewer_test
+[DEBUG][o.o.s.f.SecurityFilter] no permissions for [indices:data/read/search] and User [...]
+```
+
+OpenSearch Security's Kibana-multitenancy interceptor intercepts **every**
+request touching a `.kibana*`-pattern index, independent of
+`opensearch_dashboards.yml`'s `multitenancy.enabled` flag (that flag only
+controls the Dashboards UI's tenant switcher). Neither v1 nor v2 declared
+any `tenant_permissions`. `kibana_user` (the reference role) apparently
+gets the `global_tenant` implicitly by virtue of being a reserved/static
+role; a custom role like ours must declare it explicitly.
+
+### v3 fix
+
+Added, to both roles:
+
+```yaml
+tenant_permissions:
+- tenant_patterns:
+  - "global_tenant"
+  allowed_actions:
+  - "kibana_all_read"    # kibana_all_write for the editor
+```
+
+Redeployed live (same backups, roles updated, reloaded via
+`securityadmin.sh`) and re-ran all 8 checks:
+
+| # | Check | Expected | Actual |
+|---|---|---|---|
+| 1 | Viewer read `pdp-*` (port 9200) | 200 | **200 — PASS** |
+| 2 | Viewer write `pdp-*` (port 9200) | 403 | **403 — PASS** |
+| 3 | Editor read `pdp-*` (port 9200) | 200 | **200 — PASS** |
+| 4 | Editor write `pdp-*` (port 9200) | 403 | **403 — PASS** |
+| 5 | Viewer open dashboard (port 443, `/api/saved_objects/_find`) | 200 + dashboard found | **200, dashboard with all 8 panels returned — PASS** |
+| 6 | Viewer create a visualization (port 443) | 403 | **403 — PASS** |
+| 7 | Editor open dashboard (port 443) | 200 + dashboard found | **200 — PASS** |
+| 8 | Editor create a visualization (port 443) | 200/201 | **200, visualization created — PASS** |
+
+**8 of 8 passed.** Both roles now behave exactly as designed: read-only
+data access for both, dashboard viewing for both, saved-object editing
+for the editor only, and no role can ever write `pdp-evidence-*`/
+`pdp-assessment-*`/`pdp-findings-*`.
+
+### Cleanup
+
+- Deleted the test visualization (`pdp-rbac-v3-test-viz-editor`) and the
+  test index (`pdp-evidence-rbactest`).
+- Removed the two test users (`pdp_viewer_test`, `pdp_editor_test`) from
+  `internal_users.yml` and reloaded — provisioning real named accounts
+  for actual people is an operator decision, not something to leave
+  behind from a test pass.
+- **The `pdp_dashboard_viewer`/`pdp_dashboard_editor` roles and their
+  `pdp_viewer`/`pdp_editor` backend-role mappings were deliberately left
+  live** — unlike the test users, these are the actual deliverable
+  feature, now confirmed working, ready for real users to be assigned to
+  via `backend_roles` in `internal_users.yml` or an external identity
+  provider mapping.
+- Confirmed `admin` still has full indexer and dashboard access
+  afterward (sanity check, both 200).
+
+## Conclusion (final)
+
+Both `pdp_dashboard_viewer` and `pdp_dashboard_editor` are **confirmed
+working** as designed, end to end, against the real Wazuh Indexer 4.14.7
++ Wazuh Dashboard 4.14.7 lab. `implementations/wazuh/dashboard/rbac/roles.yml`
+and `README.md` reflect the final (v3) definitions. See
+`release/PRE_1_0_CHECKLIST.md` section F for how this is reflected in
 overall release status.
