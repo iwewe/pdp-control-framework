@@ -18,38 +18,83 @@
 #   dashboard has no need for and gets no access to Wazuh's own SIEM
 #   indices (wazuh-alerts-*, wazuh-monitoring-*, etc.) or to any other
 #   tenant's data.
+#
+# REVISED 2026-09-24 (not yet live-tested -- see "Revision 2" note below
+# and release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md):
+# a 2026-09-24 live test found both roles as originally written (v1)
+# could not use the Dashboards saved-objects application layer at all --
+# the viewer couldn't even open the dashboard, and the editor couldn't
+# read or write saved objects, despite having index-level permissions on
+# .kibana*. Root-caused by comparing against OpenSearch Security's own
+# authoritative reference role, "kibana_user"
+# (https://github.com/opensearch-project/security/blob/main/src/main/resources/static_config/static_roles.yml):
+#
+#   kibana_user:
+#     cluster_permissions:
+#       - "cluster_composite_ops"          # NOTE: read-WRITE, not the _ro variant
+#     index_permissions:
+#       - index_patterns: [".kibana", ".kibana-6", ".kibana_*", ...]
+#         allowed_actions: ["delete", "index", "manage", "read", "indices_all"]
+#
+# v1 of this file used "cluster_composite_ops_ro" (read-only composite
+# ops) for both roles, and only granted "crud" (not "manage") on
+# .kibana*. Wazuh/OpenSearch Dashboards' saved-objects backend appears to
+# route requests through composite operations (_bulk/_msearch) even for
+# single-object reads/writes, which the _ro variant cannot satisfy for
+# writes -- explaining why a direct, non-Dashboards write straight to the
+# concrete .kibana_1 index (bypassing the Dashboards backend and its
+# composite-op usage entirely) succeeded in the 2026-09-24 test while the
+# same write through /api/saved_objects/... did not. It also explains why
+# the viewer -- which had no .kibana* grant at all in v1 -- could never
+# open the dashboard to begin with.
+#
+# Revision 2 (this version) narrows the gap to the reference role's
+# permission set rather than adopting it wholesale: cluster_permissions
+# changed to "cluster_composite_ops" for both roles (composite ops appear
+# needed just to render dashboard panels, not only to save them -- the
+# read/write distinction is enforced at the index_permissions level
+# instead), and the viewer now gets a read-only .kibana*/.kibana_* grant
+# so it can actually open the dashboard. The editor's .kibana*/.kibana_*
+# actions were widened from "crud" to the reference role's explicit
+# ["delete","index","manage","read"] (kept short of adopting the reference
+# role's very broad "indices_all" catch-all, to stay closer to least
+# privilege; add "indices_all" as a fallback only if this narrower set is
+# retested and still found insufficient).
+#
+# This revision has NOT yet been live-tested. Do not treat the editor
+# role as validated until it is retested per
+# implementations/wazuh/dashboard/rbac/README.md and the result recorded
+# in a new dated RBAC_EVIDENCE file.
 
 # Read-only: can open the PDP dashboard and view its panels. Cannot save
 # changes to any dashboard/visualization, and cannot write to any index.
 pdp_dashboard_viewer:
   reserved: false
   cluster_permissions:
-  - "cluster_composite_ops_ro"
+  - "cluster_composite_ops"
   index_permissions:
   - index_patterns:
     - "pdp-*"
+    allowed_actions:
+    - "read"
+    - "indices:admin/mappings/get"
+  - index_patterns:
+    - ".kibana"
+    - ".kibana_*"
     allowed_actions:
     - "read"
     - "indices:admin/mappings/get"
   tenant_permissions: []
 
-# Editor: same read-only access to PDP data as the viewer, plus full CRUD
-# on saved objects (.kibana*) so dashboards/visualizations can be built
-# and maintained. Deliberately has NO write access to pdp-evidence-*,
-# pdp-assessment-*, or pdp-findings-* -- see design intent above.
-#
-# KNOWN GAP (confirmed 2026-09-24, see
-# release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md):
-# this "crud" grant on .kibana*/the concrete .kibana_1 index does NOT
-# grant working access to the Dashboards saved-objects application layer
-# -- both read and write via the real /api/saved_objects/... path failed
-# for this role in a live test. Do not deploy this role as-is; it needs
-# further design work (likely an additional Dashboards-specific cluster
-# permission/action group) before being retested.
+# Editor: same read-only access to PDP data as the viewer, plus CRUD +
+# index-management on saved objects (.kibana*) so dashboards/
+# visualizations can be built and maintained. Deliberately has NO write
+# access to pdp-evidence-*, pdp-assessment-*, or pdp-findings-* -- see
+# design intent above.
 pdp_dashboard_editor:
   reserved: false
   cluster_permissions:
-  - "cluster_composite_ops_ro"
+  - "cluster_composite_ops"
   index_permissions:
   - index_patterns:
     - "pdp-*"
@@ -57,7 +102,11 @@ pdp_dashboard_editor:
     - "read"
     - "indices:admin/mappings/get"
   - index_patterns:
-    - ".kibana*"
+    - ".kibana"
+    - ".kibana_*"
     allowed_actions:
-    - "crud"
+    - "delete"
+    - "index"
+    - "manage"
+    - "read"
   tenant_permissions: []

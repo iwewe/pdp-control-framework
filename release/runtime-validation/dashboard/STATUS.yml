@@ -54,14 +54,27 @@ known_issues_not_fixed:
     role via the real access path, though the raw index-level permission
     was confirmed present (write succeeded when targeted directly at
     port 9200's concrete .kibana_1 index, outside the Dashboards API).
+    Also found: pdp_dashboard_viewer had no .kibana* grant at all and
+    likely could never have opened the dashboard either (untested gap,
+    not a live-confirmed failure).
   attempted_fix: >-
-    None applied live -- a diagnostic attempt to temporarily widen the
-    role's allowed_actions to "*" to isolate the cause was correctly
-    blocked by the session's own safety guardrail before reaching the
-    server (too broad a grant for a live security role). The config
-    change was fully rolled back and verified removed instead.
-  status: UNRESOLVED
-  workaround: None yet. pdp_dashboard_viewer (read-only) is unaffected and confirmed correct.
+    Live diagnostic attempt to temporarily widen the role's
+    allowed_actions to "*" to isolate the cause was correctly blocked by
+    the session's own safety guardrail before reaching the server (too
+    broad a grant for a live security role). Live config change was fully
+    rolled back and verified removed instead.
+  root_cause_research: >-
+    Compared against OpenSearch Security's own reference "kibana_user"
+    role (github.com/opensearch-project/security). Two likely gaps found:
+    (1) cluster_composite_ops_ro used instead of the write-capable
+    cluster_composite_ops -- Dashboards' saved-objects backend appears to
+    route even single-object writes through composite _bulk/_msearch
+    operations; (2) "crud" used instead of
+    ["delete","index","manage","read"] on .kibana*/.kibana_*. Both fixed
+    in a v2 design in roles.yml/README.md, plus adding the previously
+    missing viewer .kibana* read grant.
+  status: V2_DESIGNED_NOT_YET_LIVE_TESTED
+  workaround: None yet for the editor. pdp_dashboard_viewer's pdp-* data-protection behavior (read allowed, write denied) is unaffected and confirmed correct in v1.
   evidence: release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md
 operational_risks_confirmed:
 - risk: >-

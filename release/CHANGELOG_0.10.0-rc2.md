@@ -411,3 +411,43 @@ until the editor gap is resolved and retested.**
 
 This was the last open item from `release/PRE_1_0_CHECKLIST.md` section F;
 it remains partially open (viewer done, editor not).
+
+## 2026-09-24 (same day) — RBAC editor gap: root cause researched, v2 designed
+
+Research-only pass (no further server changes) into why
+`pdp_dashboard_editor` couldn't access dashboard saved objects. Compared
+the role against OpenSearch Security's own reference `kibana_user` role
+(github.com/opensearch-project/security) and found two likely gaps:
+
+- `cluster_composite_ops_ro` (read-only) was used instead of the
+  write-capable `cluster_composite_ops`. Wazuh/OpenSearch Dashboards'
+  saved-objects backend appears to route even single-object
+  reads/writes through composite `_bulk`/`_msearch` operations, which the
+  `_ro` variant cannot satisfy for writes — consistent with a direct,
+  non-composite write to the concrete `.kibana_1` index succeeding in the
+  earlier live test while the same write through the Dashboards API
+  failed.
+- `"crud"` was granted on `.kibana*` instead of the reference role's
+  `["delete","index","manage","read"]` — `"crud"` may not include the
+  `manage` (index-admin) actions the Dashboards backend needs.
+
+Also found, by re-reading the v1 design rather than by testing: the
+**viewer** role had no `.kibana*` permission at all in v1, so it likely
+could never have opened the dashboard either (this wasn't caught in the
+v1 live test because the only `.kibana`-related check for the viewer was
+a write-deny test, which passes regardless of whether read access also
+exists).
+
+`implementations/wazuh/dashboard/rbac/roles.yml` and `README.md` updated
+to a v2 design applying both fixes (narrower than the reference role's
+very broad `"indices_all"`, to stay closer to least privilege as a first
+attempt), plus a corrected test procedure that exercises the real
+Dashboards saved-objects API (port 443) for the view/edit checks instead
+of a raw port-9200 write, which is what let the v1 gap go undetected at
+design time.
+
+**v2 has not been live-tested.** Full detail appended to
+`release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`. The
+next step is to repeat the live-test procedure against the real lab and
+record the result before checking off the RBAC item in
+`release/PRE_1_0_CHECKLIST.md` section F.

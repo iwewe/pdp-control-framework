@@ -290,6 +290,26 @@ All test users and config changes were rolled back and verified removed
 from the live indexer. **Do not re-apply this RBAC config to a live
 environment until the editor gap is resolved and retested.**
 
+**Root cause researched (2026-09-24, same day, no further server
+changes):** compared against OpenSearch Security's own reference
+`kibana_user` role
+(github.com/opensearch-project/security/blob/main/src/main/resources/static_config/static_roles.yml),
+which uses `cluster_composite_ops` (read-write) rather than the
+`cluster_composite_ops_ro` this design used, and
+`["delete","index","manage","read","indices_all"]` on `.kibana*` rather
+than plain `"crud"`. Wazuh/OpenSearch Dashboards' saved-objects backend
+appears to route even single-object operations through composite
+`_bulk`/`_msearch` calls, which the read-only cluster permission cannot
+satisfy for writes — consistent with the direct (non-composite,
+non-Dashboards) write to the concrete `.kibana_1` index succeeding while
+the same write through the Dashboards API failed. A v2 design applying
+this fix (narrower than the reference role's `indices_all`, to stay
+closer to least privilege) has been written into
+`implementations/wazuh/dashboard/rbac/roles.yml`/`README.md`, along with
+fixing a previously-unnoticed gap: the viewer role had no `.kibana*`
+grant at all and likely could never have opened the dashboard either.
+**v2 has not been live-tested** — this remains open until it is.
+
 ## 7. Other operational gaps for a real deployment
 
 - ~~Credential provisioning is undocumented.~~ **RESOLVED** 2026-09-22:
@@ -374,8 +394,9 @@ environment until the editor gap is resolved and retested.**
 8. Design and live-test a role-based access control model for the
    dashboard. **Partially done 2026-09-24** — see
    `release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`
-   (Section 6 above). Read-only viewer role confirmed correct; editor
-   role's saved-objects access does not work yet and remains open.
-9. Remaining after this pass: the `pdp_dashboard_editor` RBAC gap
-   (Section 6), and confirming the 8-panel dashboard actually renders in
-   a real browser session (only its API-level correctness was confirmed).
+   (Section 6 above). Read-only viewer role confirmed correct (v1); editor
+   role's saved-objects access did not work in v1. Root cause researched
+   the same day (v2 design fix written, not yet live-tested).
+9. Remaining after this pass: live-test the v2 RBAC design (Section 6),
+   and confirming the 8-panel dashboard actually renders in a real
+   browser session (only its API-level correctness was confirmed).
