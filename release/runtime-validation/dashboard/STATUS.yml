@@ -91,9 +91,9 @@ operational_risks_confirmed:
     verify + reimport afterward. See implementations/wazuh/DEPLOYMENT.md
     section 4.
 not_yet_covered:
-- Actual browser rendering of the 8 panels (verified via saved-objects/search APIs, not a real browser session; blocked in this pass by lab-host RAM headroom for a headless browser -- see ADDITIONAL_VALIDATION_2026-09-24.md discussion).
 - SSO/external identity provider mapping to the RBAC backend roles (deliberately deferred; see roles.yml README "Scope and limitations").
 resolved_2026-09-24:
 - Document volume behavior: tested with 1,166 synthetic documents across the three indices; templates and dashboard-panel-style aggregations both correct and fast (<50ms). See ADDITIONAL_VALIDATION_2026-09-24.md.
 - "RBAC with opensearch_security.multitenancy.enabled set to true: RBAC v3 retested with it enabled; all 6 checks passed unchanged (including with no explicit tenant header at all), then reverted back to the framework default (false). See ADDITIONAL_VALIDATION_2026-09-24.md."
 - Saved-objects persistence across a plain restart (no upgrade): confirmed safe across 2 restart cycles; the data-loss risk is specific to the upgrade path already documented in implementations/wazuh/DEPLOYMENT.md section 4. See ADDITIONAL_VALIDATION_2026-09-24.md.
+- Actual browser rendering of the 8 panels: automated pass could only verify aggregations via the saved-objects/search APIs (blocked from a real browser session by lab-host RAM headroom for a headless browser). Project owner opened the dashboard in their own browser, 2026-09-24, and confirmed it renders correctly. See implementations/wazuh/DEPLOYMENT.md section 5.

@@ -537,13 +537,19 @@ Full evidence for the four technical items:
 
 **Deliberately left open, by explicit choice, not oversight:**
 
-- Actual browser rendering of the 8-panel dashboard — blocked in this
-  pass by lab-host RAM headroom (~184Mi free) for a headless browser,
-  and by the coordinating session's own sandbox lacking root/package-install
-  access. Recommended next step: the operator opens the dashboard
-  directly in their own browser, or this is retried from an environment
-  with more headroom.
 - SSO/external identity provider integration for the RBAC backend roles
   — deliberately out of scope for this pass (see
   `implementations/wazuh/dashboard/rbac/README.md` "Scope and
   limitations").
+
+### 2026-09-24 (same day) — dashboard browser rendering confirmed by project owner
+
+Actual browser rendering of the 8-panel dashboard was blocked in the
+automated lab pass by lab-host RAM headroom (~184Mi free) for a headless
+browser, and by the coordinating session's own sandbox lacking
+root/package-install access. Steps for a manual check were added to
+`implementations/wazuh/DEPLOYMENT.md` section 5. The project owner
+opened the dashboard directly in their own browser and confirmed it
+renders correctly. This was the last open technical item from this
+validation pass; only the deliberately deferred SSO integration remains
+out of scope.

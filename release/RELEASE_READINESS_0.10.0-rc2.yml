@@ -58,8 +58,8 @@ workstreams:
     - role-based access control (viewer + editor) live-tested successfully end to end, after fixing a missing tenant_permissions grant
     - RBAC retested with opensearch_security.multitenancy.enabled true: all 6 checks passed unchanged, then reverted to the framework default (false)
     - indexing/aggregation behavior confirmed correct and fast (<50ms) at 1,166 synthetic documents across the three indices
+    - actual browser rendering of the 8 panels confirmed by the project owner opening the dashboard directly, 2026-09-24 (see implementations/wazuh/DEPLOYMENT.md section 5)
     remaining:
-    - actual browser rendering of the 8 panels (verified via API, not a browser session; blocked in this pass by lab-host RAM headroom for a headless browser)
     - SSO/external identity provider mapping to RBAC backend roles (deliberately deferred, see implementations/wazuh/dashboard/rbac/README.md)
     status: PASS
 coverage:

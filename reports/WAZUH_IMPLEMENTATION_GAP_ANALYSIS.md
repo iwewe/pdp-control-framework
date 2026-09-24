@@ -394,7 +394,8 @@ working, confirmed deliverable feature.
    `release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md`
    and the new `implementations/wazuh/dashboard/generate_dashboard_ndjson.py`.
    All 8 panels' aggregations confirmed to execute against the real index
-   mappings; not confirmed in an actual browser rendering session.
+   mappings. Actual browser rendering confirmed by the project owner
+   2026-09-24 (see item 12 below).
 8. ~~Design and live-test a role-based access control model for the
    dashboard.~~ **DONE 2026-09-24** — see
    `release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`
@@ -414,13 +415,15 @@ working, confirmed deliverable feature.
     vendor policies (not just the one tested alongside ours previously) —
     **DONE 2026-09-24**, see the `SCA_EVIDENCE_2026-09-23.md` addendum.
     Full bundled range 1000-40165, nowhere near our 910001-910006.
-11. Remaining after this pass: confirming the 8-panel dashboard actually
-    renders in a real browser session (blocked in this pass — the lab
-    host has too little RAM headroom, ~184Mi free, to safely install a
-    headless browser, and the coordinating session's own sandbox lacks
-    root/package-install access; needs either the operator opening the
-    dashboard directly, or a dedicated environment with more headroom),
-    and SSO/external identity provider integration for the RBAC backend
-    roles (deliberately deferred, see
+11. Remaining after this pass: SSO/external identity provider integration
+    for the RBAC backend roles (deliberately deferred, see
     `implementations/wazuh/dashboard/rbac/README.md` "Scope and
     limitations").
+12. Confirming the 8-panel dashboard actually renders in a real browser
+    session was blocked in the automated pass — the lab host has too
+    little RAM headroom, ~184Mi free, to safely install a headless
+    browser, and the coordinating session's own sandbox lacks
+    root/package-install access. **DONE 2026-09-24** — the project owner
+    opened the dashboard directly in their own browser (steps in
+    `implementations/wazuh/DEPLOYMENT.md` section 5) and confirmed it
+    renders correctly.
