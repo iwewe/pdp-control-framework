@@ -1,22 +1,26 @@
 metadata:
-  framework_version: 0.10.0-rc2
-  status: TARGET_MATRIX_NOT_FULLY_LAB_VALIDATED
-  last_reviewed: '2026-09-22'
+  framework_version: 1.0.0
+  status: LAB_VALIDATED
+  last_reviewed: '2026-09-24'
 targets:
 - component: Wazuh central components
   target_version: 4.14.7
-  status: TARGET
+  status: LAB_VALIDATED
   requirements:
   - manager, indexer, and dashboard must use identical versions including patch level
-  notes: Primary pre-1.0 lab target.
+  notes: >-
+    Lab-validated 2026-09-23/24: rules/decoders, FIM, SCA (local and
+    centralized agent-group distribution), agent.conf, Server API
+    /logtest, and dashboard/RBAC all confirmed on real Wazuh 4.14.7. See
+    release/RELEASE_READINESS_1.0.0.yml.
 - component: Wazuh agent
   target_version: 4.14.7
-  status: TARGET
+  status: LAB_VALIDATED
   requirements:
   - manager version must be the same as or newer than agent version
 - component: Ubuntu
   target_version: 24.04 LTS
-  status: TARGET
+  status: LAB_VALIDATED
   scope:
   - SCA Linux baseline
   - FIM
@@ -26,10 +30,12 @@ targets:
   - PostgreSQL host
 - component: PostgreSQL
   target_version: '17'
-  status: TARGET
+  status: LAB_VALIDATED
+  notes: Validated via real wazuh-logtest fixture matching against pgAudit-sourced log lines.
 - component: pgAudit
   target_version: 17.x matching PostgreSQL 17
-  status: TARGET
+  status: LAB_VALIDATED
+  notes: Validated via real wazuh-logtest fixture matching against pgAudit-sourced log lines.
 - component: Python
   target_version: '3.12'
   status: CI_TARGET

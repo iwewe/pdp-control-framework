@@ -1,4 +1,4 @@
-framework_version: 0.10.0-rc2
+framework_version: 1.0.0
 target: Wazuh Dashboard 4.14.7 / OpenSearch Dashboards saved-object API
 validation_date: '2026-09-24'
 static_ndjson_validation: PASS

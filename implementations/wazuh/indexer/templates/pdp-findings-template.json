@@ -75,6 +75,6 @@
   "priority": 200,
   "_meta": {
     "framework": "PDP Control Framework",
-    "version": "0.10.0-rc2"
+    "version": "1.0.0"
   }
 }

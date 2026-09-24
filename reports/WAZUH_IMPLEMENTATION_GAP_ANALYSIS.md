@@ -1,6 +1,6 @@
 # Wazuh Implementation Gap Analysis
 
-**Framework version reviewed:** 0.10.0-rc2
+**Framework version reviewed:** 1.0.0 (originally reviewed at 0.10.0-rc2)
 **Review date:** 2026-09-22 (original), updated 2026-09-23 and 2026-09-24
 with real lab evidence
 **Scope:** `implementations/wazuh/` content (rules, decoders, SCA policy, agent

@@ -130,7 +130,7 @@
   "priority": 200,
   "_meta": {
     "framework": "PDP Control Framework",
-    "version": "0.10.0-rc2",
+    "version": "1.0.0",
     "notes": "payload is intentionally schema-free (framework/schemas/evidence.schema.json marks it additionalProperties:true) and is stored but not indexed (enabled:false), since its shape varies by evidence-producing engine."
   }
 }

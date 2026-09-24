@@ -124,9 +124,10 @@ pdp-control-framework/
 │   │       └── STATUS.yml
 │   ├── CHANGELOG_0.10.0-rc1.md
 │   ├── CHANGELOG_0.10.0-rc2.md
+│   ├── CHANGELOG_1.0.0.md
 │   ├── PRE_1_0_CHECKLIST.md
 │   ├── RELEASE_GATES.yml
-│   ├── RELEASE_READINESS_0.10.0-rc2.yml
+│   ├── RELEASE_READINESS_1.0.0.yml
 │   └── SHA256SUMS.txt
 ├── reports/
 │   ├── COVERAGE_REPORT.json

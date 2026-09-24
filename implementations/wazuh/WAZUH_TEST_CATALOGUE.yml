@@ -1,6 +1,6 @@
 metadata:
   profile: wazuh
-  version: 0.10.0-rc2
+  version: 1.0.0
   introduced_in_draft: '0.7.0'
   status: engineering-baseline
   description: Expanded draft Wazuh test catalogue. Test designs require platform validation before normative release.

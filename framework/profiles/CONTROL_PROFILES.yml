@@ -1,6 +1,6 @@
 metadata:
   framework: PDP Control Framework
-  version: 0.10.0-rc2
+  version: 1.0.0
   introduced_in_draft: '0.5.0'
   purpose: Reusable applicability profiles that activate control requirements for common PDP processing contexts.
   important: Profiles are engineering baselines. They do not replace legal applicability analysis.

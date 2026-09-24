@@ -1,4 +1,4 @@
-version: 0.10.0-rc2
+version: 1.0.0
 introduced_in_draft: '0.8.0'
 transport:
   preferred: wazuh_server_api

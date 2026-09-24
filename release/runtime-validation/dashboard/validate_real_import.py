@@ -61,7 +61,7 @@ if not VERIFY:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 r={
-    "framework_version":"0.10.0-rc2",
+    "framework_version":"1.0.0",
     "run_at":datetime.now(timezone.utc).isoformat().replace("+00:00","Z"),
     "checks":[],
     "overall":"FAIL"

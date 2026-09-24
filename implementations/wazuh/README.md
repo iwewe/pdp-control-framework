@@ -1,6 +1,6 @@
 # Wazuh Implementation and Evidence Profile
 
-**Status:** Pre-1.0 Release Candidate (0.10.0-rc2). All content here is `STATIC_VALIDATED` only; see `reports/WAZUH_IMPLEMENTATION_GAP_ANALYSIS.md` for what real-runtime validation still requires, and `implementations/wazuh/DEPLOYMENT.md` for credential provisioning and agent-group rollout steps.
+**Status:** 1.0.0, `LAB_VALIDATED` against real Wazuh 4.14.7 (rules, decoders, SCA, agent.conf, indexer templates, dashboard, RBAC). See `reports/WAZUH_IMPLEMENTATION_GAP_ANALYSIS.md` for the full validation history and `implementations/wazuh/DEPLOYMENT.md` for credential provisioning and agent-group rollout steps.
 
 ## 1. Role of Wazuh
 

@@ -1,12 +1,14 @@
 # Pre-1.0 Release Validation Checklist
 
-Target release: **1.0.0**
+Released as: **1.0.0**, 2026-09-24. See `release/CHANGELOG_1.0.0.md` and
+`release/RELEASE_READINESS_1.0.0.yml`.
 
-This is a living release-state document. An item is checked only when there
+This is a living release-state document, kept as the historical record of
+what was checked before the `1.0.0` tag. An item is checked only when there
 is verifiable evidence for it (a passing CI check, a script re-run during
 review, or a specific document); items that require a real runtime
 (Wazuh/PostgreSQL/Indexer/Dashboard lab) stay unchecked until that runtime
-evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
+evidence exists. Last synchronized against 1.0.0 on 2026-09-24.
 
 ## A. Legal layer
 
@@ -90,11 +92,13 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 - [x] CONTRIBUTING.md added.
 - [x] SECURITY.md added.
 - [x] LICENSE selected. (Apache License 2.0 — see `LICENSE`; open to change by project governance before 1.0)
-- [x] release changelog generated. (`release/CHANGELOG_0.10.0-rc2.md`)
+- [x] release changelog generated. (`release/CHANGELOG_0.10.0-rc2.md`, `release/CHANGELOG_1.0.0.md`)
 
 ## H. 1.0 release gate
 
 Release **must not** be tagged `1.0.0` until all mandatory items above are complete or an explicit release exception is documented and approved.
+
+**Gate satisfied, 2026-09-24: all mandatory items above are complete except the two documented exceptions below. Tagged `1.0.0`.**
 
 ### Documented release exceptions
 

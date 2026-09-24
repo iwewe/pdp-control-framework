@@ -1,7 +1,7 @@
 # PDP Control Framework
 
-**Status:** Pre-1.0 Release Candidate
-**Version:** 0.10.0-rc2  
+**Status:** Released
+**Version:** 1.0.0  
 **Primary legal source:** Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)  
 **Jurisdiction:** Indonesia  
 **Project model:** Technology-neutral control framework with pluggable implementation/evidence engines  

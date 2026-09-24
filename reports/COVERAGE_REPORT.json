@@ -1,5 +1,5 @@
 {
-  "framework_version": "0.10.0-rc2",
+  "framework_version": "1.0.0",
   "summary": {
     "legal_requirements_total": 64,
     "with_wazuh_test_coverage": 24,

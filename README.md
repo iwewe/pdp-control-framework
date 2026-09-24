@@ -12,11 +12,12 @@ first implementation/evidence profile targets **Wazuh**.
 
 ## Current status
 
-**Version:** 0.10.0-rc2 — **pre-1.0, release candidate** (`FRAMEWORK_MANIFEST.yml`)
+**Version:** 1.0.0 — **first stable release** (`FRAMEWORK_MANIFEST.yml`)
 
-The repository is not yet ready for a `1.0.0` tag. See
-`release/PRE_1_0_CHECKLIST.md` and `reports/WAZUH_IMPLEMENTATION_GAP_ANALYSIS.md`
-for what remains open, and the status tables below for a snapshot.
+See `release/PRE_1_0_CHECKLIST.md`, `release/RELEASE_READINESS_1.0.0.yml`,
+and `reports/WAZUH_IMPLEMENTATION_GAP_ANALYSIS.md` for what was validated
+and what remains deliberately out of scope, and the status tables below
+for a snapshot.
 
 For the version-by-version design history (v0.1 through v0.9), see
 `docs/history/`, starting with
@@ -99,35 +100,35 @@ Binding interpretation:
 Preserved snapshots of both sources (retrieved 2026-09-22, including the
 official Constitutional Court decision PDF) are archived in
 `docs/legal-sources/`. Review status: authoritative-text review is
-`SOURCE_VERIFIED`; independent external legal counsel review is
-`NOT_PERFORMED` (`framework/legal/review/LEGAL_REVIEW_STATUS.yml`).
+`SOURCE_VERIFIED`; independent external legal counsel review and an
+independent implementing-regulations re-check are recorded as an
+explicit, scoped project-owner exception for this release, not a
+pending blocker (`framework/legal/review/LEGAL_REVIEW_STATUS.yml`,
+`release/PRE_1_0_CHECKLIST.md` section H).
 
 ## Wazuh implementation status
 
 All Wazuh content (rules, decoders, SCA policy, agent configuration, index
-templates, dashboard) is validated **statically only** — CI confirms
-well-formed XML/YAML/JSON, unique rule IDs, and schema-valid examples, but
-none of it has run against a real Wazuh/PostgreSQL/Indexer/Dashboard
-runtime yet.
+templates, dashboard) is validated both statically (CI: well-formed
+XML/YAML/JSON, unique rule IDs, schema-valid examples) and against a real
+Wazuh 4.14.7 lab (manager/agent, PostgreSQL 17 + pgAudit, Indexer,
+Dashboard).
 
 | Area | Status |
 |---|---|
 | Static repository validation | PASS (CI) |
-| Wazuh 4.14.7 manager/agent runtime | NOT RUN |
-| PostgreSQL 17 + pgAudit real decoding | NOT RUN |
-| Wazuh Indexer template import | NOT RUN |
-| Wazuh Dashboard saved-object import | NOT RUN |
+| Wazuh 4.14.7 manager/agent runtime | LAB_VALIDATED |
+| PostgreSQL 17 + pgAudit real decoding | LAB_VALIDATED |
+| Wazuh Indexer template import | LAB_VALIDATED |
+| Wazuh Dashboard saved-object import + RBAC | LAB_VALIDATED |
 
-The pgAudit decoder was previously anchored to match only at the start of
-the log line, which would not match a real PostgreSQL log line prefixed by
-`log_line_prefix` — this has been fixed (decoder now matches `AUDIT:`
-anywhere in the raw line) and fixtures now include a realistic prefix, but
-this still requires confirmation on a real lab before promotion beyond
-`STATIC_VALIDATED`. Full detail: `reports/WAZUH_IMPLEMENTATION_GAP_ANALYSIS.md`.
-
-Do not mark any implementation artifact `LAB_VALIDATED`, `PLATFORM_VALIDATED`,
-or `SUPPORTED` without reproducible runtime evidence
-(`release/compatibility/COMPATIBILITY_MATRIX.yml`).
+Full detail and evidence links: `release/RELEASE_READINESS_1.0.0.yml`,
+`reports/WAZUH_IMPLEMENTATION_GAP_ANALYSIS.md`, and
+`release/compatibility/COMPATIBILITY_MATRIX.yml` (`promotion_rule`: no
+platform is marked `SUPPORTED` before reproducible lab evidence exists —
+this release's targets are `LAB_VALIDATED`, one step below `SUPPORTED`,
+which still implies broader multi-environment production confidence
+beyond a single lab pass).
 
 ## Current coverage
 

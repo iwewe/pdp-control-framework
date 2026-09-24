@@ -1,6 +1,6 @@
 framework:
   name: PDP Control Framework
-  version: 0.10.0-rc2
+  version: 1.0.0
   jurisdiction: Indonesia
   primary_legal_source: UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi
   assessment_methods:

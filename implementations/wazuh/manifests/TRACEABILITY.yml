@@ -1,5 +1,5 @@
 metadata:
-  framework_version: 0.10.0-rc2
+  framework_version: 1.0.0
   introduced_in_draft: '0.7.0'
   implementation_profile: wazuh
   status: LAB_VALIDATION_REQUIRED

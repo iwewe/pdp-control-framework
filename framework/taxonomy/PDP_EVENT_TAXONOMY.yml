@@ -1,6 +1,6 @@
 metadata:
   framework: PDP Control Framework
-  version: 0.10.0-rc2
+  version: 1.0.0
   introduced_in_draft: '0.5.0'
   purpose: Normalize security/privacy-relevant events independently from any SIEM product.
   principle: An event category indicates technical/privacy relevance, not a legal conclusion.

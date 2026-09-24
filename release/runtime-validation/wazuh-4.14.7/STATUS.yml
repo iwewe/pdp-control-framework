@@ -1,4 +1,4 @@
-framework_version: 0.10.0-rc2
+framework_version: 1.0.0
 target: Wazuh 4.14.7
 validation_date: '2026-09-24'
 status: LAB_VALIDATED

@@ -1,7 +1,7 @@
 profile:
   id: wazuh
   name: Wazuh Implementation and Evidence Profile
-  version: 0.10.0-rc2
+  version: 1.0.0
   introduced_in_draft: '0.4.0'
   profile_type:
   - implementation

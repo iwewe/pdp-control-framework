@@ -1,12 +1,12 @@
 framework:
   name: PDP Control Framework
-  version: 0.10.0-rc2
-  release_stage: pre-1.0
+  version: 1.0.0
+  release_stage: '1.0'
   jurisdiction: Indonesia
   primary_legal_source: UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi
   implementation_profiles:
   - wazuh
-  status: RELEASE_CANDIDATE
+  status: RELEASED
 counts:
   legal_requirements: 64
   controls: 39
@@ -46,8 +46,8 @@ release_requirements:
   dashboard_import_validation_required_for_1_0: true
   coverage_report_required_for_1_0: true
   authoritative_legal_source_review_complete: true
-  real_wazuh_4_14_7_runtime_validation_complete: false
-  real_dashboard_import_validation_complete: false
+  real_wazuh_4_14_7_runtime_validation_complete: true
+  real_dashboard_import_validation_complete: true
 compatibility_baseline:
   wazuh_target: 4.14.7
   postgresql_target: '17'
