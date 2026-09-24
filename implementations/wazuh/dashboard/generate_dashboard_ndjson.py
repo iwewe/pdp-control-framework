@@ -278,7 +278,17 @@ def main():
             "panelsJSON": json.dumps(panels),
             "optionsJSON": json.dumps({"useMargins": True, "hidePanelTitles": False}),
             "version": 1,
-            "timeRestore": False,
+            # Every panel here is tied to an index pattern with timeFieldName
+            # set, so ALL of them -- not just the timeseries one -- are
+            # filtered by the dashboard's time range, not just their own
+            # query. timeRestore:false previously left this to whatever the
+            # viewer's global time picker defaulted to (e.g. "last 24
+            # hours"), which silently hid most panels' data. Confirmed on
+            # the real lab, 2026-09-24: with a wide, restored range this is
+            # not a problem.
+            "timeRestore": True,
+            "timeFrom": "now-90d",
+            "timeTo": "now+7d",
             "kibanaSavedObjectMeta": {
                 "searchSourceJSON": json.dumps({"query": {"query": "", "language": "kuery"}, "filter": []})
             },
