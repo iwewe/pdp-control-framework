@@ -1,31 +1,42 @@
 framework_version: 0.10.0-rc2
-date: '2026-09-23'
+date: '2026-09-24'
 release_target: 1.0.0
 workstreams:
   legal_review_coverage:
     authoritative_source_review: PASS
     constitutional_court_update: PASS
-    external_legal_counsel: OPEN
-    status: SOURCE_VERIFIED_NOT_COUNSEL_SIGNED
+    external_legal_counsel: OPEN_ACCEPTED_EXCEPTION
+    implementing_regulations_review: OPEN_ACCEPTED_EXCEPTION
+    status: SOURCE_VERIFIED_EXCEPTION_ACCEPTED_FOR_THIS_RELEASE
+    note: >-
+      Project owner decided 2026-09-24 to proceed toward 1.0 without
+      independent external legal counsel review or an independent
+      re-check for enacted implementing regulations, treating the
+      completed authoritative-text review as sufficient current legal
+      guidance for this release. See
+      framework/legal/review/LEGAL_REVIEW_STATUS.yml and
+      release/PRE_1_0_CHECKLIST.md section H.
   wazuh_4_14_7_lab:
     static_repository_validation: PASS
-    real_runtime_execution: PARTIAL
+    real_runtime_execution: PASS
     evidence:
     - release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md
     - release/runtime-validation/wazuh-4.14.7/FIM_LIVE_EVIDENCE_2026-09-23.md
     - release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md
     - release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md
+    - release/runtime-validation/wazuh-4.14.7/TELEMETRY_HEALTH_EVIDENCE_2026-09-23.md
+    - release/runtime-validation/wazuh-4.14.7/API_HARNESS_EVIDENCE_2026-09-23.md
     completed:
     - custom rules and decoder load on a real Wazuh 4.14.7 manager
-    - authentication, PostgreSQL/pgAudit, and privileged-access fixtures matched expected rules via real wazuh-logtest
-    - three correlation fixtures matched in a single session
+    - authentication, PostgreSQL/pgAudit, privileged-access, and telemetry-health fixtures matched expected rules via real wazuh-logtest
+    - all correlation fixtures matched in a single session
     - FIM validated via live create/modify/delete (two rule bugs found and fixed)
-    - SCA policy validated as a local endpoint policy (no bugs found)
+    - SCA policy validated both as a local endpoint policy and via centralized agent-group distribution (initial group-deployment failure was a lab-environment gap -- missing sshd/systemctl on the test container -- not a real defect)
     - centralized agent.conf distribution validated on a separately enrolled agent (one bug found and fixed: invalid syscollector element)
+    - Wazuh Server API /logtest harness run for real (one decoder-field bug found and fixed)
     remaining:
-    - telemetry-health rule family (no fixture yet)
-    - SCA policy does not work when distributed via a centralized agent group (sca.remote_commands; unresolved, see STATUS.yml)
-    status: OPEN
+    - SCA check-ID collision against a different real installation's other policies (only tested alongside the vendor cis_ubuntu24-04.yml)
+    status: PASS
   dashboard_import:
     saved_objects_static_validation: PASS
     index_template_static_validation: PASS
@@ -34,6 +45,7 @@ workstreams:
     evidence:
     - release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md
     - release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md
+    - release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md
     completed:
     - all three index templates accepted after fixing 6 missing schema-required fields
     - real schema-conformant evidence/assessment/finding documents indexed successfully
@@ -41,10 +53,13 @@ workstreams:
     - dashboard saved-objects (3 index patterns + full 8-panel dashboard) imported and discoverable
     - all 8 panel aggregations confirmed to execute against real index mappings without error
     - identified and documented an operational risk: saved objects did not survive a dashboard restart following a package upgrade; backup/reimport guidance added to implementations/wazuh/DEPLOYMENT.md
+    - role-based access control (viewer + editor) live-tested successfully end to end, after fixing a missing tenant_permissions grant
     remaining:
     - actual browser rendering of the 8 panels (verified via API, not a browser session)
-    - role-based access control model
-    status: OPEN
+    - RBAC behavior with opensearch_security.multitenancy.enabled true (tested only with it disabled, the framework default)
+    - saved-objects persistence across a plain dashboard restart not preceded by a package upgrade (isolated test not yet run)
+    - behavior at realistic document volume (tested with 1 doc per index)
+    status: PASS
 coverage:
   legal_requirements_total: 64
   with_wazuh_test_coverage: 24

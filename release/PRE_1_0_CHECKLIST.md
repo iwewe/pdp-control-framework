@@ -95,3 +95,20 @@ evidence exists. Last synchronized against 0.10.0-rc2 on 2026-09-23.
 ## H. 1.0 release gate
 
 Release **must not** be tagged `1.0.0` until all mandatory items above are complete or an explicit release exception is documented and approved.
+
+### Documented release exceptions
+
+- **`external_legal_counsel_review` (section A) — approved exception,
+  2026-09-24.** Project owner decision: proceed toward 1.0 without an
+  independent external legal counsel sign-off, treating the completed
+  authoritative-text review (`framework/legal/review/LEGAL_SOURCE_REVIEW_0.10.0-rc2.md`)
+  as sufficient current legal guidance. `framework/legal/review/LEGAL_REVIEW_STATUS.yml`
+  is updated to record this as an accepted exception rather than a
+  pending blocker. This exception covers *this* release only and should
+  be re-affirmed (or revisited) for any future major release.
+- **Implementing regulations (Peraturan Pemerintah) review (section A) —
+  approved exception, 2026-09-24.** Same decision: not independently
+  re-checked for this release. Remains documented as an open item in
+  `framework/legal/review/LEGAL_REVIEW_STATUS.yml` for future reference,
+  but does not block 1.0 for this release per the project owner's
+  explicit direction.

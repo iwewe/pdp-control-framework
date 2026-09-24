@@ -20,5 +20,18 @@ implementing_regulations:
     complete for a 1.0 release.
 release_gate:
   source_text_review: PASS
-  independent_legal_review: OPEN
-  implementing_regulations_review: OPEN
+  independent_legal_review: OPEN_ACCEPTED_EXCEPTION
+  implementing_regulations_review: OPEN_ACCEPTED_EXCEPTION
+release_exception:
+  decided_by: project_owner
+  decision_date: '2026-09-24'
+  decision: >-
+    Proceed toward 0.10.0-rc2 -> 1.0 without independent external legal
+    counsel review and without an independent re-check for enacted
+    implementing regulations (Peraturan Pemerintah). The completed
+    authoritative-text review is treated as sufficient current legal
+    guidance for this release. See
+    release/PRE_1_0_CHECKLIST.md section H "Documented release
+    exceptions" for the formal record. This decision applies to this
+    release only and should be re-affirmed or revisited for any future
+    major release.
