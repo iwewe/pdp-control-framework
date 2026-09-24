@@ -213,3 +213,32 @@ If you build out the full eight-panel dashboard
 (`implementations/wazuh/dashboard/DASHBOARD_SPEC.yml`) or add your own
 visualizations, back them up the same way — do not assume they survive a
 future Wazuh upgrade unattended.
+
+## 5. Verifying the dashboard renders correctly in a browser
+
+`release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md`
+confirms all 8 panels' aggregations execute correctly against the real
+index mappings via the saved-objects/search APIs, but that check cannot
+confirm the panels actually *render* correctly in a browser (layout,
+chart type, labels). Automating a headless-browser screenshot was not
+done for this pass — it would require installing a browser stack (e.g.
+`chromium-browser`/`playwright`, both of which pull in `snapd` on Ubuntu
+24.04) on the Wazuh Dashboard host, which is not worth the RAM/operational
+risk on a small lab host for a one-off visual check.
+
+To verify manually:
+
+1. Open `https://<dashboard-host>` in a browser (self-signed certificate
+   warning is expected on a fresh lab; accept it to proceed).
+2. Log in with the `admin` credentials from
+   `wazuh-install-files.tar`'s `wazuh-passwords.txt` (see section 1
+   above for how these are provisioned; do not commit this file or its
+   contents to the repository).
+3. Open the menu (☰) → **Dashboards** (the generic OpenSearch Dashboards
+   app, not a Wazuh-specific menu item) → **PDP Continuous Control
+   Dashboard**.
+4. Confirm all 8 panels render without a "Visualization error" state.
+   With no `pdp-*` documents currently indexed (temporary/example
+   documents used during validation were deleted as part of testing),
+   panels are expected to render their empty/no-data state correctly,
+   not necessarily show non-zero charts — that's expected, not a defect.
