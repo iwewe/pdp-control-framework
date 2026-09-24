@@ -37,6 +37,15 @@ pdp_dashboard_viewer:
 # on saved objects (.kibana*) so dashboards/visualizations can be built
 # and maintained. Deliberately has NO write access to pdp-evidence-*,
 # pdp-assessment-*, or pdp-findings-* -- see design intent above.
+#
+# KNOWN GAP (confirmed 2026-09-24, see
+# release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md):
+# this "crud" grant on .kibana*/the concrete .kibana_1 index does NOT
+# grant working access to the Dashboards saved-objects application layer
+# -- both read and write via the real /api/saved_objects/... path failed
+# for this role in a live test. Do not deploy this role as-is; it needs
+# further design work (likely an additional Dashboards-specific cluster
+# permission/action group) before being retested.
 pdp_dashboard_editor:
   reserved: false
   cluster_permissions:

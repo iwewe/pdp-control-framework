@@ -1,8 +1,8 @@
 # Wazuh Implementation Gap Analysis
 
 **Framework version reviewed:** 0.10.0-rc2
-**Review date:** 2026-09-22 (original), updated 2026-09-23 with real lab
-evidence
+**Review date:** 2026-09-22 (original), updated 2026-09-23 and 2026-09-24
+with real lab evidence
 **Scope:** `implementations/wazuh/` content (rules, decoders, SCA policy, agent
 configuration, PostgreSQL audit profile, indexer/dashboard artifacts) and the
 associated release-readiness status files.
@@ -14,22 +14,34 @@ associated release-readiness status files.
 
 ## Summary
 
-**Update 2026-09-23:** a real Wazuh 4.14.7 + PostgreSQL 17.11 + pgAudit 17.1
-lab (Ubuntu 24.04.4 LTS) is now up, and every remaining phase — authentication,
-PostgreSQL, privileged access, FIM, SCA, centralized `agent.conf`
-distribution to a genuinely separate enrolled agent, and real Wazuh
-Indexer/Dashboard import — has now been exercised against it. See Sections
-2-5 below and `release/runtime-validation/`. This found and fixed six real
-defects that static validation and CI schema validation could not catch
-(the pgAudit decoder; two in the FIM rules; an invalid `<syscollector>`
-element that silently broke an entire `agent.conf`; six schema-required
-fields missing across all three OpenSearch index templates, which meant no
-genuinely valid evidence/assessment/finding document could ever be
-indexed; and a `securitytenant` header bug in the dashboard-import
-script), plus one non-blocking design limitation in the privileged-access
-rule. One defect remains **unresolved**: the SCA policy produces zero
-usable results when distributed via a centralized agent group (only as a
-local per-endpoint policy, which does work).
+**Update 2026-09-23/24:** a real Wazuh 4.14.7 + PostgreSQL 17.11 + pgAudit
+17.1 lab (Ubuntu 24.04.4 LTS) is now up, and every phase from the original
+gap list — authentication, PostgreSQL, privileged access, FIM, SCA (both
+local and centralized agent-group deployment), telemetry-health, the API
+harness, the assessment/findings/registry tooling pipeline, real Wazuh
+Indexer/Dashboard import including the complete eight-panel dashboard, and
+dashboard RBAC — has now been exercised against it. See Sections 2-6 below
+and `release/runtime-validation/`. This found and fixed real defects that
+static validation and CI schema validation could not catch: the pgAudit
+decoder; two FIM rule bugs; an invalid `<syscollector>` element that
+silently broke an entire `agent.conf`; six schema-required fields missing
+across all three OpenSearch index templates (meaning no genuinely valid
+evidence/assessment/finding document could ever be indexed); a
+`securitytenant` header bug in the dashboard-import script; a decoder-field
+bug and a data-quality bug in the API harness path; a missing
+`NOT_APPLICABLE`-requires-justification enforcement; and a control-profile
+composition example that didn't match its own model's math — plus one
+non-blocking design limitation in the privileged-access rule and a rule-
+precedence limitation in the telemetry-health rule. What was initially
+recorded as an unresolved SCA-via-agent-group blocker turned out to be a
+lab-environment gap (missing `sshd`/`systemctl` in a minimal test
+container), not a real defect — see Section 4.
+
+**One genuine defect remains unresolved:** the dashboard RBAC "editor"
+role's saved-objects access does not work as designed (Section 6) — its
+raw index-level permission on `.kibana*` does not translate into working
+Dashboards application access. The "viewer" (read-only) role is confirmed
+correct.
 
 The Wazuh implementation profile is architecturally complete (rules, SCA
 checks, decoders, agent configuration, index templates, dashboard shell all
@@ -146,7 +158,7 @@ Only PAM session-open events (`su`, `sshd` login, etc.) reach it. See
 `release/runtime-validation/wazuh-4.14.7/LOGTEST_EVIDENCE_2026-09-23.md`
 for the corresponding fixtures and result.
 
-## 4. Agent-group deployment bugs (2026-09-23) — one fixed, one unresolved
+## 4. Agent-group deployment bugs (2026-09-23) — both resolved
 
 A separate Wazuh 4.14.7 agent (Docker container, not the manager's own
 local agent `000` used in Sections 2-3) was enrolled to test centralized
@@ -161,31 +173,32 @@ and `<sca>` in the same file all silently stopped applying too, not just
 syscollector. Removed the block; syscollector runs from each agent's local
 default configuration regardless.
 
-**Unresolved (severity: high for this specific deployment path):** once
-the above was fixed, `implementations/wazuh/sca/pdp_linux_baseline.yml`
-loaded correctly via the group but produced **zero usable results** — all
-6 checks evaluated to `not applicable`. Every check uses a `c:<command>`
-rule, and Wazuh disables remote command execution by default
-(`sca.remote_commands=0`) for any SCA policy delivered via centralized
-configuration, as a guardrail against a compromised manager pushing
-arbitrary commands to agents. Setting `sca.remote_commands=1` in
-`local_internal_options.conf` — tried on both the agent and the manager,
-each with a full daemon stop+start confirmed via a fresh non-zombie
-process — did not change the outcome across 4 separate restart cycles,
-verified against the authoritative `sca_check` table in the manager's
-per-agent database (not just log messages, which stopped showing the
-"disabled" warning without the underlying behavior actually changing —
-likely Wazuh's own repeated-message log suppression).
+**Resolved (was misdiagnosed as `sca.remote_commands`, see
+`SCA_EVIDENCE_2026-09-23.md` addendum):** once the above was fixed,
+`implementations/wazuh/sca/pdp_linux_baseline.yml` loaded correctly via
+the group but initially produced **zero usable results** — all 6 checks
+evaluated to `not applicable`, with the SCA module logging
+`sca.remote_commands` as disabled. `sca.remote_commands=1` was set and
+this conclusion held across 4 restart cycles, checked against the
+authoritative `sca_check` table — so the item was recorded as an
+unresolved blocker. In a later pass on the same day, the "disabled"
+message stopped appearing after re-testing on a freshly re-enrolled
+agent, replaced by a different error: `"Invalid path or wrong permissions
+to run command '<cmd>'"`. Direct inspection found the real cause: the
+test agent (a minimal Docker container with no init system) never had
+`sshd` or `systemctl` installed at all. Wazuh's own vendor
+`cis_ubuntu24-04.yml` policy, already loaded on the same agent, failed
+identically on the same commands, confirming this was a lab-environment
+gap, not a defect in `sca.remote_commands` handling or in the PDP policy.
+After installing `openssh-server` (which transitively provided
+`systemctl`), all 6 checks returned genuine PASS/FAIL results via the
+centralized group-pushed policy.
 
-**Practical effect:** `pdp_linux_baseline.yml` currently only produces
-real results as a **local** policy in each endpoint's own `ossec.conf`
-(as validated in Section "SCA_EVIDENCE" below / `SCA_EVIDENCE_2026-09-23.md`).
-It cannot currently be distributed via an agent group and evaluate
-anything. `implementations/wazuh/DEPLOYMENT.md` has been corrected to stop
-recommending group-based SCA distribution until this is resolved (either
-by finding the correct mechanism to enable `sca.remote_commands` for a
-managed fleet, or by redesigning the checks to avoid `c:` commands where a
-file-content check can substitute).
+**Practical effect:** `pdp_linux_baseline.yml` works via centralized
+agent-group distribution once `sca.remote_commands=1` is set on the
+receiving agent and the checked commands actually exist on that host — no
+policy redesign to file-based (`f:`) checks is needed.
+`implementations/wazuh/DEPLOYMENT.md` reflects this corrected conclusion.
 
 ## 5. Indexer/Dashboard import bugs found and fixed (2026-09-23)
 
@@ -245,7 +258,39 @@ part of routine Wazuh maintenance. See
 `implementations/wazuh/DEPLOYMENT.md` section 4 for the guidance added as
 a result.
 
-## 6. Other operational gaps for a real deployment
+## 6. Dashboard RBAC — partially validated, one role not yet working (2026-09-24)
+
+Full evidence: `release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`.
+
+The two-role model in `implementations/wazuh/dashboard/rbac/` (designed
+2026-09-23) was live-tested against the real indexer/dashboard for the
+first time. `pdp_dashboard_viewer` (read-only on `pdp-*` data) is
+**confirmed correct**: all 3 index-level tests passed.
+
+**Unresolved:** `pdp_dashboard_editor`'s `crud` grant on
+`.kibana`/`.kibana_1` does not grant working access to the Dashboards
+saved-objects application layer — neither read nor write succeeded via
+the real `/api/saved_objects/...` path (port 443), despite the raw
+index-level permission being confirmed present (a write to the concrete
+`.kibana_1` index succeeded when targeted directly at port 9200, outside
+the Dashboards API, hitting only an unrelated mapping error). Ruled out:
+glob-pattern mistakes (retested with explicit non-wildcard `.kibana` and
+`.kibana_*` entries — same failure), and hardcoded system-index protection
+(`.kibana*` is not in `opensearch.yml`'s `plugins.security.system_indices.indices`
+list). Likely cause: Wazuh/OpenSearch Dashboards requires an additional,
+Dashboards-specific cluster permission or action group beyond raw index
+CRUD, which this design did not include. A diagnostic attempt to
+temporarily widen the role to isolate the exact missing action was
+correctly stopped before reaching the server by the session's own safety
+guardrail (too broad a grant for a live security role) — the design gap
+was documented instead of chased further via broader live permission
+grants.
+
+All test users and config changes were rolled back and verified removed
+from the live indexer. **Do not re-apply this RBAC config to a live
+environment until the editor gap is resolved and retested.**
+
+## 7. Other operational gaps for a real deployment
 
 - ~~Credential provisioning is undocumented.~~ **RESOLVED** 2026-09-22:
   see `.env.example` and `implementations/wazuh/DEPLOYMENT.md` section 1.
@@ -267,7 +312,7 @@ a result.
   evidence from 2026-09-23 — see that file for current state. None of the
   remaining unchecked items should be assumed complete until verified.
 
-## 7. Suggested priority order
+## 8. Suggested priority order
 
 1. ~~Stand up a Wazuh 4.14.7 + Wazuh Indexer/Dashboard + PostgreSQL 17 +
    pgAudit lab~~ **DONE 2026-09-23** (native install on Ubuntu 24.04.4 LTS,
@@ -301,9 +346,10 @@ a result.
    `release/runtime-validation/wazuh-4.14.7/SCA_EVIDENCE_2026-09-23.md`.
    All 6 checks ran correctly with no ID collision against the vendor
    policy. Also now tested against a genuinely separate enrolled agent
-   (Section 4 above) — **found the policy does not work at all via
-   centralized/group distribution** (`sca.remote_commands`), which
-   remains unresolved.
+   (Section 4 above) — initially appeared not to work via centralized/
+   group distribution, later found to be a lab-environment gap (missing
+   `sshd`/`systemctl` on the minimal test container), not a real defect;
+   resolved once those binaries were installed.
 5. ~~Import the three index templates and the dashboard saved-objects
    NDJSON into a real Wazuh Indexer/Dashboard instance.~~ **DONE
    2026-09-23** — see
@@ -315,7 +361,7 @@ a result.
    `release/compatibility/COMPATIBILITY_MATRIX.yml`, and
    `release/PRE_1_0_CHECKLIST.md` to reflect what was actually validated~~
    **DONE, ongoing** — updated after every phase in this pass (2026-09-22
-   through 2026-09-23); continue this discipline for any future validation
+   through 2026-09-24); continue this discipline for any future validation
    work, per the project's own promotion rule
    (`release/compatibility/COMPATIBILITY_MATRIX.yml`: *"No platform is
    marked SUPPORTED before reproducible lab evidence exists."*).
@@ -325,6 +371,11 @@ a result.
    and the new `implementations/wazuh/dashboard/generate_dashboard_ndjson.py`.
    All 8 panels' aggregations confirmed to execute against the real index
    mappings; not confirmed in an actual browser rendering session.
-8. Remaining after this pass: the unresolved `sca.remote_commands`
-   centralized-SCA blocker (Section 4), and a role-based access control
-   model for the dashboard.
+8. Design and live-test a role-based access control model for the
+   dashboard. **Partially done 2026-09-24** — see
+   `release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`
+   (Section 6 above). Read-only viewer role confirmed correct; editor
+   role's saved-objects access does not work yet and remains open.
+9. Remaining after this pass: the `pdp_dashboard_editor` RBAC gap
+   (Section 6), and confirming the 8-panel dashboard actually renders in
+   a real browser session (only its API-level correctness was confirmed).

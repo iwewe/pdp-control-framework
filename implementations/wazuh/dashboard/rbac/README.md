@@ -1,8 +1,15 @@
 # Role-based access model for the PDP compliance dashboard
 
-Status: designed and applied in this pass; **live application to the lab
-Wazuh Indexer requires operator confirmation** (see "Applying this"
-below) because it edits shared access-control configuration.
+Status: **live-tested 2026-09-24, partially working, rolled back.** See
+`release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`.
+`pdp_dashboard_viewer` (read-only) is confirmed correct. `pdp_dashboard_editor`
+is **not yet correct**: `crud` on `.kibana`/`.kibana_*` does not grant
+working access to the Dashboards saved-objects application layer (neither
+read nor write worked via the real `/api/saved_objects/...` path) —
+plain index-level permissions on the alias/concrete `.kibana*` index are
+not sufficient; some additional Dashboards-specific permission is
+missing. Do not re-apply this config to a live environment until that gap
+is resolved and retested.
 
 ## Model
 

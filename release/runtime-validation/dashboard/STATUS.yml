@@ -9,6 +9,7 @@ status: LAB_VALIDATED
 evidence:
 - release/runtime-validation/dashboard/INDEXER_DASHBOARD_EVIDENCE_2026-09-23.md
 - release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md
+- release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md
 promotion_checklist:
 - three index templates accepted: DONE
 - temporary PDP indices created: DONE
@@ -44,6 +45,24 @@ bugs_found_and_fixed_in_this_lab_pass:
 - component: implementations/wazuh/indexer/templates/pdp-findings-template.json
   finding: Missing notes field.
   fix: Added notes (text).
+known_issues_not_fixed:
+- issue: >-
+    implementations/wazuh/dashboard/rbac/roles.yml's pdp_dashboard_editor
+    role's "crud" grant on .kibana/.kibana_1 does not grant working access
+    to the Dashboards saved-objects application layer (port 443
+    /api/saved_objects/...) -- neither read nor write succeeded for that
+    role via the real access path, though the raw index-level permission
+    was confirmed present (write succeeded when targeted directly at
+    port 9200's concrete .kibana_1 index, outside the Dashboards API).
+  attempted_fix: >-
+    None applied live -- a diagnostic attempt to temporarily widen the
+    role's allowed_actions to "*" to isolate the cause was correctly
+    blocked by the session's own safety guardrail before reaching the
+    server (too broad a grant for a live security role). The config
+    change was fully rolled back and verified removed instead.
+  status: UNRESOLVED
+  workaround: None yet. pdp_dashboard_viewer (read-only) is unaffected and confirmed correct.
+  evidence: release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md
 operational_risks_confirmed:
 - risk: >-
     Imported dashboard saved objects (index patterns, dashboard) do not
@@ -62,6 +81,6 @@ operational_risks_confirmed:
 not_yet_covered:
 - Actual browser rendering of the 8 panels (verified via saved-objects/search APIs, not a real browser session).
 - Behavior once each index holds a realistic document volume (tested with 1 doc per index).
-- Role-based access control (this lab used the admin superuser throughout).
+- pdp_dashboard_editor RBAC role (see known_issues_not_fixed above) -- pdp_dashboard_viewer is covered.
 - Behavior with opensearch_security.multitenancy.enabled: true.
 - Whether saved objects survive a wazuh-dashboard restart when NOT preceded by a package upgrade (not isolated/tested separately).

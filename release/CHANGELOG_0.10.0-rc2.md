@@ -375,3 +375,39 @@ Full evidence: `reports/MODEL_REVIEW_2026-09-23.md`. This completes every
 item in sections A, B, and C except `external_legal_counsel_review`
 (governance decision, out of engineering scope) and the implementing-
 regulations gap (explicitly tracked as open, not resolved).
+
+## 2026-09-24 — dashboard RBAC live test (found and safely rolled back one gap)
+
+Live-tested `implementations/wazuh/dashboard/rbac/` (designed 2026-09-23,
+not yet applied live) against the real Wazuh Indexer/Dashboard lab:
+
+- Backed up the three live security config files, appended the
+  `pdp_dashboard_viewer`/`pdp_dashboard_editor` roles, created two test
+  users, and reloaded via `securityadmin.sh` (`Done with success`).
+- **`pdp_dashboard_viewer` confirmed correct:** all 3 index-level tests
+  (read `pdp-*` allowed, write `pdp-*` denied, write `.kibana` denied)
+  passed exactly as designed.
+- **`pdp_dashboard_editor` found not to work:** its `crud` grant on
+  `.kibana`/`.kibana_1` does not grant working access to the Dashboards
+  saved-objects application layer — neither read nor write succeeded via
+  the real `/api/saved_objects/...` path (port 443), even though the raw
+  index-level permission was confirmed present (a write to the concrete
+  `.kibana_1` index succeeded when targeted directly at port 9200). Ruled
+  out glob-pattern mistakes and hardcoded system-index protection as
+  causes. A diagnostic attempt to temporarily widen the role to isolate
+  the exact missing permission was correctly blocked before reaching the
+  server by the session's own safety guardrail (too broad a grant for a
+  live security role) — the gap was documented instead of chased further
+  via broader live permission grants.
+- **Rolled back cleanly:** restored all three security config files from
+  backup, reloaded, and verified zero references to any PDP RBAC
+  role/user remain live; deleted the temporary test index and local
+  password files.
+
+Full evidence: `release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md`.
+`implementations/wazuh/dashboard/rbac/roles.yml`/`README.md` updated with
+the finding. **Do not re-apply this RBAC config to a live environment
+until the editor gap is resolved and retested.**
+
+This was the last open item from `release/PRE_1_0_CHECKLIST.md` section F;
+it remains partially open (viewer done, editor not).
