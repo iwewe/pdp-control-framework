@@ -50,6 +50,23 @@ Article violation count
 
 unless a separate authorized legal assessment explicitly produces that conclusion.
 
+## Time range
+
+All three index patterns set `@timestamp` as their time field, which
+means **every** panel here — not just a timeseries one — is filtered by
+the dashboard's active time-range picker, not just its own query. The
+generated dashboard object (`generate_dashboard_ndjson.py`) sets
+`timeRestore: true` with a wide default (`now-90d` to `now+7d`) so it
+shows its full working data set on a fresh open, rather than silently
+inheriting whatever the viewer's own global time-picker default is
+(this framework found real data go missing in a real lab under exactly
+this: an "all 8 panels empty" report that was actually just a `last
+24h` default hiding a month of data — see
+`release/runtime-validation/dashboard/DASHBOARD_TIME_RANGE_EVIDENCE_2026-09-24.md`).
+Note that `timeRestore` only applies on a fresh navigation to the
+dashboard; a browser tab already open with an explicit time range in
+its URL keeps using that range even after a plain refresh.
+
 ## Recommended access model
 
 Different users may require different privileges:

@@ -236,9 +236,24 @@ To verify manually:
    contents to the repository).
 3. Open the menu (☰) → **Dashboards** (the generic OpenSearch Dashboards
    app, not a Wazuh-specific menu item) → **PDP Continuous Control
-   Dashboard**.
+   Dashboard**. Open it from this listing page, not from an
+   already-open tab/bookmark — see the time-range note below.
 4. Confirm all 8 panels render without a "Visualization error" state.
-   With no `pdp-*` documents currently indexed (temporary/example
-   documents used during validation were deleted as part of testing),
-   panels are expected to render their empty/no-data state correctly,
-   not necessarily show non-zero charts — that's expected, not a defect.
+   If no `pdp-*` documents are indexed yet, panels are expected to
+   render their empty/no-data state correctly, not necessarily show
+   non-zero charts — that's expected, not a defect.
+
+**If panels show "No results found" despite data existing:** this
+dashboard's index patterns all use `@timestamp` as their time field, so
+every panel — not just the one timeseries panel — is filtered by the
+active time-range picker (top right), not just its own query. The
+dashboard's saved object sets `timeRestore: true` with a wide default
+(`now-90d` to `now+7d`) precisely so this isn't an issue on a fresh
+open, but that only takes effect on a **fresh navigation**: OpenSearch
+Dashboards persists the active range in the browser URL's `_g`
+parameter, and an already-open tab (or a bookmarked URL) with an old
+range in it will keep using that old range even after a plain refresh
+(F5). If this happens, either widen the time picker manually (e.g.
+"Last 90 days"), or navigate to the dashboard fresh from the listing
+page as in step 3. Full root-cause writeup:
+`release/runtime-validation/dashboard/DASHBOARD_TIME_RANGE_EVIDENCE_2026-09-24.md`.

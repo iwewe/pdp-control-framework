@@ -427,3 +427,17 @@ working, confirmed deliverable feature.
     opened the dashboard directly in their own browser (steps in
     `implementations/wazuh/DEPLOYMENT.md` section 5) and confirmed it
     renders correctly.
+13. Post-1.0.0: smoke-testing the dashboard with real synthetic
+    `pdp-*` data (31 documents, spread across a month so every panel's
+    grouping field had full enum coverage) surfaced a real bug — all 8
+    panels showed "No results found" despite the data and aggregations
+    being correct, because the dashboard's `timeRestore: false`
+    inherited the viewer's own global time-picker default (this lab:
+    last 24h) while every panel is time-filtered (all three index
+    patterns set `timeFieldName: @timestamp`). **FIXED 2026-09-24** —
+    `generate_dashboard_ndjson.py` now sets `timeRestore: true` with a
+    wide `timeFrom`/`timeTo`; redeployed and reconfirmed against the
+    real lab. See `release/runtime-validation/dashboard/DASHBOARD_TIME_RANGE_EVIDENCE_2026-09-24.md`,
+    including a documented browser-URL-state caveat (an already-open
+    tab can still show the old range after the fix, until reopened
+    fresh).

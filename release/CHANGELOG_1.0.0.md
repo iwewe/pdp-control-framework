@@ -62,3 +62,18 @@ limitations").
   promoted from `TARGET` to `LAB_VALIDATED`.
 - `release/RELEASE_READINESS_0.10.0-rc2.yml` renamed to
   `release/RELEASE_READINESS_1.0.0.yml`.
+
+## Post-release fix, same day (2026-09-24): dashboard time range
+
+Smoke-testing the deployed dashboard with real synthetic `pdp-*` data
+found all 8 panels showing "No results found" despite correct,
+indexed data. Root cause: the dashboard's `timeRestore: false`
+inherited the viewer's own global time-picker default (this lab: last
+24h), while every panel is time-filtered because all three index
+patterns set `timeFieldName: @timestamp` — not just the one timeseries
+panel. Fixed in `implementations/wazuh/dashboard/generate_dashboard_ndjson.py`
+(`timeRestore: true`, `timeFrom: now-90d`, `timeTo: now+7d`),
+regenerated, and reconfirmed against the real lab. Also documented a
+related browser caveat: an already-open tab's URL can keep an old time
+range active even after this fix, until the dashboard is reopened
+fresh. Full writeup: `release/runtime-validation/dashboard/DASHBOARD_TIME_RANGE_EVIDENCE_2026-09-24.md`.

@@ -11,6 +11,7 @@ evidence:
 - release/runtime-validation/dashboard/DASHBOARD_PANELS_EVIDENCE_2026-09-23.md
 - release/runtime-validation/dashboard/RBAC_EVIDENCE_2026-09-24.md
 - release/runtime-validation/dashboard/ADDITIONAL_VALIDATION_2026-09-24.md
+- release/runtime-validation/dashboard/DASHBOARD_TIME_RANGE_EVIDENCE_2026-09-24.md
 promotion_checklist:
 - three index templates accepted: DONE
 - temporary PDP indices created: DONE
@@ -97,3 +98,4 @@ resolved_2026-09-24:
 - "RBAC with opensearch_security.multitenancy.enabled set to true: RBAC v3 retested with it enabled; all 6 checks passed unchanged (including with no explicit tenant header at all), then reverted back to the framework default (false). See ADDITIONAL_VALIDATION_2026-09-24.md."
 - Saved-objects persistence across a plain restart (no upgrade): confirmed safe across 2 restart cycles; the data-loss risk is specific to the upgrade path already documented in implementations/wazuh/DEPLOYMENT.md section 4. See ADDITIONAL_VALIDATION_2026-09-24.md.
 - Actual browser rendering of the 8 panels: automated pass could only verify aggregations via the saved-objects/search APIs (blocked from a real browser session by lab-host RAM headroom for a headless browser). Project owner opened the dashboard in their own browser, 2026-09-24, and confirmed it renders correctly. See implementations/wazuh/DEPLOYMENT.md section 5.
+- "All 8 panels showed \"No results found\" despite correct, indexed data: root-caused to the dashboard's timeRestore:false inheriting the viewer's own global time-picker default (this lab: last 24h), while every panel is time-filtered because all three index patterns have timeFieldName:@timestamp set. Fixed by setting timeRestore:true with a wide timeFrom/timeTo in generate_dashboard_ndjson.py, redeployed and reconfirmed against the real lab. See DASHBOARD_TIME_RANGE_EVIDENCE_2026-09-24.md, including a documented browser-URL-state caveat that can still mask the fix on an already-open tab."
