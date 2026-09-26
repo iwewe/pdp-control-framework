@@ -79,15 +79,19 @@ Replace `ASSET-PROXMOX-CHANGE-ME` and `PA-CHANGE-ME` with real values
 python3 -c "import xml.etree.ElementTree as ET; ET.parse('/var/ossec/etc/ossec.conf'); print('XML OK')"
 ```
 
-**Known open question — verify on the first host, not all of them:**
-whether this local label correctly overrides the group's own
-`pdp.environment` label (same `<labels>` mechanism, different key) or
-causes any conflict has not been tested in this lab with more than one
-agent. After completing this runbook on the *first* Proxmox host,
-check a generated alert/event for that agent on the manager and
-confirm both the local (`pdp.asset_id`) and group
-(`pdp.environment`) labels appear correctly before repeating this on
-every other host.
+**Confirmed working, 2026-09-27:** this local label and the group's
+own `pdp.environment`/`pdp.profile` labels merge correctly in generated
+alerts on a real Proxmox host (agent `ganesha`) — all four keys appear
+together, no duplication or conflict. See
+`release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md`
+addendum. Still worth a quick spot-check on your own first host:
+
+```bash
+# On the manager, after this host is enrolled and labeled:
+/var/ossec/bin/agent_control -i <agent_id>
+# or check a generated alert for this agent and confirm both the local
+# (pdp.asset_id) and group (pdp.environment) labels appear together.
+```
 
 ## 3. Enable SCA remote commands
 

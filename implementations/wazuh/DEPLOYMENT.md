@@ -131,19 +131,20 @@ instead, in that agent's own **local** `ossec.conf`:
 </labels>
 ```
 
-**Verify before a multi-host rollout, not after:** whether a local
-label here actually *overrides* the group's same-keyed label, or the
-agent ends up with a duplicate/conflicting label instead, has not been
-tested in this lab. Enroll and label the first real host, then check
-the label actually reaches the manager as expected before repeating it
-across every Proxmox host:
+**Confirmed on a real Proxmox host, 2026-09-27** (agent `ganesha`; see
+`release/runtime-validation/wazuh-4.14.7/AGENT_CONF_EVIDENCE_2026-09-23.md`
+addendum): a local label here and the group's own labels
+(`pdp.environment`, `pdp.profile`) merge correctly in generated alerts
+— all keys appear together under `agent.labels.pdp`, no duplication or
+conflict. Still worth a quick check on your own first host, since this
+was one real deployment, not an exhaustive test:
 
 ```bash
 # On the manager, after the first host is enrolled and labeled:
 /var/ossec/bin/agent_control -i <agent_id>
 # or check a generated alert/event for that agent and confirm
-# pdp.asset_id shows the host-specific value, not "on-premise"-style
-# group data, and appears exactly once (not duplicated).
+# pdp.asset_id shows the host-specific value alongside the group's
+# pdp.environment, both present, neither duplicated.
 ```
 
 Verification of the group config itself:

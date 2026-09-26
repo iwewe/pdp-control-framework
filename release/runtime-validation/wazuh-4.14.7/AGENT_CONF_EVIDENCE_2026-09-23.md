@@ -163,3 +163,47 @@ second group (`pdp-database`) assigned to the same agent, alongside
 | `pdp-linux-baseline/agent.conf` distribution (after fix) | PASS |
 | `pdp-database/agent.conf` distribution | PASS |
 | SCA policy execution via centralized distribution | **PASS** (after setting `sca.remote_commands=1` and confirming target binaries are present; see addendum above and `SCA_EVIDENCE_2026-09-23.md`) |
+
+## Addendum, 2026-09-27 — per-host local label + group label merge, real Proxmox host
+
+`implementations/wazuh/AGENT_INSTALL_PROXMOX.md` (written 2026-09-26)
+documents setting `pdp.asset_id`/`pdp.processing_activity_id` in an
+agent's own local `ossec.conf`, alongside `pdp.environment`/
+`pdp.profile` pushed by the `pdp-linux-baseline` group's shared
+`agent.conf` — but flagged whether the two merge correctly (vs.
+duplicate or conflict) as unverified.
+
+A real Proxmox VE host (Debian 13) was enrolled as agent `ganesha`
+(ID 002) following that runbook. Generated alerts confirm all four
+label keys merge correctly under `agent.labels.pdp`, with no
+duplication or conflict:
+
+```json
+"agent": {
+  "id": "002", "name": "ganesha", "ip": "192.168.1.88",
+  "labels": {
+    "pdp": {
+      "asset_id": "ganesha",
+      "environment": "on-premise",
+      "processing_activity_id": "infra-proxmox",
+      "profile": "PDP-PROFILE-BASELINE"
+    }
+  }
+}
+```
+
+(The very first alert right after enrollment showed only the two local
+labels, before the group's shared config had fully applied; every
+alert afterward shows all four. Expected startup behavior, not a
+defect.)
+
+Also confirmed on this same real host, as a side effect of this test:
+`sca.remote_commands=1` was set correctly (0 `invalid`/`not_applicable`
+results out of 6 checks — `passed: 4, failed: 2`), and check 910005
+("A supported host firewall is enabled") **passed**, confirming the
+`pve-firewall` recognition fix (see `SCA_EVIDENCE_2026-09-23.md`
+addendum in this same directory) works on a real Proxmox host, not
+just in review. The two `failed` checks (910001 root SSH login,
+910003 auditd) are expected on a stock Proxmox host and not a policy
+defect — see `implementations/wazuh/DEPLOYMENT.md`, "Deploying on
+Proxmox VE (Debian) hosts".
