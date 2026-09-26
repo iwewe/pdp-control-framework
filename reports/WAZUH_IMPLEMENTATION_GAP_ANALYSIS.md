@@ -441,3 +441,23 @@ working, confirmed deliverable feature.
     including a documented browser-URL-state caveat (an already-open
     tab can still show the old range after the fix, until reopened
     fresh).
+14. Post-1.0.0, 2026-09-27: the synthetic test data from item 13 was
+    deleted at the project owner's request (real data was wanted
+    instead), and the first real-evidence pipeline gap was closed --
+    there was no tool to turn real Wazuh telemetry into
+    `evidence.schema.json` documents, only the static
+    `examples/evidence.example.json`. Added
+    `tools/evidence/harvest_sca_evidence.py`, which reads real SCA
+    check alerts from `wazuh-alerts-*` (this framework's own checks
+    only, identified by their `pdp_test` compliance tag) and writes
+    schema-valid evidence. Run end-to-end against the real lab: 18
+    evidence documents harvested from 2 real agents (`pdp-agent-test`,
+    `ganesha`), correctly aggregated into 7 control assessments and 6
+    findings by the existing (previously never end-to-end exercised)
+    `assess_controls.py`/`generate_findings.py` pipeline, exported and
+    indexed with zero errors. See
+    `implementations/wazuh/DEPLOYMENT.md` section 6. **Remaining
+    gap:** custom rule-based evidence (`pdp_authentication.xml`,
+    `pdp_fim.xml`, etc.) still has no harvester -- those rules encode
+    traceability as rule group tags, a different convention than SCA's
+    native `compliance:` block.

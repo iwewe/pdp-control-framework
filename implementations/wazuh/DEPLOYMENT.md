@@ -312,3 +312,54 @@ range in it will keep using that old range even after a plain refresh
 "Last 90 days"), or navigate to the dashboard fresh from the listing
 page as in step 3. Full root-cause writeup:
 `release/runtime-validation/dashboard/DASHBOARD_TIME_RANGE_EVIDENCE_2026-09-24.md`.
+
+## 6. Populating the dashboard with real evidence
+
+Once agents are enrolled and reporting (sections 1-3 above), evidence
+should come from real Wazuh telemetry, not hand-entered documents. The
+full pipeline, run from a host that can reach the Indexer:
+
+```bash
+set -a; source .env; set +a   # PDP_INDEXER_URL/USER/PASSWORD, see .env.example
+
+# 1. Harvest real SCA check results from wazuh-alerts-* into
+#    implementations/wazuh/tests/results/*.evidence.json
+python3 tools/evidence/harvest_sca_evidence.py --since 7d
+
+# 2. Aggregate evidence into per-control assessments
+python3 tools/assessment/assess_controls.py
+
+# 3. Generate OPEN findings for any FAIL assessment
+python3 tools/findings/generate_findings.py
+
+# 4. (optional) local retention/integrity registry, not indexed anywhere
+python3 tools/evidence/register_evidence.py
+
+# 5. Export and index into the real pdp-* indices
+for kind in evidence assessment finding; do
+  python3 tools/export/export_bulk_ndjson.py --kind "$kind" --output "/tmp/real_${kind}.ndjson"
+done
+for kind in evidence assessment finding; do
+  curl -sk -u "admin:${PDP_INDEXER_PASSWORD}" -H 'Content-Type: application/x-ndjson' \
+    -X POST "${PDP_INDEXER_URL}/_bulk" --data-binary "@/tmp/real_${kind}.ndjson"
+done
+rm -f /tmp/real_evidence.ndjson /tmp/real_assessment.ndjson /tmp/real_finding.ndjson
+```
+
+**Scope of `harvest_sca_evidence.py`, confirmed 2026-09-27:** covers
+this framework's own SCA checks only (identified by carrying a
+`pdp_test` compliance tag in the alert — Wazuh's bundled CIS policies
+are not picked up). It skips any agent missing `pdp.asset_id`/
+`pdp.processing_activity_id` labels (see section 2, "Per-host asset
+labels") rather than guessing, and prints which alerts it skipped and
+why. **Custom rule-based evidence** (`pdp_authentication.xml`,
+`pdp_fim.xml`, etc.) is **not covered yet** — those rules encode
+traceability as rule *group* tags (`pdp_req_*`, `pdp_control_*`)
+rather than SCA's native `compliance:` block, and need a separate
+harvester.
+
+Run `tools/assessment/assess_controls.py` again as more evidence
+accumulates — it always recomputes every control from everything
+currently in `implementations/wazuh/tests/results/`, so re-running the
+whole pipeline periodically (e.g. after each SCA scan interval) is the
+intended usage, not a one-off.
