@@ -111,14 +111,42 @@ systemctl restart wazuh-agent
 > present on the target host — true by default on a normal Ubuntu 24.04
 > server, but not guaranteed on a minimal/stripped-down container image.
 
-Before deploying, replace the placeholder label values in
-`implementations/wazuh/shared/pdp-linux-baseline/agent.conf`
-(`pdp.environment`, `pdp.asset_id`, `pdp.processing_activity_id` — currently
-`SET_ME`) with real values per asset, per
-`implementations/wazuh/README.md` section "Agent Labels". Do not put
+`implementations/wazuh/shared/pdp-linux-baseline/agent.conf` sets
+`pdp.environment` once for every agent in the group (a value that is
+genuinely the same across the group, e.g. `on-premise`). Do not put
 Personal Data itself into labels.
 
-Verification:
+### Per-host asset labels
+
+`pdp.asset_id` and `pdp.processing_activity_id` must be unique per
+host, so they cannot live in the group's shared `agent.conf` — that
+file is distributed byte-for-byte to every member, and a single real
+value there would be wrong for every host but one. Set them per host
+instead, in that agent's own **local** `ossec.conf`:
+
+```xml
+<labels>
+  <label key="pdp.asset_id">ASSET-PROXMOX-<hostname-or-real-id></label>
+  <label key="pdp.processing_activity_id">PA-<real-id></label>
+</labels>
+```
+
+**Verify before a multi-host rollout, not after:** whether a local
+label here actually *overrides* the group's same-keyed label, or the
+agent ends up with a duplicate/conflicting label instead, has not been
+tested in this lab. Enroll and label the first real host, then check
+the label actually reaches the manager as expected before repeating it
+across every Proxmox host:
+
+```bash
+# On the manager, after the first host is enrolled and labeled:
+/var/ossec/bin/agent_control -i <agent_id>
+# or check a generated alert/event for that agent and confirm
+# pdp.asset_id shows the host-specific value, not "on-premise"-style
+# group data, and appears exactly once (not duplicated).
+```
+
+Verification of the group config itself:
 
 ```bash
 # On the manager: confirm the group's merged configuration is well-formed
