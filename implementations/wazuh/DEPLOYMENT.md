@@ -187,6 +187,10 @@ via an agent **group's** `agent.conf` — this also works, but requires
 
 ### Deploying on Proxmox VE (Debian) hosts
 
+For a copy-paste, step-by-step agent install and enrollment runbook
+(no need to read the rest of this document first), see
+`implementations/wazuh/AGENT_INSTALL_PROXMOX.md`.
+
 All 6 checks use generic `systemctl`/`sshd -T` commands and run
 correctly on Debian/Proxmox — no separate Debian variant of the policy
 is needed. Two checks are still likely to show an expected `FAIL` on a
