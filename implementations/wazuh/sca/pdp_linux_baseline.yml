@@ -83,7 +83,7 @@ checks:
   - c:systemctl is-enabled systemd-timesyncd -> r:^enabled$
 - id: 910005
   title: 'PDP: A supported host firewall is enabled'
-  description: Checks common Linux host firewall services.
+  description: Checks common Linux host firewall services, including Proxmox VE's own pve-firewall (a distinct systemd unit from ufw/firewalld/nftables, so a Proxmox host with its firewall enabled via the GUI would otherwise show a false FAIL here).
   rationale: Supports restriction of network access to Personal Data processing assets.
   remediation: Enable and configure the approved host firewall or document an equivalent compensating control.
   compliance:
@@ -99,6 +99,7 @@ checks:
   - c:systemctl is-enabled ufw -> r:^enabled$
   - c:systemctl is-enabled firewalld -> r:^enabled$
   - c:systemctl is-enabled nftables -> r:^enabled$
+  - c:systemctl is-enabled pve-firewall -> r:^enabled$
 - id: 910006
   title: 'PDP: Wazuh agent service is enabled'
   description: Checks whether the Wazuh agent service is enabled on the endpoint.

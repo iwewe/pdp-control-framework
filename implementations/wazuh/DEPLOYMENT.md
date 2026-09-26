@@ -157,6 +157,28 @@ via an agent **group's** `agent.conf` — this also works, but requires
 `sca.remote_commands=1` on the receiving agent since its checks rely on
 `c:` commands.
 
+### Deploying on Proxmox VE (Debian) hosts
+
+All 6 checks use generic `systemctl`/`sshd -T` commands and run
+correctly on Debian/Proxmox — no separate Debian variant of the policy
+is needed. Two checks are still likely to show an expected `FAIL` on a
+stock/default Proxmox host, not because of a policy defect:
+
+- **910001 (root SSH login disabled):** Proxmox commonly leaves
+  `PermitRootLogin yes` by default, since some cluster/backup tooling
+  assumes root SSH access. Either harden it (and confirm nothing else
+  depends on root SSH first) or record it as a documented
+  finding/exception.
+- **910003 (auditd enabled):** `auditd` is not installed by default on
+  Debian/Proxmox. Install and enable it first (`apt install auditd &&
+  systemctl enable --now auditd`) if this check should pass.
+
+**910005 (host firewall enabled)** recognizes Proxmox's own
+`pve-firewall` service in addition to `ufw`/`firewalld`/`nftables` —
+without it, a Proxmox host with its firewall enabled via the GUI would
+show a false `FAIL`, since `pve-firewall` is a distinct systemd unit
+name the other three checks don't cover.
+
 ## 4. Back up dashboard saved objects before restarting/upgrading Wazuh Dashboard
 
 Confirmed on real Wazuh 4.14.7, 2026-09-23 (see
