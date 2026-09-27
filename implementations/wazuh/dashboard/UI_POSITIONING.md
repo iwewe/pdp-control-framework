@@ -310,3 +310,64 @@ its own change.
 A full multi-page native Wazuh UI IA (section 9) and clickable
 panel-to-panel drill-through (sections 11-12) are recorded as future
 work, not built in this pass.
+
+## Addendum, 2026-09-27 — native "Compliance" card investigated and ruled out
+
+The project owner asked whether "PDP Controls" could appear as an
+option in Wazuh's own native per-agent **Compliance** card dropdown
+(`/app/endpoints-summary#/agents?tab=welcome&agent=<id>`) — the same
+card that already lists PCI DSS, GDPR, HIPAA, NIST 800-53, TSC. This
+is a different, more specific ask than section 9's "full multi-page
+native UI" (which is about a whole new top-level menu item); this one
+is about extending an existing, compiled Wazuh UI element.
+
+**Investigated directly on the real lab, not assumed:** the compliance
+framework list is not driven by any configuration file.
+`/etc/wazuh-indexer/opensearch_dashboards.yml` has no relevant key, and
+no JSON manifest anywhere under
+`/usr/share/wazuh-dashboard/plugins/wazuh/` registers the available
+frameworks. The only related files found
+(`common/compliance-requirements/{gdpr,hipaa,nist,pci,tsc}-requirements.js`)
+are compiled server-side data consumed by the PDF **reporting**
+feature (`server/lib/reporting/extended-information.js`) — mapping a
+requirement code to its human-readable description for a report, not
+the source of the dropdown itself. The dropdown's framework list is
+compiled into the plugin's frontend bundle. Wazuh's rule schema also
+has no `<pdp>` compliance tag slot at all — `<gdpr>`, `<hipaa>`,
+`<pci_dss>`, `<nist_800_53>`, `<tsc>` are the fixed, built-in set; this
+framework's own rules use a separate mechanism (group tags like
+`pdp_req_mon_001`, plus the `compliance:` block on SCA checks), which
+Wazuh's compliance-card code has no knowledge of.
+
+**Conclusion: not attempted.** Making "PDP Controls" a real option in
+that dropdown would require forking and patching
+`wazuh-dashboard`'s own plugin source and shipping a custom-built
+package — not a supported extension point, and something that would
+need to be redone on every future Wazuh Dashboard upgrade. The
+maintenance burden was judged not worth it against the alternative
+already built: the standalone `PDP Continuous Control Dashboard`
+(`implementations/wazuh/dashboard/`), reached through the ordinary,
+upgrade-safe Dashboards app.
+
+**Discoverability alternative considered, also not applied:**
+OpenSearch Dashboards has a global `defaultRoute` advanced setting
+(confirmed on this lab: currently `/app/wz-home`) that controls what
+every user sees on login — setting it to the PDP dashboard's URL would
+make it the landing page for anyone who logs in, including the SOC
+team that also uses this same Wazuh instance for its ordinary security
+operations work. Changing a shared, global setting to benefit one
+stakeholder (the DPO) at the cost of disrupting everyone else's daily
+workflow was judged the wrong trade-off, so this was **not applied**.
+
+**Recommended path, deferred by the project owner for now:** create a
+dedicated internal user for the DPO, scoped to the existing
+`pdp_dashboard_viewer` role (`implementations/wazuh/dashboard/rbac/`,
+live-tested end to end already — see `RBAC_EVIDENCE_2026-09-24.md`).
+That gives the DPO their own login and lets them set their own browser
+bookmark/default tab to the PDP dashboard URL, without touching any
+setting shared with the SOC team. The project owner plans to define
+this as part of a separate DPO onboarding SOP rather than create the
+account ad hoc now; `implementations/wazuh/dashboard/rbac/README.md`
+"Applying this" already documents the exact steps (create the
+internal user, hash a password, assign the `pdp_viewer` backend role)
+whenever that SOP is ready to use them.
