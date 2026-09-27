@@ -121,14 +121,30 @@ agent's ID first:
 sudo /var/ossec/bin/agent_control -l
 ```
 
-Then assign the group(s) decided in "Before you start":
+Then assign the group(s) decided in "Before you start". **Always
+include `default` explicitly, alongside `pdp-linux-baseline`** — an
+agent enrolled with `WAZUH_AGENT_GROUP` set at install time (or by some
+other install methods) skips automatic `default` membership entirely,
+which produces exactly the inconsistent fleet this step is written to
+avoid: found in this lab, 2026-09-27, across `luwak`/`jombor`/`krete`/`tobil`
+(missing `default`) vs. `ganesha` (had it). Running the command below
+again on an agent that already has a group is harmless — it is
+idempotent, not a reset.
 
 ```bash
 # every Proxmox host:
+sudo /var/ossec/bin/agent_groups -a -i <agent_id> -g default
 sudo /var/ossec/bin/agent_groups -a -i <agent_id> -g pdp-linux-baseline
 
 # only if this host also runs PostgreSQL:
 sudo /var/ossec/bin/agent_groups -a -i <agent_id> -g pdp-database
+```
+
+Confirm both groups landed:
+
+```bash
+sudo /var/ossec/bin/agent_groups -s -i <agent_id>
+# expect: "... belongs to groups: default, pdp-linux-baseline[, pdp-database]."
 ```
 
 The agent picks up the group's shared configuration (SCA policy,
