@@ -322,9 +322,11 @@ full pipeline, run from a host that can reach the Indexer:
 ```bash
 set -a; source .env; set +a   # PDP_INDEXER_URL/USER/PASSWORD, see .env.example
 
-# 1. Harvest real SCA check results from wazuh-alerts-* into
-#    implementations/wazuh/tests/results/*.evidence.json
+# 1. Harvest real SCA check results AND custom-rule alerts (auth,
+#    privileged access, FIM, telemetry health, pgAudit) from
+#    wazuh-alerts-* into implementations/wazuh/tests/results/*.evidence.json
 python3 tools/evidence/harvest_sca_evidence.py --since 7d
+python3 tools/evidence/harvest_wazuh_rule_evidence.py --since 7d
 
 # 2. Aggregate evidence into per-control assessments
 python3 tools/assessment/assess_controls.py
@@ -352,11 +354,38 @@ this framework's own SCA checks only (identified by carrying a
 are not picked up). It skips any agent missing `pdp.asset_id`/
 `pdp.processing_activity_id` labels (see section 2, "Per-host asset
 labels") rather than guessing, and prints which alerts it skipped and
-why. **Custom rule-based evidence** (`pdp_authentication.xml`,
-`pdp_fim.xml`, etc.) is **not covered yet** — those rules encode
-traceability as rule *group* tags (`pdp_req_*`, `pdp_control_*`)
-rather than SCA's native `compliance:` block, and need a separate
-harvester.
+why.
+
+**`harvest_wazuh_rule_evidence.py`, added 2026-09-27:** covers custom
+rule-based evidence (`pdp_authentication.xml`, `pdp_privileged_access.xml`,
+`pdp_fim.xml`, `pdp_telemetry_health.xml`, `pdp_postgresql.xml`) —
+these rules encode traceability as rule *group* tags (`pdp_req_*`,
+`pdp_control_*`, `pdp_evt_*`), a different convention from SCA's
+native `compliance:` block, so it parses those tags directly off each
+alert's `rule.groups` rather than reusing the SCA harvester's lookup
+path. Same label-skip behavior as the SCA harvester. **Result is
+always `PASS`:** these tests measure whether the expected *detection*
+fired (see `implementations/wazuh/WAZUH_TEST_CATALOGUE.yml`'s own
+`result_semantics.pass`, e.g. "Repeated authentication failures
+trigger a correlated alert") — an alert firing confirms the monitoring
+capability is working, which is what this evidence records; whether
+the underlying event itself is concerning is a separate question for
+a human reviewer/finding, not this field. Confirmed end to end against
+the real lab, 2026-09-27: 65 real evidence documents harvested from
+FIM (110201/110202) and privileged-access (110101/110102) alerts
+across 3 real agents, aggregated into 3 additional control assessments
+(`PDP-ACC-002`, `PDP-RET-002`, `PDP-SEC-003`, all PASS) that had no
+prior real evidence. Authentication-failure (110001/110002) and
+pgAudit (1104xx) rule families are supported by the same script but
+have no real alert data yet in this lab to harvest (no brute-force
+attempt or PostgreSQL+pgAudit host exercised against a real agent so
+far).
+
+**Deduplication/idempotency:** both harvesters build `evidence_id` from
+the source alert's own OpenSearch `_id` (already a globally unique,
+stable identifier), so re-running either one over the same alerts
+overwrites the same local files with identical content rather than
+creating duplicates — no separate fingerprint/hash step needed.
 
 Run `tools/assessment/assess_controls.py` again as more evidence
 accumulates — it always recomputes every control from everything

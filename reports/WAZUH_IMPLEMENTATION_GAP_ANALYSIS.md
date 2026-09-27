@@ -461,3 +461,24 @@ working, confirmed deliverable feature.
     `pdp_fim.xml`, etc.) still has no harvester -- those rules encode
     traceability as rule group tags, a different convention than SCA's
     native `compliance:` block.
+15. Post-1.0.0, 2026-09-27 (same day): closed the item 14 remaining gap
+    -- added `tools/evidence/harvest_wazuh_rule_evidence.py`, which
+    parses `pdp_req_*`/`pdp_control_*`/`pdp_evt_*` rule group tags
+    directly off real alerts to resolve traceability, keyed to a
+    hand-verified rule-ID-to-test-ID table (12 of the framework's 14
+    custom rule IDs; the other 2, 110003 and 110401, carry no
+    `pdp_control_*` tag by design and are correctly skipped by the same
+    filter, no special case needed). Documented the one genuinely
+    non-obvious design decision: an alert firing means the *detection*
+    worked as expected, which is this evidence's PASS condition -- not
+    a judgment that the underlying event was itself concerning. Run
+    end-to-end against the real lab: 65 evidence documents harvested
+    from real FIM and privileged-access alerts across 3 agents, adding
+    3 more control assessments (`PDP-ACC-002`, `PDP-RET-002`,
+    `PDP-SEC-003`, all PASS) that had zero prior real evidence.
+    Authentication and pgAudit rule families are supported by the same
+    tool but have no real alert data in this lab yet to harvest.
+    Deduplication (a separate recommendation) needed no extra
+    mechanism: both harvesters already build a deterministic
+    `evidence_id` from the source alert's own unique id, so re-running
+    them is naturally idempotent.
