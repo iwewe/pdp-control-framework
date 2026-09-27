@@ -6,6 +6,7 @@ metadata:
   - pdp-evidence-*
   - pdp-assessment-*
   - pdp-findings-*
+  - pdp-legal-review*
   principle: Dashboard reports engineering control/evidence state, not a legal compliance score.
 filters:
 - scope.processing_activity_id
@@ -16,6 +17,7 @@ filters:
 - severity
 - status
 - legal_review_state
+- category
 panels:
 - id: PDP-DASH-001
   title: Control Assessment State
@@ -82,3 +84,19 @@ panels:
   - traceability.requirements
   - traceability.controls
   - traceability.legal_requirements
+- id: PDP-DASH-009
+  title: Legal / Manual Review Queue
+  index: pdp-legal-review*
+  type: table
+  buckets:
+  - category
+  - status
+  - legal_requirement_id
+  notes: >-
+    Legal requirements with no Wazuh technical coverage (UI_POSITIONING.md
+    section 7.D), so a DPO/legal reviewer can see and work through them
+    directly in this dashboard rather than only in the repository. Not a
+    dashboard-native review workflow: status/reviewer/notes are edited in
+    framework/legal/review/LEGAL_REVIEW_QUEUE_STATUS.yml and reindexed via
+    tools/export/export_legal_review_ndjson.py, not from this panel.
+    Full text of each requirement: reports/LEGAL_REVIEW_QUEUE.md.

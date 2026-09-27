@@ -1,0 +1,60 @@
+{
+ "index_patterns": [
+  "pdp-legal-review*"
+ ],
+ "template": {
+  "settings": {
+   "index.number_of_shards": "1",
+   "index.number_of_replicas": "1",
+   "index.refresh_interval": "5s",
+   "mapping.total_fields.limit": "2000"
+  },
+  "mappings": {
+   "dynamic": "strict",
+   "properties": {
+    "@timestamp": {
+     "type": "date"
+    },
+    "schema_version": {
+     "type": "keyword"
+    },
+    "legal_requirement_id": {
+     "type": "keyword"
+    },
+    "article": {
+     "type": "integer"
+    },
+    "paragraph": {
+     "type": "integer"
+    },
+    "actor": {
+     "type": "keyword"
+    },
+    "requirement_summary": {
+     "type": "text"
+    },
+    "category": {
+     "type": "keyword"
+    },
+    "status": {
+     "type": "keyword"
+    },
+    "reviewer": {
+     "type": "keyword"
+    },
+    "reviewed_at": {
+     "type": "date"
+    },
+    "notes": {
+     "type": "text"
+    }
+   }
+  }
+ },
+ "priority": 200,
+ "_meta": {
+  "framework": "PDP Control Framework",
+  "version": "1.0.0",
+  "notes": "requirement_summary and notes are mapped as text (not aggregatable) since some Indonesian legal-text summaries exceed the default keyword ignore_above; the dashboard table panel buckets on legal_requirement_id/category/status instead. This is a single, non-time-series registry (unlike pdp-evidence-*/pdp-assessment-*/pdp-findings-*): documents are upserted in place by legal_requirement_id as review status changes, not accumulated per month."
+ }
+}

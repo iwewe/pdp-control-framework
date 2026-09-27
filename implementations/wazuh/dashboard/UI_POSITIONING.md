@@ -116,7 +116,7 @@ coverage, not a legal compliance score."
 | A. Control Assessment State | PASS/FAIL/REVIEW/NOT_APPLICABLE overview | Implemented — `PDP-DASH-001` |
 | B. Evidence Health | Evidence source condition | Implemented — `PDP-DASH-002` ("Evidence Health"), but with a **different enum** than recommended here (`SUFFICIENT/DEGRADED/INSUFFICIENT/UNKNOWN` vs. the `EXPECTED/AVAILABLE/DEGRADED/STALE/MISSING` proposed in this note). Not reconciled — would be a breaking schema change post-1.0.0; needs an explicit decision, not a silent change. See section 6.F below. |
 | C. Findings (severity + lifecycle) | Operational remediation | Implemented — `PDP-DASH-003`/`PDP-DASH-004`, finding `status`/`severity` enums already match |
-| D. Review Queue | Controls/findings needing manual, document, legal, or applicability review | Implemented — `PDP-DASH-005` ("Controls Requiring Review") filters `pdp-assessment-*` on `result: REVIEW` (assessment level); `PDP-DASH-004`'s `legal_review_state` bucket (finding level, added 2026-09-24 — see below); and, for the specific example areas this section names (lawful basis, consent validity, DPIA, DPO applicability, ...), `tools/reporting/generate_legal_review_queue.py` / `reports/LEGAL_REVIEW_QUEUE.md` (added 2026-09-27 — see "Implemented in this pass" below) — these are inherently non-Wazuh-testable, so they get a dedicated worksheet instead of a dashboard panel. |
+| D. Review Queue | Controls/findings needing manual, document, legal, or applicability review | Implemented — `PDP-DASH-005` ("Controls Requiring Review") filters `pdp-assessment-*` on `result: REVIEW` (assessment level); `PDP-DASH-004`'s `legal_review_state` bucket (finding level); and, for the specific example areas this section names (lawful basis, consent validity, DPIA, DPO applicability, ...), `tools/reporting/generate_legal_review_queue.py` / `reports/LEGAL_REVIEW_QUEUE.md` PLUS a 9th dashboard panel, `PDP-DASH-009` ("Legal / Manual Review Queue", `pdp-legal-review*` index, added 2026-09-27) — so a DPO can see this queue directly on the dashboard, not only in the repository. See "Implemented in this pass" below. |
 | E. Technical Coverage | AUTOMATED/PARTIAL/MANUAL coverage, not a compliance percentage | Implemented — `framework/requirements/CONTROL_REQUIREMENTS.yml` coverage classification, `reports/COVERAGE_REPORT.md` |
 | F. Evidence Quality | Q0-Q4 scale | Implemented — `PDP-DASH-006` ("Evidence Quality Distribution"), and the `quality.level` enum in `framework/schemas/evidence.schema.json` already matches this note's Q0-Q4 scale exactly |
 | G. PDP Events Over Time | Technical event trend, explicitly not incident/breach count | Implemented — `PDP-DASH-007` |
@@ -271,14 +271,28 @@ automatic conclusion of UU PDP violation.
   validity, DPIA sufficiency, DPO applicability, and similar) — these
   have no Wazuh technical coverage at all (`NO_TECHNICAL_COVERAGE` in
   `reports/COVERAGE_REPORT.json`, 32 of 64 legal requirements), so they
-  get a dedicated hand-maintained worksheet rather than a dashboard
-  panel. The generator classifies each into a review category from its
-  `requirement_summary` text and adds any newly-appearing requirement
-  to the worksheet with status `NOT_REVIEWED`; it never overwrites or
-  deletes an existing entry, so a reviewer's recorded progress
-  (`status`/`reviewer`/`reviewed_at`/`notes`) always survives
-  re-running it — confirmed with a round-trip test before this was
-  committed.
+  get a dedicated hand-maintained worksheet. The generator classifies
+  each into a review category from its `requirement_summary` text and
+  adds any newly-appearing requirement to the worksheet with status
+  `NOT_REVIEWED`; it never overwrites or deletes an existing entry, so
+  a reviewer's recorded progress (`status`/`reviewer`/`reviewed_at`/`notes`)
+  always survives re-running it — confirmed with a round-trip test
+  before this was committed.
+- `framework/schemas/legal-review-item.schema.json`,
+  `implementations/wazuh/indexer/templates/pdp-legal-review-template.json`,
+  `tools/export/export_legal_review_ndjson.py`, and `PDP-DASH-009` on
+  the dashboard itself (added 2026-09-27, same day): the queue is also
+  indexed as its own `pdp-legal-review` registry (a single,
+  non-time-series index — documents are upserted in place by
+  `legal_requirement_id` as review status changes, unlike the
+  append-only `pdp-evidence-*`/`pdp-assessment-*`/`pdp-findings-*`
+  indices) and surfaced as a real dashboard panel, so a DPO or legal
+  reviewer sees it directly on the dashboard rather than needing to
+  read the repository. Confirmed live on the real lab: template
+  installed, all 32 items indexed with 0 errors, panel and index
+  pattern both discoverable, existing `pdp_dashboard_viewer`/`_editor`
+  RBAC roles already cover it via their existing `pdp-*` index-pattern
+  grant (no RBAC change needed).
 
 ## Explicitly NOT done in this pass — needs an explicit decision
 

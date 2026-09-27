@@ -363,3 +363,27 @@ accumulates — it always recomputes every control from everything
 currently in `implementations/wazuh/tests/results/`, so re-running the
 whole pipeline periodically (e.g. after each SCA scan interval) is the
 intended usage, not a one-off.
+
+## 7. Populating the Legal / Manual Review Queue panel
+
+Legal requirements with no Wazuh technical coverage at all (lawful
+basis, consent validity, DPIA sufficiency, DPO applicability, ...) are
+tracked separately from the evidence pipeline above — see
+`reports/LEGAL_REVIEW_QUEUE.md` and
+`framework/legal/review/LEGAL_REVIEW_QUEUE_STATUS.yml`. To reindex
+`PDP-DASH-009` ("Legal / Manual Review Queue") after editing that
+worksheet (recording a reviewer's progress):
+
+```bash
+set -a; source .env; set +a
+python3 tools/export/export_legal_review_ndjson.py --output /tmp/legal_review.ndjson
+curl -sk -u "admin:${PDP_INDEXER_PASSWORD}" -H 'Content-Type: application/x-ndjson' \
+  -X POST "${PDP_INDEXER_URL}/_bulk" --data-binary "@/tmp/legal_review.ndjson"
+rm -f /tmp/legal_review.ndjson
+```
+
+Unlike the evidence/assessment/finding indices, `pdp-legal-review` is a
+single, non-time-series registry: each document is upserted in place
+by `legal_requirement_id` (used as the Bulk API `_id`), so re-running
+this after a worksheet edit updates the existing row rather than
+creating a duplicate.

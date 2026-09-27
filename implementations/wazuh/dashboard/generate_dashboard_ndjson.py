@@ -202,6 +202,13 @@ METRIC_OVERRIDES = {
     "PDP-DASH-005": "coverage.coverage_percent",
 }
 
+# Default table bucket size (20) undercounts panels with more distinct
+# leaf values than that -- PDP-DASH-009 has up to 32 (one row per
+# legal_requirement_id nested under category/status).
+BUCKET_SIZE_OVERRIDES = {
+    "PDP-DASH-009": 50,
+}
+
 
 def build_panel_viz(panel):
     pid = panel["id"]
@@ -224,7 +231,7 @@ def build_panel_viz(panel):
         if metric_field:
             metric_agg = {"id": "1", "enabled": True, "type": "avg", "schema": "metric",
                            "params": {"field": metric_field}}
-        vis_state = table_vis(title, buckets, metric_agg=metric_agg)
+        vis_state = table_vis(title, buckets, metric_agg=metric_agg, size=BUCKET_SIZE_OVERRIDES.get(pid, 20))
     elif ptype == "timeseries":
         vis_state = line_vis_over_time(title, panel.get("time_field", "@timestamp"), buckets[0])
     else:
