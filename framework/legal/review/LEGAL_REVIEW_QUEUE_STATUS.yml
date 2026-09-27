@@ -1,0 +1,170 @@
+items:
+  LR-020-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-020-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-021-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-021-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-022-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-022-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-022-03:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-023-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-024-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-025-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-025-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-026-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-026-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-026-03:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-027-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-028-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-030-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-030-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-032-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-033-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-034-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-034-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-040-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-040-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-041-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-041-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-041-03:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-051-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-053-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-053-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-054-01:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+  LR-054-02:
+    status: NOT_REVIEWED
+    reviewer: null
+    reviewed_at: null
+    notes: null
+metadata:
+  description: Hand-maintained legal/manual review worksheet for legal requirements
+    with NO_TECHNICAL_COVERAGE (see reports/LEGAL_REVIEW_QUEUE.md). Edit status/reviewer/reviewed_at/notes
+    per item; tools/reporting/generate_legal_review_queue.py only ever adds new items
+    here, never overwrites or deletes an existing one.
+  valid_status_values:
+  - NOT_REVIEWED
+  - IN_PROGRESS
+  - REVIEWED

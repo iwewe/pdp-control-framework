@@ -107,3 +107,11 @@ jobs:
             echo "::error::reports/COVERAGE_REPORT.md and/or COVERAGE_REPORT.json are stale. Run tools/reporting/generate_coverage_report.py and commit the result." >&2
             exit 1
           }
+
+      - name: Check legal review queue is reproducible
+        run: |
+          python tools/reporting/generate_legal_review_queue.py
+          git diff --exit-code reports/LEGAL_REVIEW_QUEUE.md framework/legal/review/LEGAL_REVIEW_QUEUE_STATUS.yml || {
+            echo "::error::reports/LEGAL_REVIEW_QUEUE.md and/or LEGAL_REVIEW_QUEUE_STATUS.yml are stale (a legal requirement was likely added/changed without running tools/reporting/generate_legal_review_queue.py). The generator never overwrites an existing worksheet entry's status/reviewer/notes, so this diff only ever means new items are missing, not lost reviewer edits." >&2
+            exit 1
+          }
