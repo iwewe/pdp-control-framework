@@ -48,6 +48,8 @@ panels:
   - control_id
   - severity
   - status
+  - legal_review_state
+  notes: legal_review_state surfaces the finding-level "Review Queue" concept (UI_POSITIONING.md section 7.D) directly in this table.
 - id: PDP-DASH-005
   title: Controls Requiring Review
   index: pdp-assessment-*

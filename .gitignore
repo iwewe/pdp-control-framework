@@ -8,6 +8,7 @@ release/runtime-validation/**/RESULT.json
 *.ndjson.tmp
 *.local
 .env
+.claude/settings.local.json
 
 # Python
 __pycache__/

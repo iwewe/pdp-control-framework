@@ -10,6 +10,16 @@ first implementation/evidence profile targets **Wazuh**.
 > compliance. A Wazuh technical PASS is **not** equivalent to legal
 > compliance.
 
+**Positioning statement:** PDP Controls provides a technical control,
+evidence, and assessment view for the PDP Control Framework using
+Wazuh telemetry. It supports compliance engineering but does not
+constitute a legal compliance determination.
+
+*(Indonesian: PDP Controls menyediakan tampilan kontrol, evidence, dan
+assessment teknis untuk PDP Control Framework dengan memanfaatkan
+telemetry Wazuh. Fitur ini mendukung compliance engineering dan tidak
+merupakan penetapan kepatuhan hukum.)*
+
 ## Current status
 
 **Version:** 1.0.0 — **first stable release** (`FRAMEWORK_MANIFEST.yml`)

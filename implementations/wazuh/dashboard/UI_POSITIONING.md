@@ -1,0 +1,282 @@
+# PDP Controls in Wazuh Security Operations — UX, Architecture, and Compliance-Boundary Recommendation
+
+Design reference provided by the project owner, 2026-09-27 (source:
+`pdp-control.txt`), for how this framework could eventually be
+surfaced as a native menu item inside the Wazuh UI's own **Security
+Operations** area, alongside its existing PCI DSS / GDPR / HIPAA /
+NIST 800-53 / TSC views — a step beyond the current standalone
+imported dashboard (`DASHBOARD_SPEC.yml`). Recorded here as a design
+reference, not yet built; see "Status against the current framework"
+at the end of each section for what is already implemented vs. still
+open.
+
+## 1. Context
+
+Positioning PDP Controls inside Wazuh's Security Operations menu makes
+sense from a UX standpoint — the framework's technical evidence comes
+from Wazuh telemetry. But it must never be positioned as if Wazuh
+itself is issuing a legal verdict or compliance certification under UU
+PDP. The framework is a **Compliance Engineering Framework + Control
+Framework + Evidence Framework** — not a regulator, legal authority,
+certification body, or legal compliance engine.
+
+## 2. Recommended menu position
+
+```
+Security operations
+├── IT Hygiene
+├── PCI DSS
+├── GDPR
+├── HIPAA
+├── NIST 800-53
+├── TSC
+└── PDP Controls
+```
+
+Recommended label: **PDP Controls**. Alternatives: "PDP Control
+Framework", "PDP Engineering". Avoid the bare label **"PDP"** — too
+generic, risks being read as an official/legal verdict on UU PDP
+itself.
+
+## 3. Why Security Operations is a good location
+
+Wazuh's Security Operations function (log collection, authentication
+monitoring, privilege monitoring, FIM, SCA, telemetry health,
+vulnerability telemetry, PostgreSQL/pgAudit collection, continuous
+monitoring) sits directly beneath this framework's own technical
+layer:
+
+```
+Security Operations
+        ↓
+Technical Telemetry
+        ↓
+PDP Control Evidence
+        ↓
+Control Assessment
+```
+
+Security Operations is only *one* evidence source for PDP, and the
+framework must keep showing that boundary rather than implying it's
+the only one.
+
+## 4. Legal / engineering boundary
+
+```
+UU PDP → Legal Requirement → PDP Control → Generic Requirement →
+Technical Test → Evidence → Assessment → Finding / Review
+```
+
+Wazuh operates at Technical Test / Evidence / Continuous Monitoring
+only. It must never be the engine that concludes "the organization
+violated UU PDP" or "the organization is compliant with UU PDP":
+
+```
+Wazuh Event → Technical Evidence → Control Assessment →
+Human / Legal Review (when needed)
+```
+
+**Wazuh PASS != legal compliance. Wazuh FAIL != automatic legal
+violation.**
+
+**Status against the current framework:** already the framework's
+core design principle — see `implementations/wazuh/WAZUH_PROFILE.yml`
+(`boundary_statement`) and every dashboard/report disclaimer added
+throughout this project.
+
+## 5. Menu naming recommendation
+
+`Security operations → PDP Controls`. Clearer semantically, consistent
+with a control-framework model, avoids implying Wazuh is a regulator
+or that one dashboard is a legal compliance score, and leaves room for
+other implementation profiles later.
+
+## 6. Dashboard should not use a single compliance score
+
+Avoid a single number like "PDP Compliance = 78%" or a
+"Compliant/Non-Compliant" toggle — easily misread as a legal
+compliance score. Use the engineering assessment results instead:
+`PASS` / `FAIL` / `REVIEW` / `NOT_APPLICABLE`.
+
+- **PASS** — required technical evidence for the control assessment is satisfied.
+- **FAIL** — the control test produced evidence of failure.
+- **REVIEW** — insufficient evidence, problematic telemetry, stale/missing evidence, or human judgment needed.
+- **NOT_APPLICABLE** — the control doesn't apply to this processing activity/scope, with a documented justification.
+
+**Status against the current framework:** already how this framework
+works — `framework/schemas/control-assessment.schema.json`'s `result`
+enum, and `PDP-DASH-001` ("Control Assessment State") on the real
+dashboard. `README.md` already states this is "engineering traceability
+coverage, not a legal compliance score."
+
+## 7. Recommended PDP Controls dashboard areas
+
+| Area | Purpose | Status against the current framework |
+|---|---|---|
+| A. Control Assessment State | PASS/FAIL/REVIEW/NOT_APPLICABLE overview | Implemented — `PDP-DASH-001` |
+| B. Evidence Health | Evidence source condition | Implemented — `PDP-DASH-002` ("Evidence Health"), but with a **different enum** than recommended here (`SUFFICIENT/DEGRADED/INSUFFICIENT/UNKNOWN` vs. the `EXPECTED/AVAILABLE/DEGRADED/STALE/MISSING` proposed in this note). Not reconciled — would be a breaking schema change post-1.0.0; needs an explicit decision, not a silent change. See section 6.F below. |
+| C. Findings (severity + lifecycle) | Operational remediation | Implemented — `PDP-DASH-003`/`PDP-DASH-004`, finding `status`/`severity` enums already match |
+| D. Review Queue | Controls/findings needing manual, document, legal, or applicability review | Partially implemented — `PDP-DASH-005` ("Controls Requiring Review") already filters `pdp-assessment-*` on `result: REVIEW`, fulfilling the assessment half of this. The finding-level half (surfacing `legal_review_state`) was added 2026-09-27 — see "Implemented in this pass" below. |
+| E. Technical Coverage | AUTOMATED/PARTIAL/MANUAL coverage, not a compliance percentage | Implemented — `framework/requirements/CONTROL_REQUIREMENTS.yml` coverage classification, `reports/COVERAGE_REPORT.md` |
+| F. Evidence Quality | Q0-Q4 scale | Implemented — `PDP-DASH-006` ("Evidence Quality Distribution"), and the `quality.level` enum in `framework/schemas/evidence.schema.json` already matches this note's Q0-Q4 scale exactly |
+| G. PDP Events Over Time | Technical event trend, explicitly not incident/breach count | Implemented — `PDP-DASH-007` |
+
+## 8. Recommended disclaimer
+
+> "Engineering control and evidence status. Not a legal compliance determination."
+>
+> ("Status ini merupakan hasil assessment kontrol dan evidence
+> engineering, bukan penetapan kepatuhan hukum.")
+
+Should appear on the dashboard, in documentation, and on any exported
+report — not just buried in technical docs.
+
+**Status against the current framework:** the dashboard's own
+description field already carries an equivalent line ("Dashboard
+reports engineering control/evidence state, not a legal compliance
+score" — `implementations/wazuh/dashboard/generate_dashboard_ndjson.py`).
+Added the exact bilingual wording from this note to `README.md` and
+`implementations/wazuh/dashboard/README.md` in this pass, so it's
+visible in both places a viewer is likely to look first, not only in
+the dashboard UI itself.
+
+## 9. PDP Controls page information architecture
+
+```
+PDP Controls
+├── Overview
+├── Controls
+├── Evidence
+├── Findings
+├── Review Queue
+├── Processing Activities
+├── Assets
+├── Technical Coverage
+└── Traceability
+```
+
+**Status against the current framework:** the real dashboard is
+currently one page of 8 (now 8, unchanged panel count — see below)
+panels, not this multi-page IA. Building a full multi-page native
+Wazuh UI plugin matching this structure is a larger undertaking than a
+saved-objects dashboard and is out of scope for this pass; recorded
+here for a future implementation profile.
+
+## 10. Traceability view
+
+```
+PDP-ACC-002 → REQ-MON-002 → WZ-RUL-xxx → Evidence EV-xxx →
+Processing Activity PA-xxx → Asset ASSET-xxx → Legal Requirement LR-xxx
+```
+
+**Status against the current framework:** implemented —
+`PDP-DASH-008` ("Technical Traceability"), and the underlying data
+model (`framework/schemas/*.json`, `implementations/wazuh/manifests/TRACEABILITY.yml`)
+already carries this full chain.
+
+## 11-12. Recommended user flow / example operational flow
+
+Overview → control with FAIL/REVIEW → control detail → evidence detail
+→ asset/processing activity → finding → remediation → retest.
+
+**Status against the current framework:** the data model supports this
+drill-down (shared IDs across evidence/assessment/finding documents),
+but the dashboard doesn't yet implement clickable drill-through between
+panels — a saved-search/drilldown feature of the dashboard app itself,
+not yet configured on `implementations/wazuh/dashboard/saved-objects/pdp-dashboard-shell.ndjson`.
+
+## 13. Relation with other Wazuh compliance menu items
+
+PDP Controls can sit visually at the same menu level as PCI
+DSS/GDPR/HIPAA/NIST 800-53/TSC, but internally must stay:
+
+```
+PDP Control Framework → Wazuh Implementation Profile
+```
+
+not tightly coupled to Wazuh's own UI, so the framework can add other
+implementation profiles later (IAM, Cloud, Database, Manual
+Assessment) without Wazuh's UI being the only view of it.
+
+**Status against the current framework:** already the framework's
+design — see `FRAMEWORK_MANIFEST.yml`'s `implementation_profiles` list
+(currently `[wazuh]`, designed to be extended) and
+`docs/architecture/compliance-operating-model.md`.
+
+## 14. Recommended terminology
+
+**Use:** Control, Assessment, Evidence, Finding, Review, Coverage,
+Technical Monitoring, Engineering Status.
+
+**Avoid:** Certified, Legally Compliant, Compliant Organization,
+Official PDP Score, Legal PASS, PDP Certification.
+
+**Status against the current framework:** added as explicit
+contributor guidance in `implementations/wazuh/dashboard/README.md`
+in this pass (2026-09-27), so future dashboard/report authors don't
+reintroduce this language.
+
+## 15. Positioning statement
+
+> "PDP Controls provides a technical control, evidence, and assessment
+> view for the PDP Control Framework using Wazuh telemetry. It
+> supports compliance engineering but does not constitute a legal
+> compliance determination."
+>
+> ("PDP Controls menyediakan tampilan kontrol, evidence, dan assessment
+> teknis untuk PDP Control Framework dengan memanfaatkan telemetry
+> Wazuh. Fitur ini mendukung compliance engineering dan tidak
+> merupakan penetapan kepatuhan hukum.")
+
+Added to `README.md` in this pass.
+
+## 16-18. Final recommendation / architectural principle / summary
+
+```
+LAW / REGULATION
+      ↓
+PDP CONTROL FRAMEWORK
+      ↓
+CONTROL + REQUIREMENT + EVIDENCE MODEL
+      ↓
+WAZUH IMPLEMENTATION PROFILE
+      ↓
+SECURITY OPERATIONS / PDP CONTROLS UI
+```
+
+Not `WAZUH → LEGAL COMPLIANCE ENGINE`. Never expose a single legal
+compliance score, a compliant/non-compliant legal verdict, or an
+automatic conclusion of UU PDP violation.
+
+## Implemented in this pass (2026-09-27)
+
+- `README.md`, `implementations/wazuh/dashboard/README.md`: added the
+  bilingual positioning statement and disclaimer text verbatim from
+  sections 8 and 15.
+- `implementations/wazuh/dashboard/README.md`: added the recommended/avoid
+  terminology list from section 14.
+- `implementations/wazuh/dashboard/DASHBOARD_SPEC.yml`: added
+  `legal_review_state` as a bucket on `PDP-DASH-004` ("Findings by
+  Processing Activity"), so a finding pending legal review is visible
+  directly in that table — the finding-level half of the "Review
+  Queue" concept in section 7.D that the existing `PDP-DASH-005`
+  panel didn't cover (that panel only surfaces assessment-level
+  `result: REVIEW`, not finding-level `legal_review_state`).
+  Regenerated and reconfirmed against the real lab.
+
+## Explicitly NOT done in this pass — needs an explicit decision
+
+**Evidence Health terminology** (section 7.B): this note recommends
+`EXPECTED / AVAILABLE / DEGRADED / STALE / MISSING`. The framework's
+actual `evidence_health` enum (`framework/schemas/control-assessment.schema.json`)
+is `SUFFICIENT / DEGRADED / INSUFFICIENT / UNKNOWN`, already used by
+real indexed data and the real `PDP-DASH-002` panel. Changing the enum
+is a breaking schema change post-1.0.0 (existing indexed documents,
+the index template, and every panel referencing `evidence_health`
+would need to migrate together) and was not made silently here. If
+this reconciliation is wanted, it should be scoped and versioned as
+its own change.
+
+A full multi-page native Wazuh UI IA (section 9) and clickable
+panel-to-panel drill-through (sections 11-12) are recorded as future
+work, not built in this pass.

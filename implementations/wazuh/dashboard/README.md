@@ -50,6 +50,28 @@ Article violation count
 
 unless a separate authorized legal assessment explicitly produces that conclusion.
 
+More broadly, across any dashboard, report, or documentation built on
+this framework:
+
+**Use:** Control, Assessment, Evidence, Finding, Review, Coverage,
+Technical Monitoring, Engineering Status.
+
+**Avoid:** Certified, Legally Compliant, Compliant Organization,
+Official PDP Score, Legal PASS, PDP Certification.
+
+**Disclaimer to carry wherever this dashboard is shown or exported**
+(dashboard, README, exported report — not only buried in technical
+docs):
+
+> "Engineering control and evidence status. Not a legal compliance determination."
+>
+> ("Status ini merupakan hasil assessment kontrol dan evidence
+> engineering, bukan penetapan kepatuhan hukum.")
+
+See `implementations/wazuh/dashboard/UI_POSITIONING.md` for the full
+design reference this terminology and disclaimer guidance is drawn
+from.
+
 ## Time range
 
 All three index patterns set `@timestamp` as their time field, which
