@@ -1,0 +1,42 @@
+# PDP Control Framework -- scheduled evidence harvest/index pipeline.
+#
+# Install (run once, as root, on the Wazuh manager / a host that can
+# reach the Indexer):
+#
+#   sudo cp implementations/wazuh/systemd/pdp-harvest.service /etc/systemd/system/
+#   sudo cp implementations/wazuh/systemd/pdp-harvest.timer /etc/systemd/system/
+#
+#   # Credentials, readable only by root -- never commit this file:
+#   sudo install -m 600 /dev/null /etc/pdp-control-framework/harvest.env
+#   sudo tee /etc/pdp-control-framework/harvest.env >/dev/null <<'ENV'
+#   PDP_INDEXER_URL=https://127.0.0.1:9200
+#   PDP_INDEXER_USER=admin
+#   PDP_INDEXER_PASSWORD=<real password>
+#   PDP_VERIFY_TLS=false
+#   ENV
+#
+#   # Edit WorkingDirectory below to this repository's real checkout path
+#   # if it differs from /home/bagong/pdp-control-framework.
+#
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now pdp-harvest.timer
+#   sudo systemctl status pdp-harvest.timer
+#   sudo journalctl -u pdp-harvest.service -n 50   # check a run's output
+#
+# This unit itself is never templated with real values -- it is safe
+# to keep checked into the repository.
+[Unit]
+Description=PDP Control Framework - harvest evidence and index (one-shot)
+Wants=network-online.target
+After=network-online.target wazuh-indexer.service wazuh-manager.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/bagong/pdp-control-framework
+EnvironmentFile=/etc/pdp-control-framework/harvest.env
+ExecStart=/usr/bin/bash implementations/wazuh/scripts/run_harvest_pipeline.sh
+# Defense in depth: this pipeline only reads Wazuh data and writes to
+# its own repo checkout / the Indexer over HTTPS. It does not need
+# broader filesystem or privilege access.
+NoNewPrivileges=true
+ProtectSystem=full

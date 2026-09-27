@@ -170,5 +170,13 @@ sudo /var/ossec/bin/agent_control -i <agent_id>
 sudo grep "<agent_id>" /var/ossec/logs/ossec.log | grep -i sca | tail -5
 ```
 
+After enrolling all your hosts, also run the fleet-wide consistency
+check (catches exactly the missing-`default`-group issue this runbook
+now warns about in step 5, automatically, across every agent at once):
+
+```bash
+sudo python3 tools/validation/validate_agent_group_membership.py
+```
+
 Repeat steps 1-6 for each Proxmox host, replacing the asset label
 values in step 2 for every host.

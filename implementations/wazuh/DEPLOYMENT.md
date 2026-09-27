@@ -416,3 +416,65 @@ single, non-time-series registry: each document is upserted in place
 by `legal_requirement_id` (used as the Bulk API `_id`), so re-running
 this after a worksheet edit updates the existing row rather than
 creating a duplicate.
+
+Recording a review without hand-editing the worksheet YAML:
+
+```bash
+python3 tools/legal_review/mark_reviewed.py --id LR-020-01 \
+  --status REVIEWED --reviewer "Jane Doe" \
+  --notes "Lawful basis documented in DPA section 3.2."
+```
+
+This updates `LEGAL_REVIEW_QUEUE_STATUS.yml` and regenerates
+`reports/LEGAL_REVIEW_QUEUE.md`; re-run the export/index commands
+above afterward to push the change to the dashboard panel too.
+
+## 8. Scheduled continuous harvesting
+
+Sections 6-7 above can be run manually, but the intended steady-state
+operation is scheduled: `implementations/wazuh/scripts/run_harvest_pipeline.sh`
+wraps the whole harvest → assess → find → export → index sequence into
+one command, safe to run unattended on a timer.
+
+```bash
+set -a; source .env; set +a
+bash implementations/wazuh/scripts/run_harvest_pipeline.sh
+```
+
+**Why this is safe to run every few minutes, confirmed 2026-09-27:**
+`assess_controls.py`'s `assessment_id` and `generate_findings.py`'s
+`finding_id` are now deterministic (`ASM-<control_id>` /
+`FIND-<control_id>` — previously a random UUID each run), so a bulk
+"index" upserts the same document instead of accumulating a duplicate
+every cycle; evidence documents were already deterministic (keyed by
+the source alert's own unique id). Findings additionally upsert only
+the fields a re-run can legitimately know changed (evidence/scope/
+assessment linkage, `updated_at`) — `status`/`severity`/`owner`/`notes`
+are never touched once a finding exists, so a human closing a finding
+is never silently reopened just because the control still fails on
+the next scheduled run. Verified by running the pipeline 3 times in a
+row against the real lab: identical document counts every time (114
+evidence, 11 assessments, 7 findings), zero growth, zero duplication
+per control.
+
+To actually schedule it, see
+`implementations/wazuh/systemd/pdp-harvest.service` (install/setup
+instructions are in that file's own header comment — it needs a
+root-only credentials file created on the manager, which is a manual
+step by design, not something automated here).
+
+## 9. Fleet consistency check
+
+After enrolling agents (`AGENT_INSTALL_PROXMOX.md`), confirm the whole
+fleet has consistent group membership — this is the automated version
+of the manual check that caught a real gap on 2026-09-27 (several
+agents missing the `default` group). Run on the manager:
+
+```bash
+sudo python3 tools/validation/validate_agent_group_membership.py
+```
+
+Checks every non-manager agent: `default` is present alongside any
+`pdp-*` group, no unexpected group names, and that its group
+membership was queryable at all. Exits non-zero with a listed reason
+per agent if something's wrong.

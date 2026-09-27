@@ -5,7 +5,7 @@ Consumes normalized evidence and applies conservative anti-false-compliance logi
 """
 from pathlib import Path
 from datetime import datetime, timezone
-import json, yaml, uuid, collections
+import json, yaml, collections
 
 def find_repo_root(start):
     p = Path(start).resolve()
@@ -66,7 +66,12 @@ for control, items in sorted(by_control.items()):
 
     summary={
         "schema_version":"0.8",
-        "assessment_id":"ASM-"+str(uuid.uuid4()),
+        # Deterministic (control_id, not a random uuid): assess_controls.py
+        # always produces exactly one current assessment per control, so a
+        # scheduled re-run upserts the same document in the indexer instead
+        # of accumulating a duplicate every cycle. See
+        # implementations/wazuh/scripts/run_harvest_pipeline.sh.
+        "assessment_id":"ASM-"+control,
         "control_id":control,
         "scope":{
             "processing_activity_id":pa,

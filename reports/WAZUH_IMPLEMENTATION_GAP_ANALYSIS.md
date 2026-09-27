@@ -482,3 +482,38 @@ working, confirmed deliverable feature.
     mechanism: both harvesters already build a deterministic
     `evidence_id` from the source alert's own unique id, so re-running
     them is naturally idempotent.
+16. Post-1.0.0, 2026-09-27 (same day): closed the recommendation
+    review's P1 (operational workflow) items 6 and 7, and gave item 5
+    (real Legal Review Queue usage) a lower-friction tool.
+    - **Fleet consistency:** `tools/validation/validate_agent_group_membership.py`,
+      the automated version of the manual `default`-group check from
+      item 11 in this same log. Confirmed it would have caught the
+      original real bug (unit-tested against the exact captured
+      `luwak` CLI output that had it), and confirmed clean against the
+      current real fleet.
+    - **Scheduled continuous harvesting:** required fixing a real
+      latent bug first -- `assess_controls.py`'s `assessment_id` and
+      `generate_findings.py`'s `finding_id` were random UUIDs, so any
+      unattended repeated run would have accumulated a duplicate
+      assessment/finding per control every cycle. Made both
+      deterministic (`ASM-<control_id>` / `FIND-<control_id>`), and
+      made finding regeneration a real upsert that only refreshes
+      evidence/scope/`updated_at` -- never `status`/`owner`/`notes` --
+      so a human closing a finding is never silently reopened.
+      Wrapped the full pipeline in
+      `implementations/wazuh/scripts/run_harvest_pipeline.sh` plus
+      `implementations/wazuh/systemd/pdp-harvest.{service,timer}`.
+      Verified by running the wrapper 3 times in a row against the
+      real lab: identical counts every time (114 evidence, 11
+      assessments, 7 findings), zero growth.
+    - **Legal Review Queue usage:** `tools/legal_review/mark_reviewed.py`,
+      a small CLI so recording a review doesn't require hand-editing
+      YAML. Tested with a round-trip (set status, confirmed the
+      report updated, reverted).
+    - **Deliberately not attempted:** clickable panel-to-panel
+      drill-down navigation (item 4). Constructing OpenSearch
+      Dashboards' drilldown saved-object config correctly, without a
+      real browser session to verify the interactive behavior against,
+      was judged too easy to get subtly wrong for how it's built here
+      (generated NDJSON, no interactive test harness) -- left for a
+      pass where that can be visually verified.

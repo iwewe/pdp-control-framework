@@ -9,7 +9,7 @@ Conservative policy:
 """
 from pathlib import Path
 from datetime import datetime, timezone
-import json, uuid
+import json
 
 def find_repo_root(start):
     p = Path(start).resolve()
@@ -33,30 +33,54 @@ for p in ASSESS.glob("*.assessment.json"):
     if asm["result"]!="FAIL":
         continue
 
-    finding={
-        "schema_version":"0.9",
-        "finding_id":"FIND-"+str(uuid.uuid4()),
-        "control_id":asm["control_id"],
-        "scope":{
+    # Deterministic (control_id, not a random uuid): at most one open
+    # finding per control by design, so a scheduled re-run upserts the
+    # same document instead of accumulating a duplicate every cycle --
+    # same reasoning as assess_controls.py's assessment_id.
+    finding_id="FIND-"+asm["control_id"]
+    out=OUT/f"{finding_id}.finding.json"
+
+    if out.exists():
+        # Upsert, not overwrite: refresh only what re-running this
+        # script can legitimately know changed (evidence/scope/assessment
+        # linkage, updated_at). Never touch status/severity/owner/notes --
+        # those are human-owned once a finding exists, matching this
+        # script's own conservative policy above ("do not auto-close...
+        # without explicit remediation/retest workflow"). A human closing
+        # a finding must never be silently reopened just because the
+        # control still fails on the next scheduled run.
+        finding=json.loads(out.read_text(encoding="utf-8"))
+        finding["scope"]={
             "processing_activity_id":asm["scope"]["processing_activity_id"],
             "asset_ids":asm["scope"].get("asset_ids",[])
-        },
-        "status":"OPEN",
-        "severity":"HIGH",
-        "statement":f"Control {asm['control_id']} failed for the assessed scope.",
-        "evidence":asm.get("evidence",[]),
-        "assessment_id":asm["assessment_id"],
-        "remediation_id":None,
-        "exception_id":None,
-        "created_at":now(),
-        "updated_at":None,
-        "owner":None,
-        "risk_owner":None,
-        "legal_review_state":"NOT_REVIEWED",
-        "notes":"Engineering finding only; this is not a legal determination of UU PDP non-compliance."
-    }
+        }
+        finding["evidence"]=asm.get("evidence",[])
+        finding["assessment_id"]=asm["assessment_id"]
+        finding["updated_at"]=now()
+    else:
+        finding={
+            "schema_version":"0.9",
+            "finding_id":finding_id,
+            "control_id":asm["control_id"],
+            "scope":{
+                "processing_activity_id":asm["scope"]["processing_activity_id"],
+                "asset_ids":asm["scope"].get("asset_ids",[])
+            },
+            "status":"OPEN",
+            "severity":"HIGH",
+            "statement":f"Control {asm['control_id']} failed for the assessed scope.",
+            "evidence":asm.get("evidence",[]),
+            "assessment_id":asm["assessment_id"],
+            "remediation_id":None,
+            "exception_id":None,
+            "created_at":now(),
+            "updated_at":None,
+            "owner":None,
+            "risk_owner":None,
+            "legal_review_state":"NOT_REVIEWED",
+            "notes":"Engineering finding only; this is not a legal determination of UU PDP non-compliance."
+        }
 
-    out=OUT/f"{finding['finding_id']}.finding.json"
     out.write_text(json.dumps(finding,indent=2),encoding="utf-8")
     created.append(finding)
 

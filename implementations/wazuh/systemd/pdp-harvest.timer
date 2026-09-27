@@ -1,0 +1,15 @@
+# See pdp-harvest.service for install/setup instructions.
+#
+# Runs every 10 minutes (the recommendation this implements suggested
+# "every 5-15 minutes" -- 10 is the midpoint; adjust OnUnitActiveSec if
+# your evidence volume or Indexer load calls for a different cadence).
+[Unit]
+Description=PDP Control Framework - harvest/index every 10 minutes
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=10min
+Unit=pdp-harvest.service
+
+[Install]
+WantedBy=timers.target
